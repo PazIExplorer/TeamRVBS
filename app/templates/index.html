@@ -8,7 +8,7 @@
 	<body id="cadre">
 		<div id="container">
 			<h1>Bienvenue</h1>
-			<img src="View/Pictures/usmb.jfif" alt="Logo usmb">
+			<img src="{{ url_for('static', filename='img/usmb.jfif') }}" alt="Logo usmb">
 
 			<form action="Control/connexion.html" method="post">
 				<input type="text" id="name" name="user_name" placeholder="Utilisateur">
