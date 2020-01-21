@@ -1,0 +1,8 @@
+# Cache VSCode
+.vscode/
+
+# Environnement virtuel de Python
+venv/
+
+# Caches de Python
+*__pycache__/
