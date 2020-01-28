@@ -7,7 +7,6 @@ form input{
     background-color: #5fc7f6;
     text-align: center;
     padding: 10px;
-    
     margin-bottom: 10px;
     
 }
@@ -15,5 +14,5 @@ form input{
 table{
     text-align: center;
     border: 1px solid black;
-    
+    margin-left: 35%;
 }
