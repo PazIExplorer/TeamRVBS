@@ -1,0 +1,36 @@
+#logoUSMB{  
+    max-width: 140px;
+}
+
+#logoMaison{  
+    max-width: 50px;
+
+}
+
+#logoDeco{
+    max-width: 50px; 
+}
+
+header a{
+    text-align: justify;
+}
+
+.aimg{
+    margin: 0;
+    position: absolute;
+    margin-left: 90%;
+    
+}
+
+.header{
+    max-height: 50px; 
+    background-color: #5fc7f6; 
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+
+#headera{
+    color: white;
+    text-decoration: none;
+}

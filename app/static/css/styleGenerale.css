@@ -1,0 +1,25 @@
+h1{
+    text-align: center;
+}
+
+form input{
+    border-radius: 20px;
+    background-color: #5fc7f6;
+    text-align: center;
+    padding: 10px;
+    margin-left: 35%;
+
+    margin-bottom: 10px;
+    
+}
+
+table,th,td{
+    text-align: center;
+    border: 1px solid black;
+    border-collapse: separate;
+}
+
+table{
+    margin-left: 35%;
+
+}
