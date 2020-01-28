@@ -24,7 +24,7 @@ header a{
 
 .header{
     max-height: 50px; 
-    background-color: deepskyblue; 
+    background-color: #5fc7f6; 
     width: 100%;
     display: flex;
     align-items: center;

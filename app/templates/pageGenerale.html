@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Page Générale</title>
+  <link rel="stylesheet" href="../static/css/styleHeader.css">
+  <link rel="stylesheet" href="../static/css/styleGenerale.css">
+  <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+<script> 
+$(function(){
+  $("#header").load("./header.html"); 
+  $("#footer").load("./footer.html"); 
+});
+</script> 
+</head>
+<body>
+  {% include 'header.html' %}
+
+  <h1>Master Informatique</h1>
+  <table>
+      <thead>
+        <tr>
+            <th colspan="4">Liste des étudiants</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Type de contrat</th>
+            <th>N°Étudiant</th>
+        </tr>
+        <tr>
+            <td>Kitschminyof</td>
+            <td>Stephan</td>
+            <td>contrat</td>
+            <td>0123456789</td>
+        </tr>
+    </tbody>
+  </table>
+  <h1>!!!!!!!!! FAIRE UNE BOUCLE AVEC LES DONNÉES DE LA BDD !!!!!!!!!</h1>
+  <br><br>
+  <h1>Feuille de présence par semaine</h1>
+  <br><br>
+  <h1>!!!!!!!!! METTRE LE TABLEAU JAVASCRIPT DE RÉMI !!!!!!!!!</h1>
+
+  <form method="POST" action="" >
+    <input type="submit" value="Générer le tableau du mois">
+  </form>
+</body>
+</html>
