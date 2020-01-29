@@ -27,3 +27,7 @@ def pageGenerale():
 @app.route("/pageEtu")
 def pageEtu():
     return render_template("pageEtu.html")
+
+@app.route('/calendartest')
+def calendar():
+    return render_template('calendartest.html')

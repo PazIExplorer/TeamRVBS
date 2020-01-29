@@ -61,8 +61,38 @@ $(function(){
   </table>
   
   <h1>Consultation présence de l'étudiant</h1>
-  <br><br>
-  <h1>!!!!!!!!! METTRE LE TABLEAU JAVASCRIPT DE RÉMI !!!!!!!!!</h1>
+  <br>
+  <div class="card">
+    <table class="table-bordered table-responsive-sm" id="calendar">
+        <thead id="calendar-head">
+            <tr>
+                <th style="width: 50px;"></th>
+                <th>Lundi</th>
+                <th>Mardi</th>
+                <th>Mercredi</th>
+                <th>Jeudi</th>
+                <th>Vendredi</th>
+            </tr>
+            <tr>
+                <th style="width: 50px;"></th>
+                <th id="semaine-lun"></th>
+                <th id="semaine-mar"></th>
+                <th id="semaine-mer"></th>
+                <th id="semaine-jeu"></th>
+                <th id="semaine-ven"></th>
+            </tr>
+        </thead>
+        <tbody id="calendar-body"></tbody>
+    </table>
+
+    <div class="form-inline">
+        <button class="btn btn-outline-primary col-sm-6" onclick=prevWeek()>Précédent</button>
+        <button class="btn btn-outline-primary col-sm-6" onclick=nextWeek()>Suivant</button>
+    </div>
+</div>
+</div>
+  <script src="{{ url_for('static', filename='js/calendar.js') }}"></script>
+
 
   
 </body>
