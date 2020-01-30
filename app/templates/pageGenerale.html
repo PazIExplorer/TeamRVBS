@@ -47,5 +47,9 @@ $(function(){
   <form method="POST" action="" >
     <input type="submit" value="Générer le tableau du mois">
   </form>
+
+  {% for e in user %}
+    <div><p>Nom: {{ e.nom }} Prénom: <b>{{ e.prenom }}</b></p></div>
+  {% endfor %}
 </body>
 </html>
