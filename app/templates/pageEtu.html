@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8">
-  <title>Page Étudiant</title>
+  <title>Étudiant : {{user.nom}} {{user.prenom}} </title>
   <link rel="stylesheet" href="../static/css/styleHeader.css">
   <link rel="stylesheet" href="../static/css/styleEtu.css">
   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
@@ -21,27 +21,27 @@ $(function(){
     <tbody>
         <tr>
             <th>Nom :</th>
-            <td colspan="2">LE NOM</tdcolspan="2">
+            <td colspan="2">{{user.nom}}</tdcolspan="2">
         </tr>
         <tr>
             <th>Prénom :</th>
-            <td colspan="2">LE PRENOM</td>
+            <td colspan="2">{{user.prenom}}</td>
         </tr>
         <tr>
             <th>Numéro étudiant :</th>
-            <td colspan="2">LE NUM</tdcolspan="2">
+            <td colspan="2">{{user.numeroEtudiant}}</tdcolspan="2">
         </tr>
         <tr>
             <th>Contact :</th>
-            <td colspan="2">LE MAIL</td>
+            <td colspan="2">{{user.mailEtu}}</td>
         </tr>
         <tr>
             <th>Numéro de téléphone :</th>
-            <td colspan="2">LE TEL</td>
+            <td colspan="2">{{user.numeroTel}}</td>
         </tr>
         <tr>
             <th>Mail entreprise :</th>
-            <td colspan="2">LE MAILS</td>
+            <td colspan="2">{{user.mailEntreprise}}</td>
         </tr>
         <tr>
             <td><form method="POST" action="" >

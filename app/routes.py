@@ -29,9 +29,11 @@ def pageGenerale():
         print(e.nom, e.prenom)
     return render_template("pageGenerale.html",user=etu)
 
-@app.route("/pageEtu")
-def pageEtu():
-    return render_template("pageEtu.html")
+@app.route("/pageEtu/<id>")
+def pageEtu(id):
+    id=id
+    etu = Etudiant.query.get(int(id))
+    return render_template("pageEtu.html", user=etu)
 
 @app.route('/calendartest')
 def calendar():
