@@ -1,6 +1,6 @@
 from app import app
 from app import db
-from app.models import Filiere, Etudiant
+from app.models import Filiere, Etudiant, Presence
 from flask import render_template, request
 
 @app.route("/", methods=["GET", "POST"])
@@ -33,7 +33,9 @@ def pageGenerale():
 def pageEtu(id):
     id=id
     etu = Etudiant.query.get(int(id))
-    return render_template("pageEtu.html", user=etu)
+    #presence ='TEST'
+    presence = Presence.query.filter_by(idCarteEtu=int(id)).all()
+    return render_template("pageEtu.html", user=etu , presence=presence)
 
 @app.route('/calendartest')
 def calendar():

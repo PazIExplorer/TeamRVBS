@@ -59,6 +59,11 @@ $(function(){
         </tr>
     </tbody>
   </table>
+
+  {% for p in presence %}
+    <h1>{{p.id}} {{p.idCarteEtu}}</h1>
+  {% endfor %}
+
   
   <h1>Consultation présence de l'étudiant</h1>
   <br>

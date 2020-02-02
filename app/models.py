@@ -31,10 +31,10 @@ class Etudiant(db.Model):
 #Presence
 class Presence(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    matin = db.Column(db.String(64))
-    apresMidi = db.Column(db.String(64))
+    matin = db.Column(db.Integer)
+    apresMidi = db.Column(db.Integer)
     idCarteEtu = db.Column(db.Integer, db.ForeignKey('etudiant.idCarteEtu'))
-    date = db.Column(db.String(64))
+    date = db.Column(db.Integer)
 
     def __repr__(self):
-        return '<Presence {} {} {} {}>'.format(self.id, self.matin, self.apresMidi, self.date)
+        return '<Presence {} {} {} {}>'.format(self.idCarteEtu,self.id, self.matin, self.apresMidi, self.date)

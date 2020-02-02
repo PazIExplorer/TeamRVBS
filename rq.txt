@@ -19,6 +19,9 @@ e = Etudiant(idCarteEtu='5555555', nom='Dumond', prenom='Yves', numeroEtudiant='
 e = Etudiant(idCarteEtu='6666666', nom='Charles', prenom='Martin', numeroEtudiant='66666666', typeContratEtudiant='contrat pro', tarif='1', filiere='1', numeroTel='0666666666', mailEtu='cm@etu.fr', mailEntreprise='cme@entr.fr')
 e = Etudiant(idCarteEtu='7777777', nom='Perreux', prenom='Claire', numeroEtudiant='77777777', typeContratEtudiant='contrat pro', tarif='3', filiere='1', numeroTel='0677777777', mailEtu='pc@etu.fr', mailEntreprise='pce@entr.fr')
 
+e = Etudiant(idCarteEtu=987654,nom='Kitschminyof',prenom='Stephan',numeroEtudiant=51702569,typeContratEtudiant='Contrat Pro',tarif=3,filiere=1,numeroTel=33622222222,mailEtu='ks@etu.fr',mailEntreprise='kse@entr.fr')
+
+
 #A faire à chaque fois
 db.session.add(e)
 db.session.commit()
@@ -26,7 +29,7 @@ db.session.commit()
 
 #Pour la table Presence:
 
-p = Presence(id=, matin='', apresMidi='', idCarteEtu='', date='')
+p = Presence(id=2,matin=1,apresMidi=1,idCarteEtu=123456,date=40220)
 
 db.session.add(p)
 db.session.commit()

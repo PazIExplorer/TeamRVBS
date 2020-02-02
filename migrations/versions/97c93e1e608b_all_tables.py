@@ -1,8 +1,8 @@
-"""table
+"""all tables
 
-Revision ID: b8c13b2a5e18
+Revision ID: 97c93e1e608b
 Revises: 
-Create Date: 2020-01-31 12:50:55.781628
+Create Date: 2020-02-02 16:18:42.307946
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'b8c13b2a5e18'
+revision = '97c93e1e608b'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -42,10 +42,10 @@ def upgrade():
     op.create_index(op.f('ix_etudiant_prenom'), 'etudiant', ['prenom'], unique=False)
     op.create_table('presence',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('matin', sa.String(length=64), nullable=True),
-    sa.Column('apresMidi', sa.String(length=64), nullable=True),
+    sa.Column('matin', sa.Integer(), nullable=True),
+    sa.Column('apresMidi', sa.Integer(), nullable=True),
     sa.Column('idCarteEtu', sa.Integer(), nullable=True),
-    sa.Column('date', sa.String(length=64), nullable=True),
+    sa.Column('date', sa.Integer(), nullable=True),
     sa.ForeignKeyConstraint(['idCarteEtu'], ['etudiant.idCarteEtu'], ),
     sa.PrimaryKeyConstraint('id')
     )
