@@ -25,8 +25,6 @@ def choixFiliere():
 @app.route("/pageGenerale")
 def pageGenerale():
     etu = Etudiant.query.all()
-    for e in etu:
-        print(e.nom, e.prenom)
     return render_template("pageGenerale.html",user=etu)
 
 @app.route("/pageEtu/<id>")
@@ -34,7 +32,9 @@ def pageEtu(id):
     id=id
     etu = Etudiant.query.get(int(id))
     #presence ='TEST'
+    
     presence = Presence.query.filter_by(idCarteEtu=int(id)).all()
+    #print(presence[0].date)
     return render_template("pageEtu.html", user=etu , presence=presence)
 
 @app.route('/calendartest')

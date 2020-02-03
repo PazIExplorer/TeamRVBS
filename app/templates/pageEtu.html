@@ -60,13 +60,9 @@ $(function(){
     </tbody>
   </table>
 
-  {% for p in presence %}
-    <h1>{{p.id}} {{p.idCarteEtu}}</h1>
-  {% endfor %}
-
-  
   <h1>Consultation présence de l'étudiant</h1>
   <br>
+  
   <div class="card">
     <table class="table-bordered table-responsive-sm" id="calendar">
         <thead id="calendar-head">
@@ -96,9 +92,152 @@ $(function(){
     </div>
 </div>
 </div>
-  <script src="{{ url_for('static', filename='js/calendar.js') }}"></script>
+<script type="text/javascript">
+  //<!--
+  // DEFINITION DU NUMERO DE SEMAINE
+// Returns the ISO week of the date.
+Date.prototype.getWeek = function () {
+    var onejan = new Date(this.getFullYear(), 0, 1);
+    return Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
+}
+
+let today = new Date();
+let curWeek = today.getWeek();
+let curMonth = today.getMonth();
+let curYear = today.getFullYear();
+
+let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+let days = ["lundi", "mardi", "mercredi", "jeudi", "vendredi"];
 
 
+showCalendar(curWeek, curYear);
+
+
+function showCalendar(week, year) {
+    let dateSemaine = [];
+    let datePresence =[];
+    let presenceMatin =[];
+    let presenceAprem=[];
+    {% for p in presence %}
+        datePresence.push("{{p.date}}")
+        presenceMatin.push({{p.matin}});
+        presenceAprem.push({{p.apresMidi}});
+    {% endfor %}
+
+    
+    let first = new Date(year, 0, (week*7)-1);
+
+    let calendar = document.getElementById("calendar-body");
+    calendar.innerHTML = "";
+    // document.getElementById("titleSemaine").innerText = `Semaine ${week} de ${year+(week===1?1:0)}`
+
+    let date = first.getDate();
+    
+
+    for (let i = 0; i < 3; i++) {
+        // N° jour, matin, après-midi
+        if (i === 0) {
+            let dateCalc = first;
+
+            document.getElementById("semaine-lun").innerHTML = `${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`;
+            dateSemaine.push(`${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`);
+
+            dateCalc.setDate(dateCalc.getDate() + 1);
+            document.getElementById("semaine-mar").innerHTML = `${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`;
+            dateSemaine.push(`${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`);
+
+            dateCalc.setDate(dateCalc.getDate() + 1);
+            document.getElementById("semaine-mer").innerHTML = `${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`;
+            dateSemaine.push(`${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`);
+
+            dateCalc.setDate(dateCalc.getDate() + 1);
+            document.getElementById("semaine-jeu").innerHTML = `${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`;
+            dateSemaine.push(`${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`);
+
+            dateCalc.setDate(dateCalc.getDate() + 1);
+            document.getElementById("semaine-ven").innerHTML = `${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`;
+            dateSemaine.push(`${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`);
+            continue;
+        }
+
+
+        let row = document.createElement("tr");
+        row.style = "height: 20px;"
+        let dateCalc = date;
+        
+        for (let j = 0; j < 6; j++) {
+            let cell = document.createElement("td");
+            if (i === 1 && j === 0) {
+                // Matin
+                cell.innerText = "MATIN";
+            }
+            else if (i === 2 && j === 0) {
+                // Après-midi
+                cell.innerText = "APRES-MIDI";
+            }else{
+              cell.id = `${days[j - 1]}_${i === 1 ? "matin" : "apresmidi"}`; 
+            }
+            
+            
+            row.appendChild(cell);
+        }
+        calendar.appendChild(row);
+    }
+
+    let getJourMatin = ["lundi_matin","mardi_matin","mercredi_matin","jeudi_matin","vendredi_matin"];
+    let getJourApresMidi = ["lundi_apresmidi","mardi_apresmidi","mercredi_apresmidi","jeudi_apresmidi","vendredi_apresmidi"];
+
+    for(let joursem=0;joursem<5;joursem++){
+        let lunM = document.getElementById(getJourMatin[joursem]);
+        let lunAM = document.getElementById(getJourApresMidi[joursem]);
+
+        for(let jourpres=0;jourpres<datePresence.length;jourpres++){
+            console.log(datePresence[jourpres]);
+            console.log(dateSemaine[joursem]);
+            if(datePresence[jourpres] == dateSemaine[joursem]){
+                if(presenceMatin[jourpres] == 1){
+                    lunM.style.backgroundColor = "#2ade1a";
+                }else if(presenceMatin[jourpres] == 2){
+                    lunM.style.backgroundColor = "#de1a1a";
+                }else if(presenceMatin[jourpres] == 3){
+                    lunM.style.backgroundColor = "#e8bf09";
+                }
+                if(presenceAprem[jourpres] == 1){
+                    lunAM.style.backgroundColor = "#2ade1a";
+                }else if(presenceAprem[jourpres] == 2){
+                    lunAM.style.backgroundColor = "#de1a1a";
+                }else if(presenceAprem[jourpres] == 3){
+                    lunAM.style.backgroundColor = "#e8bf09";
+                }
+            }else{
+                
+                
+            }
+        }
+    }
+
+
+}
+
+
+
+function prevWeek() {
+    today.setDate(today.getDate() - 7);
+    let curWeek = today.getWeek();
+    let curMonth = today.getMonth();
+    let curYear = today.getFullYear();
+    showCalendar(curWeek, curYear);
+}
+
+function nextWeek() {
+    today.setDate(today.getDate() + 7);
+    let curWeek = today.getWeek();
+    let curMonth = today.getMonth();
+    let curYear = today.getFullYear();
+    showCalendar(curWeek, curYear);
+}
+  //-->
+  </script>
   
 </body>
 </html>

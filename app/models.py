@@ -20,7 +20,7 @@ class Etudiant(db.Model):
     typeContratEtudiant = db.Column(db.String(64))
     tarif = db.Column(db.Integer)
     filiere = db.Column(db.Integer, db.ForeignKey('filiere.idFiliere'))
-    numeroTel = db.Column(db.Integer)
+    numeroTel = db.Column(db.String(64))
     mailEtu = db.Column(db.String(64))
     mailEntreprise = db.Column(db.String(64))
 
@@ -34,7 +34,7 @@ class Presence(db.Model):
     matin = db.Column(db.Integer)
     apresMidi = db.Column(db.Integer)
     idCarteEtu = db.Column(db.Integer, db.ForeignKey('etudiant.idCarteEtu'))
-    date = db.Column(db.Integer)
+    date = db.Column(db.String(64))
 
     def __repr__(self):
         return '<Presence {} {} {} {}>'.format(self.idCarteEtu,self.id, self.matin, self.apresMidi, self.date)
