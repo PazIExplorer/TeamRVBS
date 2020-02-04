@@ -1,0 +1,53 @@
+{%- extends "bootstrap/base.html" %}
+
+{% block title %}Calendar{% endblock %}
+
+{% block head %}
+{{super()}}
+{%- endblock %}
+
+{% block styles -%}
+{{super()}}
+{% endblock %}
+
+{% block content %}
+
+
+    <div class="container col-sm-4 col-md-7 col-lg-4 mt-5">
+        <h1>Calendar</h1>
+
+        <div class="card">
+            <h3 class="card-header" id="titleSemaine">Semaine</h3>
+            <table class="table-bordered table-responsive-sm" id="calendar">
+                <thead id="calendar-head">
+                    <tr>
+                        <th style="width: 50px;"></th>
+                        <th>Lundi</th>
+                        <th>Mardi</th>
+                        <th>Mercredi</th>
+                        <th>Jeudi</th>
+                        <th>Vendredi</th>
+                    </tr>
+                    <tr>
+                        <th style="width: 50px;"></th>
+                        <th id="semaine-lun"></th>
+                        <th id="semaine-mar"></th>
+                        <th id="semaine-mer"></th>
+                        <th id="semaine-jeu"></th>
+                        <th id="semaine-ven"></th>
+                    </tr>
+                </thead>
+                <tbody id="calendar-body"></tbody>
+            </table>
+
+            <div class="form-inline">
+                <button class="btn btn-outline-primary col-sm-6" onclick=prevWeek()>Précédent</button>
+                <button class="btn btn-outline-primary col-sm-6" onclick=nextWeek()>Suivant</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/calendar.js') }}"></script>
+
+
+{%- endblock %}

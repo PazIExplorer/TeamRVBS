@@ -1,4 +1,6 @@
 from app import app
+from app import db
+from app.models import Filiere, Etudiant, Presence
 from flask import render_template, request
 
 @app.route("/", methods=["GET", "POST"])
@@ -22,8 +24,17 @@ def choixFiliere():
 
 @app.route("/pageGenerale")
 def pageGenerale():
-    return render_template("pageGenerale.html")
+    etu = Etudiant.query.all()
+    return render_template("pageGenerale.html",user=etu)
 
-@app.route("/pageEtu")
-def pageEtu():
-    return render_template("pageEtu.html")
+@app.route("/pageEtu/<id>")
+def pageEtu(id):
+    id=id
+    etu = Etudiant.query.get(int(id))
+    #presence ='TEST'
+    
+    presence = Presence.query.filter_by(idCarteEtu=int(id)).all()
+    #print(presence[0].date)
+    return render_template("pageEtu.html", user=etu , presence=presence)
+
+

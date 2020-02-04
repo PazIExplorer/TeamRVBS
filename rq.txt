@@ -1,0 +1,33 @@
+python
+from app import db
+from app.models import Filiere, Etudiant, Presence
+
+#Pour la table Filiere:
+f = Filiere(idFiliere=1, nomFiliere='Informatique')
+
+db.session.add(e)
+db.session.commit()
+
+
+#Pour la table Etudiant:
+e = Etudiant(idCarteEtu=9999999,nom='Kitschminyof',prenom='Stephan',numeroEtudiant=99999999,typeContratEtudiant='contrat pro',tarif=2,filiere=1,numeroTel='0600000000',mailEtu='ks@etu.fr',mailEntreprise='kse@entr.fr')
+e = Etudiant(idCarteEtu=1111111,nom='Gallet',prenom='Benjamin',numeroEtudiant=11111111,typeContratEtudiant='contrat pro',tarif=3,filiere=1,numeroTel='0611111111',mailEtu='gb@etu.fr',mailEntreprise='gbe@entr.fr')
+e = Etudiant(idCarteEtu=2222222,nom='Matrod',prenom='Remi',numeroEtudiant=22222222,typeContratEtudiant='contrat pro',tarif=1,filiere=1,numeroTel='0622222222',mailEtu='mr@etu.fr',mailEntreprise='mre@entr.fr')
+e = Etudiant(idCarteEtu=3333333,nom='Jacquet',prenom='Virgile',numeroEtudiant=33333333,typeContratEtudiant='contrat pro',tarif=4,filiere=1,numeroTel='0633333333',mailEtu='jv@etu.fr',mailEntreprise='jve@entr.fr')
+e = Etudiant(idCarteEtu=4444444,nom='Durand',prenom='Jean',numeroEtudiant=44444444,typeContratEtudiant='contrat pro',tarif=2,filiere=1,numeroTel='0644444444',mailEtu='dj@etu.fr',mailEntreprise='dje@entr.fr')
+e = Etudiant(idCarteEtu=5555555,nom='Dumond',prenom='Yves',numeroEtudiant=55555555,typeContratEtudiant='contrat pro',tarif=6,filiere=1,numeroTel='0655555555',mailEtu='dy@etu.fr',mailEntreprise='dye@entr.fr')
+e = Etudiant(idCarteEtu=6666666,nom='Charles',prenom='Martin',numeroEtudiant=66666666,typeContratEtudiant='contrat pro',tarif=1,filiere=1,numeroTel='0666666666',mailEtu='cm@etu.fr',mailEntreprise='cme@entr.fr')
+e = Etudiant(idCarteEtu=7777777,nom='Perreux',prenom='Claire',numeroEtudiant=77777777,typeContratEtudiant='contrat pro',tarif=3,filiere=1,numeroTel='0677777777',mailEtu='pc@etu.fr',mailEntreprise='pce@entr.fr')
+
+#A faire à chaque fois
+db.session.add(e)
+db.session.commit()
+
+
+#Pour la table Presence:
+
+p = Presence(id=2,matin=1,apresMidi=1,idCarteEtu=123456,date='1/2/2020')
+
+db.session.add(p)
+db.session.commit()
+

@@ -30,15 +30,17 @@ $(function(){
             <th>Type de contrat</th>
             <th>N°Étudiant</th>
         </tr>
+      {% for e in user %}
         <tr>
-            <td>Kitschminyof</td>
-            <td>Stephan</td>
-            <td>contrat</td>
-            <td>0123456789</td>
+          <td><a href="{{url_for('pageEtu', id=e.idCarteEtu)}}">{{e.nom}}</a></td>
+          <td>{{e.prenom}}</td>
+          <td>{{e.typeContratEtudiant}}</td>
+          <td>{{e.numeroEtudiant}}</td>
         </tr>
+      {% endfor %}
+        
     </tbody>
   </table>
-  <h1>!!!!!!!!! FAIRE UNE BOUCLE AVEC LES DONNÉES DE LA BDD !!!!!!!!!</h1>
   <br><br>
   <h1>Feuille de présence par semaine</h1>
   <br><br>
@@ -47,5 +49,7 @@ $(function(){
   <form method="POST" action="" >
     <input type="submit" value="Générer le tableau du mois">
   </form>
+
+  
 </body>
 </html>
