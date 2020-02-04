@@ -3,22 +3,58 @@ h1{
 }
 
 form input{
+    border:none;
     border-radius: 20px;
     background-color: #5fc7f6;
     text-align: center;
     padding: 10px;
     margin-bottom: 10px;
+    padding-left: 40px;
+    padding-right: 40px
     
 }
 
 table{
+    
+    border-collapse: collapse;
     text-align: center;
-    border: 1px solid black;
-    margin-left: 35%;
+    border: none;
+    margin:auto;
+}
+
+table.etu{
+    background-color:#e0e0d1;
+border:1px solid #9FC6FF;
+padding:5px;
+border:2px solid black;
+-moz-border-radius:15px;
+-webkit-border-radius:15px;
+border-radius:15px;
+    text-align: center;
+    border: 0px solid black;
+}
+
+td.etu,th.etu{
+    border: 0px solid black;
+    width: 200px;
+    height: 50px;
+    
+}
+
+th.disparait{
+    border:0px solid black;
 }
 
 td,th{
-    border: 1px solid black;
-    width: 50px;
+    border: 1px solid #a3a375;
+    width: 100px;
     height: 50px;
+    font-family: Arial, Helvetica, sans-serif;
 }
+
+div.form-inline{
+    display: flex;
+    justify-content: center;
+    
+}
+

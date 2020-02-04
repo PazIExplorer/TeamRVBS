@@ -17,42 +17,42 @@ $(function(){
   {% include 'header.html' %}
 
   <h1>Description de l'étudiant</h1>
-  <table>
+  <table class="etu">
     <tbody>
         <tr>
-            <th>Nom :</th>
-            <td colspan="2">{{user.nom}}</tdcolspan="2">
+            <th class="etu">Nom :</thclass="etu">
+            <td class="etu" colspan="2">{{user.nom}}</tdcolspan="2">
         </tr>
         <tr>
-            <th>Prénom :</th>
-            <td colspan="2">{{user.prenom}}</td>
+            <th class="etu">Prénom :</th>
+            <td class="etu" colspan="2">{{user.prenom}}</td>
         </tr>
         <tr>
-            <th>Numéro étudiant :</th>
-            <td colspan="2">{{user.numeroEtudiant}}</tdcolspan="2">
+            <th class="etu">Numéro étudiant :</th>
+            <td class="etu" colspan="2">{{user.numeroEtudiant}}</tdcolspan="2">
         </tr>
         <tr>
-            <th>Contact :</th>
-            <td colspan="2">{{user.mailEtu}}</td>
+            <th class="etu">Contact :</th>
+            <td class="etu" colspan="2">{{user.mailEtu}}</td>
         </tr>
         <tr>
-            <th>Numéro de téléphone :</th>
-            <td colspan="2">{{user.numeroTel}}</td>
+            <th class="etu">Numéro de téléphone :</th>
+            <td class="etu" colspan="2">{{user.numeroTel}}</td>
         </tr>
         <tr>
-            <th>Mail entreprise :</th>
-            <td colspan="2">{{user.mailEntreprise}}</td>
+            <th class="etu">Mail entreprise :</th>
+            <td class="etu" colspan="2">{{user.mailEntreprise}}</td>
         </tr>
         <tr>
-            <td><form method="POST" action="" >
+            <td class="etu"><form method="POST" action="" >
                 <input type="submit" value="Modifier">
               </form>
             </td>
-            <td><form method="POST" action="" >
+            <td class="etu"><form method="POST" action="" >
                 <input type="submit" value="Convention">
               </form>
             </td>
-            <td><form method="POST" action="" >
+            <td class="etu"><form method="POST" action="" >
                 <input type="submit" value="Contrat">
               </form>
             </td>
@@ -67,7 +67,7 @@ $(function(){
     <table class="table-bordered table-responsive-sm" id="calendar">
         <thead id="calendar-head">
             <tr>
-                <th style="width: 50px;"></th>
+                <th class="disparait" style="width: 50px;"></th>
                 <th>Lundi</th>
                 <th>Mardi</th>
                 <th>Mercredi</th>
@@ -75,7 +75,7 @@ $(function(){
                 <th>Vendredi</th>
             </tr>
             <tr>
-                <th style="width: 50px;"></th>
+                <th class="disparait" style="width: 50px;"></th>
                 <th id="semaine-lun"></th>
                 <th id="semaine-mar"></th>
                 <th id="semaine-mer"></th>
@@ -87,8 +87,8 @@ $(function(){
     </table>
 
     <div class="form-inline">
-        <button class="btn btn-outline-primary col-sm-6" onclick=prevWeek()>Précédent</button>
-        <button class="btn btn-outline-primary col-sm-6" onclick=nextWeek()>Suivant</button>
+        <button onclick=prevWeek()>Précédent</button>
+        <button  onclick=nextWeek()>Suivant</button>
     </div>
 </div>
 </div>
@@ -196,18 +196,18 @@ function showCalendar(week, year) {
             console.log(dateSemaine[joursem]);
             if(datePresence[jourpres] == dateSemaine[joursem]){
                 if(presenceMatin[jourpres] == 1){
-                    lunM.style.backgroundColor = "#2ade1a";
+                    lunM.style.backgroundColor = "#8cff66";
                 }else if(presenceMatin[jourpres] == 2){
-                    lunM.style.backgroundColor = "#de1a1a";
+                    lunM.style.backgroundColor = "#ff6666";
                 }else if(presenceMatin[jourpres] == 3){
-                    lunM.style.backgroundColor = "#e8bf09";
+                    lunM.style.backgroundColor = "#ffff66";
                 }
                 if(presenceAprem[jourpres] == 1){
-                    lunAM.style.backgroundColor = "#2ade1a";
+                    lunAM.style.backgroundColor = "#8cff66";
                 }else if(presenceAprem[jourpres] == 2){
-                    lunAM.style.backgroundColor = "#de1a1a";
+                    lunAM.style.backgroundColor = "#ff6666";
                 }else if(presenceAprem[jourpres] == 3){
-                    lunAM.style.backgroundColor = "#e8bf09";
+                    lunAM.style.backgroundColor = "#ffff66";
                 }
             }else{
                 
