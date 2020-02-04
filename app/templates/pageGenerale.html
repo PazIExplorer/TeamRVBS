@@ -16,23 +16,24 @@ $(function(){
 <body>
   {% include 'header.html' %}
 
-  <h1>Master Informatique</h1>
-  <table>
+  <div id="titre">Master Informatique</div>
+  <br>
+  
+  <h2>Liste des étudiants</h2>
+  <table id="listeEtudiants">
       <thead>
         <tr>
-            <th colspan="4">Liste des étudiants</th>
+          <th>Nom</th>
+          <th>Prénom</th>
+          <th>Type de contrat</th>
+          <th>N° Étudiant</th>
         </tr>
     </thead>
     <tbody>
-        <tr>
-            <th>Nom</th>
-            <th>Prénom</th>
-            <th>Type de contrat</th>
-            <th>N°Étudiant</th>
-        </tr>
+
       {% for e in user %}
-        <tr>
-          <td><a href="{{url_for('pageEtu', id=e.idCarteEtu)}}">{{e.nom}}</a></td>
+        <tr id="ligneEtudiant" onclick="window.location=`{{url_for('pageEtu', id=e.idCarteEtu)}}`">
+          <td>{{e.nom}}</td>
           <td>{{e.prenom}}</td>
           <td>{{e.typeContratEtudiant}}</td>
           <td>{{e.numeroEtudiant}}</td>
@@ -42,9 +43,10 @@ $(function(){
     </tbody>
   </table>
   <br><br>
-  <h1>Feuille de présence par semaine</h1>
-  <br><br>
-  <h1>!!!!!!!!! METTRE LE TABLEAU JAVASCRIPT DE RÉMI !!!!!!!!!</h1>
+  <h2>Feuille de présence par semaine</h2>
+  <br>
+
+  <!-- !!!!!!!!! METTRE LE TABLEAU JAVASCRIPT DE RÉMI !!!!!!!!! -->
 
   <form method="POST" action="" >
     <input type="submit" value="Générer le tableau du mois">
