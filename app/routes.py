@@ -37,6 +37,4 @@ def pageEtu(id):
     #print(presence[0].date)
     return render_template("pageEtu.html", user=etu , presence=presence)
 
-@app.route('/calendartest')
-def calendar():
-    return render_template('calendartest.html')
+
