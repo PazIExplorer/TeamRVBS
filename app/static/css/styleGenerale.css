@@ -1,25 +1,63 @@
-h1{
+/* TITRES */
+h1, h2{
     text-align: center;
+}
+
+#titre {
+    align-content: center;
+    border-radius: 20px;
+    background-color: #5fc7f6;
+    text-align: center;
+    margin: auto;
+    width: 30%;
+    padding: 10px;
+    margin-top: 2em;
+    margin-bottom: 10px;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+/* BOUTON GÉNÉRATION DU TABLEAU DE PRÉSENCE */
+
+form {
+    display: flex;
 }
 
 form input{
     border-radius: 20px;
     background-color: #5fc7f6;
+    margin: auto;
     text-align: center;
     padding: 10px;
-    margin-left: 35%;
 
     margin-bottom: 10px;
     
 }
 
-table,th,td{
-    text-align: center;
-    border: 1px solid black;
-    border-collapse: separate;
+/* TABLEAU LISTE ÉTUDIANTS */
+
+#listeEtudiants {
+    margin: auto;
+    width: 60%;
 }
 
-table{
-    margin-left: 35%;
+#listeEtudiants thead {
+    font-size: 1.2em;
+    font-weight: bold;
+}
 
+#listeEtudiants, #listeEtudiants th, #listeEtudiants td {
+    border: 1px solid black;
+    border-collapse: collapse;
+    text-align: center;
+    padding: 5px;
+}
+
+#ligneEtudiant {
+    background-color: #fff;
+}
+
+#ligneEtudiant:hover {
+    background-color: #ccc;
+    cursor: pointer;
 }
