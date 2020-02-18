@@ -2,6 +2,10 @@ from app import app
 from app import db
 from app.models import Filiere, Etudiant, Presence
 from flask import render_template, request
+import os
+print(os.path.join(os.getcwd(),"app/","pdfgen.py"))
+print(os.path.isfile(os.path.join(os.getcwd(),"app/","pdfgen.py")))
+from app import pdfgen
 
 @app.route("/", methods=["GET", "POST"])
 @app.route("/index", methods=["GET", "POST"])
@@ -38,3 +42,10 @@ def pageEtu(id):
     return render_template("pageEtu.html", user=etu , presence=presence)
 
 
+@app.route("/pdfEtu/<id>")
+def pdfEtu(id): 
+    id=id 
+    etu= Etudiant.query.get(int(id))
+    filiere=Filiere.query.get(int(etu.filiere))
+    myPDF=pdfgen.pdf(etu.nom+" "+etu.prenom,filiere.nomFiliere)
+    return render_template("pdfEtu.html",myPDF=myPDF,user=etu)

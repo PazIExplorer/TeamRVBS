@@ -52,7 +52,7 @@ $(function(){
                 <input type="submit" value="Convention">
               </form>
             </td>
-            <td class="etu"><form method="POST" action="" >
+            <td class="etu"><form method="GET" action="{{url_for('pdfEtu', id=user.idCarteEtu)}}" >
                 <input type="submit" value="Contrat">
               </form>
             </td>
