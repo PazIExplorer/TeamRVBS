@@ -4,5 +4,11 @@
 # Environnement virtuel de Python
 venv/
 
+# PDFs
+*.pdf
+
 # Caches de Python
 *__pycache__/
+
+# Autres ignores du serveur
+TeamRVBS/

@@ -1,12 +1,9 @@
-html{
-    height: 100%;
-}
-
 body {
-    height: 97%;
-    border-width: 4px;
+    margin:5px;
+    border-width: 5px;
     border-style: solid;
     border-color: black;
+    padding-bottom:5px;
     font: 14px Verdana;
 }
 
@@ -48,21 +45,26 @@ form input{
 
 /* TABLEAU LISTE ÉTUDIANTS */
 
-#listeEtudiants {
+table {
     margin: auto;
     width: 60%;
 }
 
-#listeEtudiants thead {
+table thead {
     font-size: 1.2em;
     font-weight: bold;
 }
 
-#listeEtudiants, #listeEtudiants th, #listeEtudiants td {
+table, table th, table td {
+
     border: 1px solid black;
     border-collapse: collapse;
     text-align: center;
     padding: 5px;
+}
+
+th.disparait{
+    border:0px solid black;
 }
 
 #ligneEtudiant {
@@ -72,4 +74,29 @@ form input{
 #ligneEtudiant:hover {
     background-color: #ccc;
     cursor: pointer;
+}
+
+div.form-inline{
+    display: flex;
+    justify-content: center;
+}
+
+
+#presenceEtudiants td, #presenceEtudiants th{
+    width: 50px;
+    height: 50px;
+
+}
+
+button{
+    background-color: white;
+    height: 30px;
+    border-radius: 5px;
+    border: 3px solid black;
+    margin: 5px;
+}
+
+#num-sem{
+    margin: 10px;
+    text-align: center;
 }
