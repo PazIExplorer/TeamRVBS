@@ -32,11 +32,11 @@ $(function(){
     <tbody>
 
       {% for e in user %}
-        <tr id="ligneEtudiant" onclick="window.location=`{{url_for('pageEtu', id=e[0])}}`">
-          <td>{{e[1]}}</td>
-          <td>{{e[2]}}</td>
-          <td>{{e[4]}}</td>
-          <td>{{e[3]}}</td>
+        <tr id="ligneEtudiant" onclick="window.location=`{{url_for('pageEtu', id=e.idCarteEtu)}}`">
+          <td>{{e.nom}}</td>
+          <td>{{e.prenom}}</td>
+          <td>{{e.typeContratEtudiant}}</td>
+          <td>{{e.numeroEtudiant}}</td>
         </tr>
       {% endfor %}
         
@@ -84,31 +84,38 @@ $(function(){
 // Returns the ISO week of the date.
 Date.prototype.getWeek = function () {
     var onejan = new Date(this.getFullYear(), 0, 1);
-    return Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
+    var sem = Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
+    return (sem==53?1:sem);
+}
+function getMonday(d) {
+  var cday = new Date(d);
+  var day = cday.getDay(),
+    diff = cday.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
+  return new Date(d.setDate(diff));
 }
 
 let today = new Date();
-let curWeek = today.getWeek();
-let curMonth = today.getMonth();
-let curYear = today.getFullYear();
+let monday = getMonday(today);
 
 let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 let days = ["lundi", "mardi", "mercredi", "jeudi", "vendredi"];
 
-showCalendar(curWeek, curYear);
+showCalendar(monday);
 
 
+function showCalendar(monday) {
+    let curWeek = monday.getWeek();
+    let curYear = monday.getFullYear();
 
-function showCalendar(week, year) {
     let dateSemaine =[];
     let idEtu =[];
     let presence =[];
     let numEtu=[];
     let nomEtu=[];
     {% for e in user %}
-      idEtu.push({{e[0]}});
-      numEtu.push({{e[3]}});
-      nomEtu.push("{{e[1]}} {{e[2]}}");
+      idEtu.push({{e.idCarteEtu}});
+      numEtu.push({{e.numeroEtudiant}});
+      nomEtu.push("{{e.nom}} {{e.prenom}}");
       {% endfor %}
 
       let getJour = [];
@@ -121,9 +128,7 @@ function showCalendar(week, year) {
     }
 
 
-
-
-    let first = new Date(year, 0, (week*7)-1);
+    let first = monday;
 
 	let numSem = document.getElementById("num-sem");
 
@@ -198,11 +203,11 @@ function showCalendar(week, year) {
       let presenceMatin =[];
       let presenceAprem=[];
       {% for p in presence %}
-        if({{p[2]}} === idEtu[etu]){
-          idEtuPres.push({{p[2]}});
-          datePresence.push("{{p[3]}}");
-          presenceMatin.push({{p[0]}});
-          presenceAprem.push({{p[1]}});
+        if({{p.idCarteEtu}} === idEtu[etu]){
+          idEtuPres.push({{p.idCarteEtu}});
+          datePresence.push("{{p.date}}");
+          presenceMatin.push({{p.matin}});
+          presenceAprem.push({{p.apresMidi}});
         }
       {% endfor %}
 /*
@@ -259,18 +264,14 @@ function showCalendar(week, year) {
 
 function prevWeek() {
     today.setDate(today.getDate() - 7);
-    let curWeek = today.getWeek();
-    let curMonth = today.getMonth();
-    let curYear = today.getFullYear();
-    showCalendar(curWeek, curYear);
+    let monday = getMonday(today);
+    showCalendar(today);
 }
 
 function nextWeek() {
     today.setDate(today.getDate() + 7);
-    let curWeek = today.getWeek();
-    let curMonth = today.getMonth();
-    let curYear = today.getFullYear();
-    showCalendar(curWeek, curYear);
+    let monday = getMonday(today);
+    showCalendar(today);
 }
   </script>
   

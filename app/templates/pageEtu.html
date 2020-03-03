@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8">
-  <title>Étudiant : {{user[0][1]}} {{user[0][2]}} </title>
+  <title>Étudiant : {{user.nom}} {{user.prenom}} </title>
   <link rel="stylesheet" href="../static/css/styleHeader.css">
   <link rel="stylesheet" href="../static/css/styleEtu.css">
   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
@@ -20,40 +20,40 @@ $(function(){
   <table class="etu">
     <tbody>
         <tr>
-            <th class="etu">Nom :</thclass="etu">
-            <td class="etu" colspan="2">{{user[0][1]}}</tdcolspan="2">
+            <th class="etu">Nom :</th>
+            <td class="etu" colspan="2">{{user.nom}}</td>
         </tr>
         <tr>
             <th class="etu">Prénom :</th>
-            <td class="etu" colspan="2">{{user[0][2]}}</td>
+            <td class="etu" colspan="2">{{user.prenom}}</td>
         </tr>
         <tr>
             <th class="etu">Numéro étudiant :</th>
-            <td class="etu" colspan="2">{{user[0][3]}}</tdcolspan="2">
+            <td class="etu" colspan="2">{{user.numeroEtudiant}}</tdcolspan="2">
         </tr>
         <tr>
             <th class="etu">Contact :</th>
-            <td class="etu" colspan="2">{{user[0][8]}}</td>
+            <td class="etu" colspan="2">{{user.mailEtu}}</td>
         </tr>
         <tr>
             <th class="etu">Numéro de téléphone :</th>
-            <td class="etu" colspan="2">{{user[0][7]}}</td>
+            <td class="etu" colspan="2">{{user.numeroTel}}</td>
         </tr>
         <tr>
             <th class="etu">Mail entreprise :</th>
-            <td class="etu" colspan="2">{{user[0][9]}}</td>
+            <td class="etu" colspan="2">{{user.mailEntreprise}}</td>
         </tr>
         <tr>
-            <td class="etu"><form method="GET" action="{{url_for('pageModifEtu', id=user[0][0])}}" >
+            <td class="etu"><form method="POST" action="" >
                 <input type="submit" value="Modifier">
               </form>
             </td>
-            <td class="etu"><form method="GET" action="{{url_for('pageConvention', id=user[0][0])}}" >
+            <td class="etu"><form method="POST" action="" >
                 <input type="submit" value="Convention">
               </form>
             </td>
-            <td class="etu"><form method="GET" action="{{url_for('pdfEtu', id=user[0][0])}}" >
-                <input type="submit" value="Attestation de présence">
+            <td class="etu"><form method="POST" action="" >
+                <input type="submit" value="Contrat">
               </form>
             </td>
         </tr>
@@ -88,7 +88,7 @@ $(function(){
 
     <div class="form-inline">
         <button onclick=prevWeek()>Précédent</button>
-	<p id="num-sem"></p>
+        <p id="num-sem"></p>
         <button onclick=nextWeek()>Suivant</button>
     </div>
 </div>
@@ -99,36 +99,46 @@ $(function(){
 // Returns the ISO week of the date.
 Date.prototype.getWeek = function () {
     var onejan = new Date(this.getFullYear(), 0, 1);
-    return Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
+    var sem = Math.ceil((((this - onejan) / 86400000) + onejan.getDay() + 1) / 7);
+    return (sem == 53 ? 1 : sem);
+}
+function getMonday(d) {
+    var cday = new Date(d);
+    var day = cday.getDay(),
+        diff = cday.getDate() - day + (day == 0 ? -6 : 1); // adjust when day is sunday
+    return new Date(d.setDate(diff));
 }
 
 let today = new Date();
-let curWeek = today.getWeek();
-let curMonth = today.getMonth();
-let curYear = today.getFullYear();
+let monday = getMonday(today);
 
 let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 let days = ["lundi", "mardi", "mercredi", "jeudi", "vendredi"];
 
 
-showCalendar(curWeek, curYear);
+showCalendar(monday);
 
 
-function showCalendar(week, year) {
+
+function showCalendar(monday) {
+    let curWeek = monday.getWeek();
+    let curYear = monday.getFullYear();
+
     let dateSemaine = [];
     let datePresence =[];
     let presenceMatin =[];
     let presenceAprem=[];
     {% for p in presence %}
-        datePresence.push("{{p[3]}}")
-        presenceMatin.push({{p[0]}});
-        presenceAprem.push({{p[1]}});
+        datePresence.push("{{p.date}}");
+        presenceMatin.push({{p.matin}});
+        presenceAprem.push({{p.apresMidi}});
     {% endfor %}
 
     
-    let first = new Date(year, 0, ((week-1)*7)-1);
+    let first = monday;
 
     let numSem = document.getElementById("num-sem");
+
     numSem.innerText = "semaine "+first.getWeek();
 
     let calendar = document.getElementById("calendar-body");
@@ -161,7 +171,7 @@ function showCalendar(week, year) {
             dateCalc.setDate(dateCalc.getDate() + 1);
             document.getElementById("semaine-ven").innerHTML = `${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`;
             dateSemaine.push(`${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`);
-            continue;
+            //continue;
         }
 
 
@@ -227,20 +237,15 @@ function showCalendar(week, year) {
 
 function prevWeek() {
     today.setDate(today.getDate() - 7);
-    let curWeek = today.getWeek();
-    let curMonth = today.getMonth();
-    let curYear = today.getFullYear();
-    showCalendar(curWeek, curYear);
+    let monday = getMonday(today);
+    showCalendar(monday);
 }
 
 function nextWeek() {
     today.setDate(today.getDate() + 7);
-    let curWeek = today.getWeek();
-    let curMonth = today.getMonth();
-    let curYear = today.getFullYear();
-    showCalendar(curWeek, curYear);
+    let monday = getMonday(today);
+    showCalendar(monday);
 }
-  //-->
   </script>
   
 </body>

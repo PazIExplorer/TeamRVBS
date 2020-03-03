@@ -1,3 +1,5 @@
+
+
 body {
     margin:5px;
     border-width: 5px;
@@ -48,6 +50,7 @@ form input{
 table {
     margin: auto;
     width: 60%;
+    table-layout: fixed;
 }
 
 table thead {
@@ -83,7 +86,7 @@ div.form-inline{
 
 
 #presenceEtudiants td, #presenceEtudiants th{
-    width: 50px;
+    width: 10%;
     height: 50px;
 
 }
