@@ -32,12 +32,12 @@ $(function(){
     <tbody>
 
       {% for e in user %}
-        <tr id="ligneEtudiant" onclick="window.location=`{{url_for('pageEtu', id=e.idCarteEtu)}}`">
-          <td>{{e.nom}}</td>
-          <td>{{e.prenom}}</td>
-          <td>{{e.typeContratEtudiant}}</td>
-          <td>{{e.numeroEtudiant}}</td>
-        </tr>
+      <tr id="ligneEtudiant" onclick="window.location=`{{url_for('pageEtu', id=e[0])}}`">
+        <td>{{e[1]}}</td>
+        <td>{{e[2]}}</td>
+        <td>{{e[4]}}</td>
+        <td>{{e[3]}}</td>
+      </tr>
       {% endfor %}
         
     </tbody>
@@ -113,10 +113,10 @@ function showCalendar(monday) {
     let numEtu=[];
     let nomEtu=[];
     {% for e in user %}
-      idEtu.push({{e.idCarteEtu}});
-      numEtu.push({{e.numeroEtudiant}});
-      nomEtu.push("{{e.nom}} {{e.prenom}}");
-      {% endfor %}
+      idEtu.push({{e[0]}});
+      numEtu.push({{e[3]}});
+      nomEtu.push("{{e[1]}} {{e[2]}}");
+    {% endfor %}
 
       let getJour = [];
     for(let r=0;r<idEtu.length;r++){
@@ -203,46 +203,23 @@ function showCalendar(monday) {
       let presenceMatin =[];
       let presenceAprem=[];
       {% for p in presence %}
-        if({{p.idCarteEtu}} === idEtu[etu]){
-          idEtuPres.push({{p.idCarteEtu}});
-          datePresence.push("{{p.date}}");
-          presenceMatin.push({{p.matin}});
-          presenceAprem.push({{p.apresMidi}});
-        }
-      {% endfor %}
-/*
-      console.log("idEtu: "+idEtu[etu]);
-      for(let r=0;r<idEtuPres.length;r++){
-        console.log("idEtu: "+idEtuPres[r]+" datePressence: "+datePresence[r] + " matin: "+presenceMatin[r]+" aprem: "+presenceAprem);
-      }
- */   
+          if ({{ p[2] }} === idEtu[etu]) {
+            idEtuPres.push({{ p[2]}});
+            datePresence.push("{{p[3]}}");
+            presenceMatin.push({{ p[0]}});
+            presenceAprem.push({{ p[1]}});
+          }
+        {% endfor %}
 
       for(let joursem=p1;joursem<(p1+5);joursem++){
           
 		  let lunM = document.getElementById(getJour[joursem]);
 		  
-		  /*
-          console.log("lunM = "+getJour[joursem]);
-          console.log("idEtu: "+idEtu[etu]);
-          for(let r=0;r<idEtuPres.length;r++){
-           console.log("idEtu: "+idEtuPres[r]+" datePressence: "+datePresence[r] + " matin: "+presenceMatin[r]+" aprem: "+presenceAprem);
-		  }
-		  */
 
           for(let jourpres=0;jourpres<datePresence.length;jourpres++){
-			console.log("lunM = "+getJour[joursem]);
-          		console.log("idEtu: "+idEtu[etu]);
-			console.log("datepres"+datePresence[jourpres]);
-			console.log("datesemaine"+dateSemaine[joursem%5]);
+	
             if(datePresence[jourpres] == dateSemaine[joursem%5]){
-               
-                /*
-                console.log("getJour"+ joursem + " : "+getJour[joursem]);
-                console.log("presenceMatin : "+presenceMatin[jourpres]);
-                console.log("presenceAprem : "+presenceAprem[jourpres]);
-                */
-				
-                //lunM.style.backgroundColor = "#ffffff";
+
                 if(presenceMatin[jourpres] == 1 && presenceAprem[jourpres] == 1){
                     lunM.style.backgroundColor = "#8cff66";
                 }else if((presenceMatin[jourpres] == 1 && presenceAprem[jourpres] == 2) || (presenceMatin[jourpres] == 2 && presenceAprem[jourpres] == 1) || (presenceMatin[jourpres] == 2 && presenceAprem[jourpres] == 3) || (presenceMatin[jourpres] == 3 && presenceAprem[jourpres] == 2)|| (presenceMatin[jourpres] == 2 && presenceAprem[jourpres] == 2)){
