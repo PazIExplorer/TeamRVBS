@@ -3,7 +3,6 @@ from app import app
 #from app.models import Filiere, Etudiant, Presence
 from flask import render_template, request
 from werkzeug import secure_filename
-
 import mysql.connector
 
 import os
@@ -49,6 +48,7 @@ def pageGenerale():
     #presence = Presence.query.all()
 
     return render_template("pageGenerale.html",user=etu,presence=presence)
+
 
 @app.route("/pageEtu/<id>", methods=["GET", "POST"])
 def pageEtu(id):
@@ -129,7 +129,6 @@ def pageModifEtu(id):
 
     return render_template("pageModifEtu.html", user=etu)
 
-
 @app.route("/pdfEtu/<id>")
 def pdfEtu(id): 
     id=id 
@@ -146,3 +145,17 @@ def pdfEtu(id):
 0][1]+" "+etu[0][2],filiere[0][1])
     return render_template("pdfEtu.html",myPDF=myPDF,user=etu)
 
+@app.route("/pdfEtu2/<id>")
+def pdfEtu2(id): 
+    id=id 
+    querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
+    cursora.execute(querya)
+    etu = cursora.fetchall()
+
+    querya = ("SELECT * FROM filiere WHERE idFiliere="+str(etu[0][6]))
+    cursora.execute(querya)
+    filiere = cursora.fetchall()
+    #etu= Etudiant.query.get(int(id))
+    #filiere=Filiere.query.get(int(etu.filiere))
+    myPDF=pdfgen.pdf(etu[0][1]+" "+etu[0][2],filiere[0][1])
+    return render_template("pdfEtu.html",myPDF=myPDF,user=etu)
