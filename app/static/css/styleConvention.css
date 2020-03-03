@@ -1,0 +1,42 @@
+html{
+    height:100%;
+}
+
+body{
+    margin:5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black;
+    padding-bottom:5px;
+    font: 14px Verdana;
+}
+
+h1{
+    text-align: center;
+}
+
+form input{
+    cursor: pointer;
+    border-radius: 20px;
+    background-color: #61c6f4c7;
+    border: none;
+    text-align: center;
+    padding: 8px;
+    margin-top:5px;
+    width: 60%;
+    font: 16px Verdana;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+    margin-left: 10%;
+}
+
+embed{
+    height:100px;
+    padding-top:20px;
+    
+}

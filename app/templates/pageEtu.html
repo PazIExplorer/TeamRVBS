@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8">
-  <title>Étudiant : {{user.nom}} {{user.prenom}} </title>
+  <title>Étudiant : {{user[0][1]}} {{user[0][2]}} </title>
   <link rel="stylesheet" href="../static/css/styleHeader.css">
   <link rel="stylesheet" href="../static/css/styleEtu.css">
   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
@@ -21,39 +21,39 @@ $(function(){
     <tbody>
         <tr>
             <th class="etu">Nom :</thclass="etu">
-            <td class="etu" colspan="2">{{user.nom}}</tdcolspan="2">
+            <td class="etu" colspan="2">{{user[0][1]}}</tdcolspan="2">
         </tr>
         <tr>
             <th class="etu">Prénom :</th>
-            <td class="etu" colspan="2">{{user.prenom}}</td>
+            <td class="etu" colspan="2">{{user[0][2]}}</td>
         </tr>
         <tr>
             <th class="etu">Numéro étudiant :</th>
-            <td class="etu" colspan="2">{{user.numeroEtudiant}}</tdcolspan="2">
+            <td class="etu" colspan="2">{{user[0][3]}}</tdcolspan="2">
         </tr>
         <tr>
             <th class="etu">Contact :</th>
-            <td class="etu" colspan="2">{{user.mailEtu}}</td>
+            <td class="etu" colspan="2">{{user[0][8]}}</td>
         </tr>
         <tr>
             <th class="etu">Numéro de téléphone :</th>
-            <td class="etu" colspan="2">{{user.numeroTel}}</td>
+            <td class="etu" colspan="2">{{user[0][7]}}</td>
         </tr>
         <tr>
             <th class="etu">Mail entreprise :</th>
-            <td class="etu" colspan="2">{{user.mailEntreprise}}</td>
+            <td class="etu" colspan="2">{{user[0][9]}}</td>
         </tr>
         <tr>
-            <td class="etu"><form method="POST" action="" >
+            <td class="etu"><form method="GET" action="{{url_for('pageModifEtu', id=user[0][0])}}" >
                 <input type="submit" value="Modifier">
               </form>
             </td>
-            <td class="etu"><form method="POST" action="" >
+            <td class="etu"><form method="GET" action="{{url_for('pageConvention', id=user[0][0])}}" >
                 <input type="submit" value="Convention">
               </form>
             </td>
-            <td class="etu"><form method="GET" action="{{url_for('pdfEtu', id=user.idCarteEtu)}}" >
-                <input type="submit" value="Contrat">
+            <td class="etu"><form method="GET" action="{{url_for('pdfEtu', id=user[0][0])}}" >
+                <input type="submit" value="Attestation de présence">
               </form>
             </td>
         </tr>
@@ -88,6 +88,7 @@ $(function(){
 
     <div class="form-inline">
         <button onclick=prevWeek()>Précédent</button>
+	<p id="num-sem"></p>
         <button onclick=nextWeek()>Suivant</button>
     </div>
 </div>
@@ -119,13 +120,16 @@ function showCalendar(week, year) {
     let presenceMatin =[];
     let presenceAprem=[];
     {% for p in presence %}
-        datePresence.push("{{p.date}}")
-        presenceMatin.push({{p.matin}});
-        presenceAprem.push({{p.apresMidi}});
+        datePresence.push("{{p[3]}}")
+        presenceMatin.push({{p[0]}});
+        presenceAprem.push({{p[1]}});
     {% endfor %}
 
     
     let first = new Date(year, 0, ((week-1)*7)-1);
+
+    let numSem = document.getElementById("num-sem");
+    numSem.innerText = "semaine "+first.getWeek();
 
     let calendar = document.getElementById("calendar-body");
     calendar.innerHTML = "";

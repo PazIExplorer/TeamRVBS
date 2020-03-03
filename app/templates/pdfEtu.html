@@ -2,7 +2,7 @@
 <html lang="fr" style="height: 100%;">
 <head>
   <meta charset="utf-8">
-  <title>Étudiant : {{user.nom}} {{user.prenom}} </title>
+  <title>Étudiant : {{user[0][1]}} {{user[0][2]}} </title>
   <link rel="stylesheet" href="../static/css/styleHeader.css">
   <link rel="stylesheet" href="../static/css/stylepdf.css">
   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
@@ -14,7 +14,7 @@ $(function(){
 </script> 
 </head>
 <body style="height: 100%;">
-  <embed src="../static/pdf/{{user.nom}} {{user.prenom}}.pdf" type="application/pdf" width="100%" height="100%"/>
+  <embed src="../static/pdf/{{user[0][1]}} {{user[0][2]}}.pdf" type="application/pdf" width="100%" height="100%"/>
     
 </body>
 </html> 
