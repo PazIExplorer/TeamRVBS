@@ -10,5 +10,5 @@ venv/
 # Caches de Python
 *__pycache__/
 
-# Autres ignores du serveur
+# Autres ignores serveur
 TeamRVBS/

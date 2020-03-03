@@ -3,7 +3,6 @@ from app import app
 #from app.models import Filiere, Etudiant, Presence
 from flask import render_template, request
 from werkzeug import secure_filename
-
 import mysql.connector
 
 import os
@@ -146,3 +145,10 @@ def pdfEtu(id):
 0][1]+" "+etu[0][2],filiere[0][1])
     return render_template("pdfEtu.html",myPDF=myPDF,user=etu)
 
+@app.route("/pdfEtu/<id>")
+def pdfEtu(id): 
+    id=id 
+    etu= Etudiant.query.get(int(id))
+    filiere=Filiere.query.get(int(etu.filiere))
+    myPDF=pdfgen.pdf(etu.nom+" "+etu.prenom,filiere.nomFiliere)
+    return render_template("pdfEtu.html",myPDF=myPDF,user=etu)
