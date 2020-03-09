@@ -20,7 +20,7 @@ $(function(){
     <form action="{{url_for('pageEtu', id=user[0][0])}}" method="POST">
 	
 	<label for="idCarteEtu">Numero de la carte étudiant: </label>
-    	<input type="text" name="idCarteEtu" id="idCarteEtu" value="{{user[0][0]}}" onClick="this.value = '';" >
+    	<input type="text" name="idCarteEtu" id="idCarteEtu" value="{{'%0x' % user[0][0]}}" onClick="this.value = '';" >
 <br>
 	<label for="nom">Nom: </label>
         <input type="text" name="nom" id="nom" value='{{user[0][1]}}' onClick="this.value = '';">
