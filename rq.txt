@@ -31,3 +31,35 @@ p = Presence(id=2,matin=1,apresMidi=1,idCarteEtu=123456,date='1/2/2020')
 db.session.add(p)
 db.session.commit()
 
+
+
+INSERT INTO etudiant VALUES(X'04FB80995B2380','Gallet','Benjamin','11111111','contrat pro',3,1,'0611111111','gb@etu.fr','gbe@entr.fr');
+INSERT INTO etudiant VALUES(2222222,'Matrod','Remi','22222222','contrat pro',1,1,'0622222222','mr@etu.fr','mre@entr.fr');
+INSERT INTO etudiant VALUES(3333333,'Jacquet','Virgile','33333333','contrat pro',4,1,'0633333333','jv@etu.fr','jve@entr.fr');
+INSERT INTO etudiant VALUES(4444444,'Durand','Jean','44444444','contrat pro',2,1,'0644444444','dj@etu.fr','dje@entr.fr');
+INSERT INTO etudiant VALUES(5555555,'Dumond','Yves','55555555','contrat pro',6,1,'0655555555','dy@etu.fr','dye@entr.fr');
+INSERT INTO etudiant VALUES(6666666,'Charles','Martin','66666666','contrat pro',1,1,'0666666666','cm@etu.fr','cme@entr.fr');
+INSERT INTO etudiant VALUES(7777777,'Perreux','Claire','77777777','contrat pro',3,1,'0677777777','pc@etu.fr','pce@entr.fr');
+INSERT INTO etudiant VALUES(9999999,'Kitschminyof','Stephan','99999999','contrat pro',2,1,'0600000000','ks@etu.fr','kse@entr.fr');
+
+
+
+
+
+INSERT INTO presence VALUES(1,1,X'04FB80995B2380','28/2/2020');
+INSERT INTO presence VALUES(1,1,X'04FB80995B2380','27/2/2020');
+INSERT INTO presence VALUES(2,1,X'04FB80995B2380','26/2/2020');
+INSERT INTO presence VALUES(3,3,2222222,'28/2/2020');
+INSERT INTO presence VALUES(2,3,2222222,'27/2/2020');
+
+INSERT INTO presence VALUES(1,1,4444444,'4/3/2020');
+INSERT INTO presence VALUES(1,1,6666666,'5/3/2020');
+INSERT INTO presence VALUES(2,1,3333333,'3/3/2020');
+INSERT INTO presence VALUES(3,3,2222222,'2/3/2020');
+INSERT INTO presence VALUES(2,3,2222222,'2/3/2020');
+
+
+4fb80995b2380
+
+042a5fca3e6280
+
