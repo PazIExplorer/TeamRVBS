@@ -10,7 +10,7 @@ from app.pythonScript import pdfgen
 
 
 
-cnx = mysql.connector.connect(host='localhost',database='badgeuse',user='ben',password='teamRVBS')
+cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
 cursor = cnx.cursor()
 cursora = cnx.cursor()
 cursorb = cnx.cursor()
