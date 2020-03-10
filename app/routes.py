@@ -6,8 +6,6 @@ from werkzeug import secure_filename
 import mysql.connector
 
 import os
-print(os.path.join(os.getcwd(),"app/","pdfgen.py"))
-print(os.path.isfile(os.path.join(os.getcwd(),"app/","pdfgen.py")))
 from app import pdfgen
 
 
@@ -146,7 +144,7 @@ def pageModifEtu(id):
 
 @app.route("/pdfEtu/<id>")
 def pdfEtu(id): 
-    id=id 
+    id=id
     querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
     cursora.execute(querya)
     etu = cursora.fetchall()
@@ -154,11 +152,13 @@ def pdfEtu(id):
     querya = ("SELECT * FROM filiere WHERE idFiliere="+str(etu[0][6]))
     cursora.execute(querya)
     filiere = cursora.fetchall()
-    #etu= Etudiant.query.get(int(id))
-    #filiere=Filiere.query.get(int(etu.filiere))
-    myPDF=pdfgen.pdf(etu[
-0][1]+" "+etu[0][2],filiere[0][1])
-    return render_template("pdfEtu.html",myPDF=myPDF,user=etu)
+
+    querya = ("SELECT * FROM presence WHERE idCarteEtu="+str(id))
+    cursora.execute(querya)
+    presence = cursora.fetchall()
+
+    myPresence= pdfgen.presence(etu[0][1]+" "+etu[0][2],filiere[0][1],presence)
+    return render_template("pdfEtu.html",myPresence=myPresence,user=etu)
 
 @app.route("/pdfEtu2/<id>")
 def pdfEtu2(id): 
@@ -174,3 +174,4 @@ def pdfEtu2(id):
     #filiere=Filiere.query.get(int(etu.filiere))
     myPDF=pdfgen.pdf(etu[0][1]+" "+etu[0][2],filiere[0][1])
     return render_template("pdfEtu.html",myPDF=myPDF,user=etu)
+
