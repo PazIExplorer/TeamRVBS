@@ -6,7 +6,7 @@ from werkzeug import secure_filename
 import mysql.connector
 
 import os
-from app import pdfgen
+from app.pythonScript import pdfgen
 
 
 
