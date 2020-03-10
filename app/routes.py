@@ -6,8 +6,6 @@ from werkzeug import secure_filename
 import mysql.connector
 
 import os
-print(os.path.join(os.getcwd(),"app/","pdfgen.py"))
-print(os.path.isfile(os.path.join(os.getcwd(),"app/","pdfgen.py")))
 from app.pythonScript import pdfgen
 
 
