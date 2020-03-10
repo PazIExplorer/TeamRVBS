@@ -7,7 +7,7 @@ import mysql.connector
 
 import os
 from app.pythonScript import pdfgen
-
+from app.pythonScript import excelGen
 
 
 cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
