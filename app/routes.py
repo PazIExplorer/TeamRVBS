@@ -8,7 +8,7 @@ import mysql.connector
 import os
 print(os.path.join(os.getcwd(),"app/","pdfgen.py"))
 print(os.path.isfile(os.path.join(os.getcwd(),"app/","pdfgen.py")))
-from app import pdfgen
+from app.pythonScript import pdfgen
 
 
 
