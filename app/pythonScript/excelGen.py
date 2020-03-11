@@ -1,6 +1,6 @@
 import xlsxwriter
 import mysql.connector
-import sqlite3
+from app.pythonScript import fonctionPy
 
 def creation():
     #VALEUR A MODIFIER
@@ -171,6 +171,9 @@ def creation():
         #affichage Tarif conv
         ws.write(row+i, 3, tarifConv, formatT1Base)
 
+        #afficher la présence
+        tab = heurePresentParMoi(element[0])
+        ws.write(row+i, 4, tab["Sept"], formatT1Base)
 
         i = i+1
 

@@ -19,10 +19,36 @@ def heurePresentParMoi(numCarteEtu):
     rows = cursor.fetchall()
 
     for row in rows:
-        a = 2
         #pour chaque rows : récupérer la datePresence 
+        dateCourant = row[3]
         #en récupérer le moi (ex : "09")
-        #récupérer le nom du moi ("Sept") 
+        numMoi = recupMoi(dateCourant)
+        #récupérer le nom du moi ("Sept")
+        nomMoi = tab_des_mois[numMoi]
         #ajouter +4 pour le matin et +3 pour l'aprem dans le tab_presence au bon mois
+        if(row[0] == 1):
+            tab_presence[nomMoi] = tab_presence[nomMoi] + 4
+        if(row[1] == 1):
+            tab_presence[nomMoi] = tab_presence[nomMoi] + 3
 
     return tab_presence
+
+def recupMoi(datePresence):
+    liste = list(datePresence)
+    i = 0
+    flag = False
+    chaine = ""
+    for i in len(liste):
+        if(flag == True):
+            if(liste == '/'):
+                flag == False
+            else:
+                chaine = chaine+liste[i]
+
+        else:
+            if(liste == '/'):
+                flag = True
+
+        i = i+1
+
+    return chaine
