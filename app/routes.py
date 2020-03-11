@@ -10,7 +10,7 @@ from app.pythonScript import pdfgen
 
 
 
-cnx = mysql.connector.connect(host='localhost',database='badgeuse',user='ben',password='teamRVBS')
+cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
 cursor = cnx.cursor()
 cursora = cnx.cursor()
 cursorb = cnx.cursor()
@@ -29,8 +29,13 @@ def index():
         
     return render_template('index.html')
 
-@app.route("/choixFiliere")
+@app.route("/choixFiliere", methods=["GET","POST"])
 def choixFiliere():
+    if request.method == "POST":
+        tabSemA = request.form["tsa"]
+        
+        print("tabAlternant"+tabSemA)
+
     return render_template("choixFiliere.html")
 
 @app.route("/pageGenerale")
@@ -172,3 +177,7 @@ def pdfEtu2(id):
     #filiere=Filiere.query.get(int(etu.filiere))
     myPDF=pdfgen.pdf(etu[0][1]+" "+etu[0][2],filiere[0][1])
     return render_template("pdfEtu.html",myPDF=myPDF,user=etu)
+
+@app.route("/administration")
+def administration():
+    return render_template("administration.html")
