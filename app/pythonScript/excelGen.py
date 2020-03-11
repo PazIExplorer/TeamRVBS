@@ -172,8 +172,8 @@ def creation():
         ws.write(row+i, 3, tarifConv, formatT1Base)
 
         #afficher la présence
-        tab = heurePresentParMoi(element[0])
-        ws.write(row+i, 4, tab["Sept"], formatT1Base)
+        tab = fonctionPy.heurePresentParMoi(element[0])
+        ws.write(row+i, 4, tab["Juin"], formatT1Base)
 
         i = i+1
 
