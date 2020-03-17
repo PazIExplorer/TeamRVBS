@@ -1,6 +1,7 @@
 import sys
 import os
 from datetime import datetime
+import shutil
 
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
@@ -36,8 +37,12 @@ def pdf(etu,master):
     alternant=etu
     periodeDebut="9 septembre 2019"
     periodeFin="13 décembre 2019"
+
+    pathPDF = "./app/static/pdf"
+    pathArchive = "./app/static/archive"
+    filename = alternant+".pdf"
     
-    c = canvas.Canvas(os.path.join("./app/static/pdf",alternant+".pdf"))
+    c = canvas.Canvas(os.path.join(pathPDF,filename))
 
     # move the origin up and to the left
     c.translate(inch,inch)
@@ -93,6 +98,11 @@ def pdf(etu,master):
     c.drawImage(signaturePNG,280,-20,130,80)
     c.showPage()
     c.save()
+
+    # ARCHIVAGE
+    currDate = datetime.now()
+    dateStr = str(currDate.year) + "-" + str(currDate.month)+ "-" + str(currDate.day) + "-" + str(currDate.hour) + "-" + str(currDate.minute) + "-" + str(currDate.second) + "-" + filename
+    shutil.copy2(os.path.join(pathPDF,filename), os.path.join(pathArchive,dateStr))
     return c
 
 
@@ -104,10 +114,12 @@ def presence(etu,master,presenceJour):
     master= master
     alternant=etu
 
-    
+    pathPDF = "./app/static/pdf"
+    pathArchive = "./app/static/archive"
+    filename = alternant+" Presence.pdf"
    
 
-    c = canvas.Canvas(os.path.join("./app/static/pdf",alternant+" Presence.pdf"))
+    c = canvas.Canvas(os.path.join(pathPDF,filename))
 
     for i in range(0,len(presenceJour)):
         presenceJour[i] = list(presenceJour[i])
@@ -186,6 +198,11 @@ def presence(etu,master,presenceJour):
 
     c.showPage()
     c.save()
+
+    # ARCHIVAGE
+    currDate = datetime.now()
+    dateStr = str(currDate.year) + "-" + str(currDate.month)+ "-" + str(currDate.day) + "-" + str(currDate.hour) + "-" + str(currDate.minute) + "-" + str(currDate.second) + "-" + filename
+    shutil.copy2(os.path.join(pathPDF,filename), os.path.join(pathArchive,dateStr))
     return c
 
 
