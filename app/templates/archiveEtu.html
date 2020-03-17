@@ -14,10 +14,9 @@ $(function(){
 </script> 
 </head>
 <body style="height: 100%;">
-    <?php
-    
-
-    ?>
+    {% for file in folderContent %}
+    <a href='{{url_for("static", filename="archive/"+file)}}'>{{file}}</h3> <br>
+    {% endfor %}
 </body>
 </html> 
 

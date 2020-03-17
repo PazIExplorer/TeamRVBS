@@ -185,6 +185,8 @@ def archiveEtu(id):
     cursora.execute(querya)
     etu = cursora.fetchall()
 
-    return render_template("archiveEtu.html",user=etu) 
+    folderContent = os.listdir(os.path.join("./app/static/archive"))
+
+    return render_template("archiveEtu.html",user=etu, folderContent=folderContent) 
 
 
