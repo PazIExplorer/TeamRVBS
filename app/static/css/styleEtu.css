@@ -33,12 +33,12 @@ table{
 
 table.etu{
     background-color:#e0e0d1;
-border:1px solid #9FC6FF;
-padding:5px;
-border:2px solid black;
--moz-border-radius:15px;
--webkit-border-radius:15px;
-border-radius:15px;
+    border:1px solid #9FC6FF;
+    padding:5px;
+    border:2px solid black;
+    -moz-border-radius:15px;
+    -webkit-border-radius:15px;
+    border-radius:15px;
     text-align: center;
     border: 0px solid black;
 }
