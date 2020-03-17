@@ -7,6 +7,7 @@ import mysql.connector
 
 import os
 from app.pythonScript import pdfgen
+from app.pythonScript import excelGen
 
 
 
@@ -29,8 +30,13 @@ def index():
         
     return render_template('index.html')
 
-@app.route("/choixFiliere")
+@app.route("/choixFiliere", methods=["GET","POST"])
 def choixFiliere():
+    if request.method == "POST":
+        tabSemA = request.form["tsa"]
+        
+        print("tabAlternant"+tabSemA)
+
     return render_template("choixFiliere.html")
 
 @app.route("/pageGenerale")
@@ -47,6 +53,8 @@ def pageGenerale():
     cursor.execute(query)
     presence = cursor.fetchall()
     
+    #génération du excel a chaque fois qu'on est sur la page générale
+    excelGen.creation()
     return render_template("pageGenerale.html",user=etu,presence=presence)
 
 
@@ -197,4 +205,6 @@ def archiveEtu(id):
 
     return render_template("archiveEtu.html",user=etu, folderContent=fichiersEtu) 
 
-
+@app.route("/administration")
+def administration():
+    return render_template("administration.html")

@@ -103,3 +103,15 @@ button{
     margin: 10px;
     text-align: center;
 }
+
+#buttonExcel{
+    display: block;
+    border-radius: 20px;
+    background-color: #5fc7f6;
+    text-align: center;
+    padding: 10px;
+    margin:auto;
+    text-decoration: none;
+    color: black;
+    width: 250px;
+}
