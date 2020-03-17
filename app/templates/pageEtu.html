@@ -57,8 +57,19 @@
                     </form>
                 </td>
                 <td class="etu">
-                    <form method="GET" action="{{url_for('pdfEtu', id=user[0][0])}}">
-                        <input type="submit" value="Attestation de présence">
+                    <form method="GET" action="{{url_for('pdfEtuPresence', id=user[0][0])}}">
+                        <input type="submit" value="Fiche de présence">
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <td class="etu">
+                    <form method="GET" action="{{url_for('pdfEtu',id=user[0][0]) }}">
+                        <input type="submit" value="Attestation de présence (mois courant)">
+                    </form>
+                <td class="etu">
+                    <form method="GET" action="{{url_for('archiveEtu',id=user[0][0]) }}">
+                        <input type="submit" value="archive de l'étudiant">
                     </form>
                 </td>
             </tr>

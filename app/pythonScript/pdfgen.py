@@ -23,7 +23,7 @@ from reportlab.platypus import Paragraph
 
 alternant = "test2"
 
-def pdf(etu,master):
+def pdf(etu,master,presence):
     
     from reportlab.lib.units import cm,inch
     usmb=os.path.join("./app/static/img",'logoUSMB2.png')
@@ -204,12 +204,3 @@ def presence(etu,master,presenceJour):
     dateStr = str(currDate.year) + "-" + str(currDate.month)+ "-" + str(currDate.day) + "-" + str(currDate.hour) + "-" + str(currDate.minute) + "-" + str(currDate.second) + "-" + filename
     shutil.copy2(os.path.join(pathPDF,filename), os.path.join(pathArchive,dateStr))
     return c
-
-
-
-
-
-
-
-
-
