@@ -48,7 +48,7 @@ def pageGenerale():
     presence = cursor.fetchall()
     
     #génération du excel a chaque fois qu'on est sur la page générale
-    excelGen.creation()
+    #excelGen.creation()
     return render_template("pageGenerale.html",user=etu,presence=presence)
 
 
@@ -174,10 +174,3 @@ def pdfEtu2(id):
     #filiere=Filiere.query.get(int(etu.filiere))
     myPDF=pdfgen.pdf(etu[0][1]+" "+etu[0][2],filiere[0][1])
     return render_template("pdfEtu.html",myPDF=myPDF,user=etu)
-
-
-@app.route("/download")
-def excel():
-    excelGen.creation()
-    return render_template("pageGenerale.html")
-    
