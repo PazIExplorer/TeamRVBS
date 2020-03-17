@@ -167,33 +167,30 @@ function showCalendar(monday) {
 
     let date = first.getDate();
     
+    // Mise à jour de l'affichage de la date
+    let dateCalc = first;
 
-    for (let i = 0; i < 3; i++) {
-        // N° jour, matin, après-midi
-        if (i === 0) {
-            let dateCalc = first;
+    document.getElementById("semaine-lun").innerHTML = `${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`;
+    dateSemaine.push(`${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`);
 
-            document.getElementById("semaine-lun").innerHTML = `${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`;
-            dateSemaine.push(`${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`);
+    dateCalc.setDate(dateCalc.getDate() + 1);
+    document.getElementById("semaine-mar").innerHTML = `${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`;
+    dateSemaine.push(`${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`);
 
-            dateCalc.setDate(dateCalc.getDate() + 1);
-            document.getElementById("semaine-mar").innerHTML = `${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`;
-            dateSemaine.push(`${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`);
+    dateCalc.setDate(dateCalc.getDate() + 1);
+    document.getElementById("semaine-mer").innerHTML = `${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`;
+    dateSemaine.push(`${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`);
 
-            dateCalc.setDate(dateCalc.getDate() + 1);
-            document.getElementById("semaine-mer").innerHTML = `${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`;
-            dateSemaine.push(`${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`);
+    dateCalc.setDate(dateCalc.getDate() + 1);
+    document.getElementById("semaine-jeu").innerHTML = `${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`;
+    dateSemaine.push(`${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`);
 
-            dateCalc.setDate(dateCalc.getDate() + 1);
-            document.getElementById("semaine-jeu").innerHTML = `${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`;
-            dateSemaine.push(`${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`);
+    dateCalc.setDate(dateCalc.getDate() + 1);
+    document.getElementById("semaine-ven").innerHTML = `${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`;
+    dateSemaine.push(`${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`);
 
-            dateCalc.setDate(dateCalc.getDate() + 1);
-            document.getElementById("semaine-ven").innerHTML = `${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`;
-            dateSemaine.push(`${dateCalc.getDate()}/${dateCalc.getMonth() + 1}/${dateCalc.getFullYear()}`);
-            //continue;
-        }
-
+    for (let i = 0; i < 2; i++) {
+        // Matin, après-midi
 
         let row = document.createElement("tr");
         row.style = "height: 20px;"
@@ -201,15 +198,15 @@ function showCalendar(monday) {
         
         for (let j = 0; j < 6; j++) {
             let cell = document.createElement("td");
-            if (i === 1 && j === 0) {
+            if (i === 0 && j === 0) {
                 // Matin
                 cell.innerText = "MATIN";
             }
-            else if (i === 2 && j === 0) {
+            else if (i === 1 && j === 0) {
                 // Après-midi
-                cell.innerText = "APRES-MIDI";
+                cell.innerText = "APRÈS-MIDI";
             }else{
-              cell.id = `${days[j - 1]}_${i === 1 ? "matin" : "apresmidi"}`; 
+              cell.id = `${days[j - 1]}_${i === 0 ? "matin" : "apresmidi"}`; 
             }
             
             
