@@ -1,0 +1,37 @@
+html{
+    height: 100%;
+}
+
+body {
+    height: 97%;
+    border-width: 4px;
+    border-style: solid;
+    border-color: black;
+    font: 14px Verdana;
+}
+
+h1 {
+    text-align: center;
+}
+
+.datepainter {
+    width: 80%;
+    margin: auto;
+
+}
+
+input {
+    cursor: pointer;
+    border-radius: 20px;
+    background-color: #61c6f4c7;
+    border: none;
+    text-align: center;
+    padding: 8px;
+    margin-top:5px;
+    width: 60%;
+    font: 16px Verdana;
+    align-items: center;
+    margin: auto;
+    display: block;
+}
+
