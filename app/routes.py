@@ -7,8 +7,7 @@ import mysql.connector
 
 import os
 from app.pythonScript import pdfgen
-
-
+from app.pythonScript import excelGen
 
 cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
 cursor = cnx.cursor()
@@ -47,6 +46,8 @@ def pageGenerale():
     cursor.execute(query)
     presence = cursor.fetchall()
     
+    #génération du excel a chaque fois qu'on est sur la page générale
+    excelGen.creation()
     return render_template("pageGenerale.html",user=etu,presence=presence)
 
 
