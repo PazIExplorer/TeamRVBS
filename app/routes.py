@@ -142,8 +142,8 @@ def pageModifEtu(id):
     #etu[0][0]= hex(etu[0][0])
     return render_template("pageModifEtu.html", user=etu)
 
-@app.route("/pdfEtu/<id>")
-def pdfEtu(id): 
+@app.route("/pdfEtuPresence/<id>")
+def pdfEtuPresence(id): 
     id=id
     querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
     cursora.execute(querya)
@@ -160,8 +160,8 @@ def pdfEtu(id):
     myPresence= pdfgen.presence(etu[0][1]+" "+etu[0][2],filiere[0][1],presence)
     return render_template("pdfEtu.html",myPresence=myPresence,user=etu)
 
-@app.route("/pdfEtu2/<id>")
-def pdfEtu2(id): 
+@app.route("/pdfEtu/<id>")
+def pdfEtu(id): 
     id=id 
     querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
     cursora.execute(querya)
@@ -181,12 +181,20 @@ def pdfEtu2(id):
 
 @app.route("/archiveEtu/<id>")
 def archiveEtu(id):
+    import re
     querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
     cursora.execute(querya)
     etu = cursora.fetchall()
+    eturegex=rf".*{etu[0][1]}\s{etu[0][2]}.*"
 
     folderContent = os.listdir(os.path.join("./app/static/archive"))
+    fichiersEtu = []
 
-    return render_template("archiveEtu.html",user=etu, folderContent=folderContent) 
+    for i in folderContent:
+        if (re.match(eturegex,i)!=None):
+            fichiersEtu.append(i)
+    print(fichiersEtu)
+
+    return render_template("archiveEtu.html",user=etu, folderContent=fichiersEtu) 
 
 

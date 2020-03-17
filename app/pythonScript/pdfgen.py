@@ -23,7 +23,7 @@ from reportlab.platypus import Paragraph
 
 alternant = "test2"
 
-def pdf(etu,master):
+def pdf(etu,master,presence):
     
     from reportlab.lib.units import cm,inch
     usmb=os.path.join("./app/static/img",'logoUSMB2.png')
