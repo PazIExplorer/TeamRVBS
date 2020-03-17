@@ -15,7 +15,7 @@ def creation():
     cursor = cnx.cursor()
 
     #Création du fichier et de la feuille
-    wb = xlsxwriter.Workbook('app/static/excel/out.xlsx') #création d'un classeur
+    wb = xlsxwriter.Workbook('app/static/excel/forfaitHorraire.xlsx') #création d'un classeur
     ws = wb.add_worksheet()
 
     #Déclaration des formats

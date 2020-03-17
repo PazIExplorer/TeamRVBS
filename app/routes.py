@@ -48,7 +48,7 @@ def pageGenerale():
     presence = cursor.fetchall()
     
     #génération du excel a chaque fois qu'on est sur la page générale
-    #excelGen.creation()
+    excelGen.creation()
     return render_template("pageGenerale.html",user=etu,presence=presence)
 
 
