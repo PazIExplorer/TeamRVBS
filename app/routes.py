@@ -208,3 +208,8 @@ def archiveEtu(id):
 @app.route("/administration")
 def administration():
     return render_template("administration.html")
+
+
+@app.route("/testCalendar")
+def calendreierAlt():
+    return render_template("testCalendar.html")

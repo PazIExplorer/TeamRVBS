@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Selection du calendrier des alternants</title>
+
+    	<!-- loads jquery and jquery ui -->
+	<!-- -->
+	<script type="text/javascript" src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+
+
+    <!-- loads multiple dates picker -->
+	<script type="text/javascript" src="../static/js/jquery-ui.multidatespicker.js"></script>
+   
+    <!-- le css pour le calendrier TODO-->
+    <link rel="stylesheet" type="text/css" href="../static/css/jquery-ui.multidatespicker.css">
+
+    <script>
+		$(function(){
+			$( "#calendar" ).multiDatesPicker();
+		})
+	</script>
+</head>
+
+<body>
+    {% include 'header.html' %}
+
+    <div id="calendar"></div>
+
+    <script type="text/javascript">
+		function getDatesSelected(){
+			var dates = $('#calendar').multiDatesPicker('getDates');
+			console.log("test");
+			console.log(dates);
+		}
+	</script>
+	<button id="test" onClick="getDatesSelected()">Afficher dans la console les jours select</button>
+</body>
+
+</html>
