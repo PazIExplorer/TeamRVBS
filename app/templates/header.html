@@ -17,7 +17,11 @@
     </ul>
 
     <div id="nomUser"></div>
-    
+
+    <a class="aimg" href="{{url_for('deconnexion')}}">
+        <img id="logoDeco" src="../static/img/logoDeco.png" width="50"/>
+    </a>
+
     <script>
         // Fonction getCookie
         function getCookie(cname) {
@@ -35,16 +39,6 @@
             }
             return "";
         }
-
-        if (getCookie("compteConnecte") == "") {
-            // On est pas connecté, redirection forcée
-            window.location.href = "{{url_for('index')}}";
-        }
-
         document.getElementById('nomUser').innerText = `Bonjour, ${getCookie("compteConnecte")}`;
     </script>
-
-    <a class="aimg" href="{{url_for('deconnexion')}}">
-        <img id="logoDeco" src="../static/img/logoDeco.png" width="50"/>
-    </a>
 </header>
