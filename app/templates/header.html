@@ -1,5 +1,7 @@
 <header class="header">
+    
     <img id="logoUSMB" src="../static/img/logoUSMB1.png" width="100"/>
+
     <a href="/choixFiliere">
         <img id="logoMaison" src="../static/img/logoMaison.png" width="50"/>
     </a>
@@ -13,7 +15,36 @@
             </ul>
         </li>
     </ul>
-    <a class="aimg" href="index">
+
+    <div id="nomUser"></div>
+    
+    <script>
+        // Fonction getCookie
+        function getCookie(cname) {
+            var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+
+        if (getCookie("compteConnecte") == "") {
+            // On est pas connecté, redirection forcée
+            window.location.href = "{{url_for('index')}}";
+        }
+
+        document.getElementById('nomUser').innerText = `Bonjour, ${getCookie("compteConnecte")}`;
+    </script>
+
+    <a class="aimg" href="{{url_for('deconnexion')}}">
         <img id="logoDeco" src="../static/img/logoDeco.png" width="50"/>
     </a>
 </header>

@@ -1,7 +1,7 @@
 from app import app
 #from app import db
 #from app.models import Filiere, Etudiant, Presence
-from flask import render_template, request
+from flask import render_template, request, make_response, redirect
 from werkzeug import secure_filename
 import mysql.connector
 
@@ -18,17 +18,50 @@ cursorb = cnx.cursor()
 @app.route("/", methods=["GET", "POST"])
 @app.route("/index", methods=["GET", "POST"])
 def index():
+    # CONNEXION
     if request.method == "POST":
-        user_name = request.form["user_name"]
-        user_mdp = request.form["user_mdp"]
+        #--------------------
+        # Première vérification: Déjà connecté à un compte
+        #--------------------
+
+        # if 'compteConnecte' in request.cookies:
+        #     return redirect(choixFiliere)
         
-        #----------------
+        
+        #--------------------
         # Voir la connexion a partir de la bdd
         #--------------------
-        if user_name == "Admin" and user_mdp == "Admin":
-            return render_template("choixFiliere.html")
         
+        user_name = request.form["user_name"]
+        user_mdp = request.form["user_mdp"]
+
+        query = ("SELECT * FROM connexion WHERE identifiant=%s AND motdepasse=%s")
+        val = (user_name,user_mdp)
+        cursor.execute(query, val)
+        user_result = cursor.fetchall()
+
+        if len(user_result) == 0:
+            # ID / MDP Incorrect
+            return render_template('index.html', connexionError=True)
+
+        else:
+            # ID et MDP Correct
+            res = make_response(render_template("choixFiliere.html"))
+            res.set_cookie('compteConnecte', user_result[0][0], max_age=60*60*24)
+
+            res.set_cookie('typeCompte', user_result[0][2], max_age=60*60*24) # Type de compte: "administrateur" ou "enseignant"
+            return res
+        
+    # PAGE D'INDEX
     return render_template('index.html')
+
+
+@app.route("/deconnexion", methods=["GET"])
+def deconnexion():
+    res = make_response("Déconnexion réalisée.")
+    res.set_cookie('compteConnecte', "null", max_age=0)
+    res.set_cookie('typeCompte', "null", max_age=0)
+    return res
 
 @app.route("/choixFiliere", methods=["GET","POST"])
 def choixFiliere():
@@ -37,7 +70,7 @@ def choixFiliere():
         
         print("tabAlternant"+tabSemA)
 
-    return render_template("choixFiliere.html")
+    return render_template("choixFiliere.html", connexionError=False)
 
 @app.route("/pageGenerale")
 def pageGenerale():
