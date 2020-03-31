@@ -45,7 +45,7 @@
                 <th class="etu">Mail entreprise :</th>
                 <td class="etu" colspan="2">{{user[0][9]}}</td>
             </tr>
-            <tr>
+            <tr id="btnsAdmin">
                 <td class="etu">
                     <form method="GET" action="{{url_for('pageModifEtu', id=user[0][0])}}">
                         <input type="submit" value="Modifier">
@@ -62,7 +62,7 @@
                     </form>
                 </td>
             </tr>
-            <tr>
+            <tr id="btnsAdmin">
                 <td class="etu">
                     <form method="GET" action="{{url_for('pdfEtu',id=user[0][0]) }}">
                         <input type="submit" value="Attestation de présence (mois courant)">
@@ -75,6 +75,14 @@
             </tr>
         </tbody>
     </table>
+
+    <script>
+        // Suppression des boutons administrateur
+        // La fonction getCookie est écrite dans header.html, on peut s'en servir car le header est importé
+        if (getCookie("typeCompte") != "administrateur") {
+            $("[id=btnsAdmin]").remove();
+        }
+    </script>
 
     <h1>Consultation présence de l'étudiant</h1>
     <br>
