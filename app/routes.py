@@ -1,7 +1,7 @@
 from app import app
 #from app import db
 #from app.models import Filiere, Etudiant, Presence
-from flask import render_template, request, make_response, redirect
+from flask import render_template, request, make_response, redirect, url_for
 from werkzeug import secure_filename
 import mysql.connector
 
@@ -212,6 +212,10 @@ def pageConvention(id):
     if not cookieEstValide():
         return redirect("index")
 
+    # Vérifie si le compte est admin, sinon retour à la page étudiant
+    if not compteEstAdmin():
+        return redirect(url_for("pageEtu", id=id))
+
 
     id=id
     querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
@@ -237,6 +241,9 @@ def pageModifEtu(id):
     if not cookieEstValide():
         return redirect("index")
 
+    # Vérifie si le compte est admin, sinon retour à la page étudiant
+    if not compteEstAdmin():
+        return redirect(url_for("pageEtu", id=id))
 
     id=id
     querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
@@ -251,6 +258,10 @@ def pdfEtuPresence(id):
     # Validation du compte dans le cookie
     if not cookieEstValide():
         return redirect("index")
+
+    # Vérifie si le compte est admin, sinon retour à la page étudiant
+    if not compteEstAdmin():
+        return redirect(url_for("pageEtu", id=id))
 
 
     id=id
@@ -276,6 +287,9 @@ def pdfEtu(id):
     if not cookieEstValide():
         return redirect("index")
 
+    # Vérifie si le compte est admin, sinon retour à la page étudiant
+    if not compteEstAdmin():
+        return redirect(url_for("pageEtu", id=id))
 
     id=id 
     querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
@@ -301,6 +315,9 @@ def archiveEtu(id):
     if not cookieEstValide():
         return redirect("index")
 
+    # Vérifie si le compte est admin, sinon retour à la page étudiant
+    if not compteEstAdmin():
+        return redirect(url_for("pageEtu", id=id))
 
     import re
     querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
@@ -324,6 +341,10 @@ def administration():
     # Validation du compte dans le cookie
     if not cookieEstValide():
         return redirect("index")
+
+    # Vérifie si le compte est admin, sinon retour à la page d'accueil
+    if not compteEstAdmin():
+        return redirect("choixFiliere")
 
 
     return render_template("administration.html")
