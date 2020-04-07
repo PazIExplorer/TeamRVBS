@@ -147,8 +147,12 @@ def pageModifEtu(id):
     querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
     cursora.execute(querya)
     etu = cursora.fetchall()
+
+    querya = ("SELECT * FROM filiere")
+    cursora.execute(querya)
+    filiere = cursora.fetchall()
     #etu[0][0]= hex(etu[0][0])
-    return render_template("pageModifEtu.html", user=etu)
+    return render_template("pageModifEtu.html", user=etu, fil=filiere)
 
 @app.route("/pdfEtuPresence/<id>")
 def pdfEtuPresence(id): 

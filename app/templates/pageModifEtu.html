@@ -44,7 +44,15 @@ $(function(){
                 </div>
                 <div class="ligne">
                         <label for="filiere">Filiere: </label>
-                        <input type="text" name="filiere" id="filiere" value='{{user[0][6]}}' onClick="this.value = '';">
+                        <select name="filiere">
+                                {% for f in fil %}
+                                        {% if user[0][6] == f[0] %}
+                                                <option selected value="{{f[0]}}">{{f[1]}}</option>
+                                        {% else %}
+                                                <option value="{{f[0]}}">{{f[1]}}</option>
+                                        {% endif %}
+                                {% endfor %}
+                        </select>
                 </div>
                 <div class="ligne">
                         <label for="numeroTel">Numero de Telephone: </label>
