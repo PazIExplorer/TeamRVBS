@@ -20,15 +20,15 @@ $(function(){
   <form action="{{url_for('pageAdministration')}}" method="POST">
     Année scolaire courante
     <label for="debutAnnee">Debut d'année : </label>
-      <input type="string" name="debutAnnee" id="debutAnnee" value="{{admin[0][0]}}" placeholder="jj/mm/aaaa" onClick="this.value = '';" >
+      <input type="text" name="debutAnnee" id="debutAnnee" value="{{admin[0][0]}}" placeholder="jj/mm/aaaa" onClick="this.value = '';" >
     <label for="finAnnee">  Fin d'année :</label>
-        <input type="string" name="finAnnee" id="finAnnee" value="{{admin[0][1]}}" placeholder="jj/mm/aaaa"  onClick="this.value = '';" >
+        <input type="text" name="finAnnee" id="finAnnee" value="{{admin[0][1]}}" placeholder="jj/mm/aaaa"  onClick="this.value = '';" >
 <br>
        Choix de la periode d'affichage (attestation,excel) 
        <label for="debutPeriode">Du:</label>
-        <input type="string" name="debutPeriode" id="debutPeriode" value="{{admin[0][2]}}" placeholder="jj/mm/aaaa" onClick="this.value = '';" >
+        <input type="text" name="debutPeriode" id="debutPeriode" value="{{admin[0][2]}}" placeholder="jj/mm/aaaa" onClick="this.value = '';" >
       <label for="finPeriode">Au :</label>
-        <input type="string" name="finPeriode" id="finPeriode" value="{{admin[0][3]}}" placeholder="jj/mm/aaaa" onClick="this.value = '';" >
+        <input type="text" name="finPeriode" id="finPeriode" value="{{admin[0][3]}}" placeholder="jj/mm/aaaa" onClick="this.value = '';" >
 <br>  
       Noms des Presidents</label>
       <label for="presidentUSMB">President de l'USMB:</label>

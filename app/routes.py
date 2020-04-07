@@ -243,7 +243,7 @@ def pageAdministration():
         print(tarifMaster)
         print("test")
 
-        query = ("UPDATE administration SET debutAnnee=%s,finAnnee=%s,debutAffiche=%s,finAffiche=%s,presidentSMB=%s,presidentSFC=%s,tarifMaster=%d")
+        query = ("UPDATE administration SET debutAnnee=%s,finAnnee=%s,debutAffiche=%s,finAffiche=%s,presidentSMB=%s,presidentSFC=%s,tarfiMaster=%s")
         val = (debutAnnee,finAnnee,debutAffiche,finAffiche,presidentSMB,presidentSFC,tarifMaster)
 
         print("1")
@@ -267,6 +267,6 @@ def pageAdministration():
     querya = ("SELECT * FROM administration ")
     cursora.execute(querya)
     admin = cursora.fetchall()
-    
+    print(admin)
  
     return render_template("pageAdministration.html",admin=admin)
