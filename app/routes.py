@@ -208,3 +208,21 @@ def archiveEtu(id):
 @app.route("/administration")
 def administration():
     return render_template("administration.html")
+
+
+@app.route("/ajoutEtu/<nomprenomid>",methods=["GET","POST"])
+def ajoutEtu(nomprenomid):
+    np = str(nomprenomid).split('-')
+    idCarte = int(np[2])
+    nom = np[0]
+    prenom = np[1]
+    numEtu = np[3]
+    query = ("INSERT INTO etudiant (idCarteEtu,nom,prenom,numeroEtudiant) VALUES (%s,%s,%s,%s)")
+    arg = (idCarte,nom,prenom,numEtu)
+    try:
+        cursor.execute(query,arg)
+        cnx.commit()
+        return render_template("success.html")
+    except Exception as e:
+        print(e)
+        return render_template("failure.html")
