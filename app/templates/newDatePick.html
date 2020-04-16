@@ -1,0 +1,88 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Selection du calendrier des alternants</title>
+	<link rel="stylesheet" href="../static/css/styleHeader.css">
+    	<!-- loads jquery and jquery ui -->
+	<!-- -->
+	<script type="text/javascript" src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
+	<script type="text/javascript" src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
+
+    <!-- loads multiple dates picker -->
+	<script type="text/javascript" src="../static/js/jquery-ui.multidatespicker.js"></script>
+   
+    <!-- le css pour le calendrier TODO-->
+	<link rel="stylesheet" type="text/css" href="../static/css/newDatePicker.css">
+	
+
+    <script>
+		$(function(){
+			//---------------------------------------------------------
+			//Récupération de l'emploi du temps déja mis dans la bdd
+			//----------------------------------------------------------
+			var liste_jours_cours;
+			$.getJSON("../static/json/emploiDuTemps.json", function(data){
+				liste_jours_cours = data;
+			})
+			.done(function() {
+				console.log(liste_jours_cours); //Bien récup le json
+				console.log(liste_jours_cours[0].substring(3, 5));
+				
+				var date = new Date();
+
+				var a = new Array();
+				for(let i=0; i<liste_jours_cours.length; i++){
+					a[i] = date.setDate(liste_jours_cours[i].substring(3,5));
+				}
+
+           		$('#calendar').multiDatesPicker({
+					addDates: a 
+				});
+  			})
+  			.fail(function() {
+    			console.log( "error" ); //TODO si jamais il y a un pb lors du chargement du json
+  			})
+		})
+	</script>
+
+<script> 
+	$(function(){
+	  $("#header").load("./header.html"); 
+	  $("#footer").load("./footer.html"); 
+	});
+	</script> 
+</head>
+
+<body>
+	{% include 'header.html' %}
+    <div id="calendar">
+
+	</div>
+	<form method="post">
+		<input id="r" type="hidden">
+		<button id="test" type="submit" onclick="getDatesSelected()">Afficher dans la console les jours select</button>
+	</form>
+	
+</body>
+</html>
+
+<script type="text/javascript">
+	let dates;
+
+	getElementByid("r");
+
+	function getDatesSelected(){
+		//Récupération des dates pick
+		dates = $('#calendar').multiDatesPicker('getDates');
+		console.log(dates);
+
+		//Transformation en js
+		let myJson = JSON.stringify(dates, null, '\t');
+		console.log(myJson);
+
+		//Send dans avec le form
+		var data = new FormData();
+		data.append("data", myJson);
+	}
+</script>

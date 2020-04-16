@@ -8,6 +8,7 @@ import mysql.connector
 import os
 from app.pythonScript import pdfgen
 from app.pythonScript import excelGen
+from app.pythonScript import fonctionPy
 
 
 
@@ -206,10 +207,14 @@ def archiveEtu(id):
     return render_template("archiveEtu.html",user=etu, folderContent=fichiersEtu) 
 
 @app.route("/administration")
+@app.route("/administration", methods=['GET', 'POST'])
 def administration():
-    return render_template("administration.html")
+    if request.method == 'POST':
+        #data = request.form['data']
+        print("\n\nTEST\n")
+        #if data:
+        #    print(data)
+    else:
+        fonctionPy.recupererEmploiDuTemps()
+    return render_template("newDatePick.html")
 
-
-@app.route("/testCalendar")
-def calendreierAlt():
-    return render_template("testCalendar.html")

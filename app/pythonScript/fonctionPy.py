@@ -1,4 +1,4 @@
-import mysql.connector
+import mysql.connector, json, os
 
 
 # On lui donne un étudiant a partir de son numéro de carte étudiant
@@ -50,3 +50,32 @@ def recupMoi(datePresence):
 
         i = i+1
     return chaine
+
+
+#Récupérer les dates de la bdd
+def recupererEmploiDuTemps():
+    #connection bdd
+    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cursor = cnx.cursor()
+
+    #récupérer les jours de cours de la bdd
+    query = ("SELECT *, DATE_FORMAT(jourDeCour, \"%m/%d/%Y\") FROM calendrier")
+    cursor.execute(query)
+    rows = cursor.fetchall()
+
+    #Met les données dans la list python
+    liste_jours = []
+    for row in rows:
+        liste_jours.append(row[1]) #row[0] la date sql avec le format de base, row[1] avec format %m/%d/%Y
+
+    #[DEBUG] afficher les jours récupérés de la bdd
+    print("\n\n-----------test print j de la bdd recup----------")
+    for t in liste_jours:
+        print(t)
+
+
+    #Ouvre le fichier emploiDuTempse.json en écriture et écrit la liste des jours de cours dedans 
+    with open("app/static/json/emploiDuTemps.json", "w") as file:
+        json.dump(liste_jours, file)
+
+    #Il y aura plusqu'a recup je json dans le js

@@ -1,120 +1,112 @@
 
-/* just some styling */
+body{
+    display: block;
+}
+
+
+div{
+}
+/*le fond marron du calendar*/
+.ui-widget-content {
+    background: #eceadf url(../img/bg_fine-grain_eceadf.png) 50% 50% repeat;
+    width: 100%;
+    display: flex;
+}
+
+/* la bordure qui fait le cadre*/
+.ui-widget.ui-widget-content {
+    border: 1px solid #cbc7bd;
+}
+
+
+/* Les bords du cadre arrondi */
+.ui-corner-all, .ui-corner-bottom, .ui-corner-right, .ui-corner-br {
+    border-bottom-right-radius: 6px;
+}
+.ui-corner-all, .ui-corner-bottom, .ui-corner-left, .ui-corner-bl {
+     border-bottom-left-radius: 6px; 
+}
+.ui-corner-all, .ui-corner-top, .ui-corner-right, .ui-corner-tr {
+    border-top-right-radius: 6px;
+}
+.ui-corner-all, .ui-corner-top, .ui-corner-left, .ui-corner-tl {
+    border-top-left-radius: 6px; 
+}
+
+/*Taille et police du calendar*/
+.ui-widget {
+    font-family: Trebuchet MS,Tahoma,Verdana,Arial,sans-serif;
+    font-size: 1.1em;
+}
+
+/*TODO*/
+.ui-datepicker {
+    width: 17em;
+    padding: .2em .2em 0;
+    display: none;
+}
+
 body {
-	font: 0.7em/1.5em "Trebuchet MS",Verdana,sans-serif;
+    font-size: x-small !important;
+    height: 600px;
 }
 
-h1 {
-	text-align: center;
-	margin: 1.5em;
+
+/*Suite important mais je ne sais pas m'en servir*/
+.ui-helper-clearfix:after {
+    clear: both;
+}
+.ui-helper-clearfix:before, .ui-helper-clearfix:after {
+    content: "";
+    display: table;
+    border-collapse: collapse;
 }
 
-h2 {
-	border-top: 1px dotted #AAA;
-	padding-top: 1em;
-	margin-top: 1em;
-}
-
-h4 {margin-bottom: 0;}
-
-p {margin-top: .3em;}
-
-code, pre.code {
-	font: 11px/13px monospace;
-	background-color: #FFC;
-	padding: 2px;
-	border: 1px dotted grey;
-}
-
-.clear {clear: both;}
-
+/*Les jours*/
 a {text-decoration: none; color: #800;}
 a:hover {text-decoration: underline;}
 
-#share {
-	position: absolute;
-	right: 20px;
-	top: 20px;
-	text-align: right;
+/*taille de la table permet de l'afficher correctement*/
+table {
+	font-size: 1.5em;
+    margin-bottom: 15px;
 }
 
-#page {
-	position: relative;
-	margin: 1em auto;
-	padding: 2em;
-	width: 960px;
-	-moz-border-radius: 6px;
-	-webkit-border-radius: 6px;
-	border-radius: 6px;
-	border: 1px solid #D9D6C4;
-	color: #1F1F1F;
-	font-family: Trebuchet MS, Tahoma, Verdana, Arial, sans-serif;
-	font-size: 1.1em;
+.ui-widget-header {
+    border: 1px solid #d4d1bf;
+    background: #ffffff url(../img/bg_fine-grain.png) 50% 50% repeat;
+    color: #453821;
+    font-weight: bold;
+    height:40px;
 }
 
-#demos-list {padding: 0;}
-
-#flairs {text-align: center;}
-#flairs ul {list-style: none; padding: 0;}
-#flairs li {display: inline;}
-
-.demo {
-	vertical-align: top;
-	display: inline-block;
-	margin: 1em 1%;
-	width: 43.5%;
-	background-color: rgba(0, 0, 0, .1);
-	padding: 0 2%;
-	border-radius: 10px;
+/* Css pour les cases des numéros du jour */
+.ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default {
+    border: 1px solid #a9a089;
+    background: #f8f7f6 url(../img/bg_fine-grain_f8f7f6.png) 50% 50% repeat;
+    font-weight: bold;
+    color: #654b24;
 }
 
-.demo.full-row {
-	width: 95%;
+.ui-datepicker td {
+    border: 0;
+    padding: 1px;
 }
 
-.demo ul, .demo ol {list-style-position: inside;}
-.demo .box {
-	float: left;
-	margin: 0 1em 1em 0;
+.ui-datepicker td span, .ui-datepicker td a {
+    display: block;
+    padding: .2em;
+    text-align: right;
+    text-decoration: none;
 }
-
-.example {
-	color: #006400;
-}
-
-.important-note {
-	font-weight: bold;
-	color: #B22222;
-}
-
-.reference-to {
-	font-size: large;
-	font-weight: bold;
-}
-
-.code-box {clear:both;}
-.code {
-	padding: 5px;
-	color: #333;
-	background-color: white;
-	font: small monospace;
-}
-
-
-
-/* begin: jQuery UI Datepicker moving pixels fix */
-table.ui-datepicker-calendar {border-collapse: separate;}
-.ui-datepicker-calendar td {border: 1px solid transparent;}
-/* end: jQuery UI Datepicker moving pixels fix */
-
-/* begin: jQuery UI Datepicker emphasis on selected dates */
+/*jour sélectionné */
 .ui-datepicker .ui-datepicker-calendar .ui-state-highlight a {
-	background: #743620 none;
-	color: white;
+    background: #743620 none;
+    color: white;
 }
-/* end: jQuery UI Datepicker emphasis on selected dates */
 
+/* other */
+.ui-datepicker-group .ui-datepicker-group-middle {
+    margin-bottom: 20px;
+}
 
-/* begin: jQuery UI Datepicker hide datepicker helper */
-#ui-datepicker-div {display:none;}
-/* end: jQuery UI Datepicker hide datepicker helper */
