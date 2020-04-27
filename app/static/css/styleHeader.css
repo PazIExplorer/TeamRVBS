@@ -12,10 +12,8 @@ header {
 }
 
 #nomUser{
-    margin: 0;
     position: absolute;
-    margin-left: 85%;
-    
+    right: 10%;
 }
 
 
