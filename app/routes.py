@@ -1,6 +1,4 @@
 from app import app
-#from app import db
-#from app.models import Filiere, Etudiant, Presence
 from flask import render_template, request
 from werkzeug import secure_filename
 import mysql.connector
@@ -9,7 +7,6 @@ import os
 from app.pythonScript import pdfgen
 from app.pythonScript import excelGen
 from app.pythonScript import fonctionPy
-
 
 
 cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
@@ -210,11 +207,13 @@ def archiveEtu(id):
 @app.route("/administration", methods=['GET', 'POST'])
 def administration():
     if request.method == 'POST':
-        #data = request.form['data']
-        print("\n\nTEST\n")
-        #if data:
-        #    print(data)
-    else:
-        fonctionPy.recupererEmploiDuTemps()
-    return render_template("newDatePick.html")
+
+        data = request.form['hide']
+        if data:
+            print("TEST route.py")
+            print(data)
+            fonctionPy.sendEmploiDuTemps(data)
+
+    fonctionPy.recupererEmploiDuTemps()
+    return render_template("emploiDuTempsPicker.html")
 

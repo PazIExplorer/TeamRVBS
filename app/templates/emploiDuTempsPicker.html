@@ -22,13 +22,14 @@
 			//Récupération de l'emploi du temps déja mis dans la bdd
 			//----------------------------------------------------------
 			var liste_jours_cours;
-			$.getJSON("../static/json/emploiDuTemps.json", function(data){
+			$.getJSON("../static/json/emploiDuTempsPick.json", function(data){
 				liste_jours_cours = data;
+				console.log("test :");
+				console.log(data);
 			})
 			.done(function() {
 				console.log(liste_jours_cours); //Bien récup le json
-				console.log(liste_jours_cours[0].substring(3, 5));
-				
+
 				var date = new Date();
 
 				var a = new Array();
@@ -60,7 +61,7 @@
 
 	</div>
 	<form method="post">
-		<input id="r" type="hidden">
+		<input id="hide" name="hide" type="hidden" value="">
 		<button id="test" type="submit" onclick="getDatesSelected()">Afficher dans la console les jours select</button>
 	</form>
 	
@@ -70,7 +71,7 @@
 <script type="text/javascript">
 	let dates;
 
-	getElementByid("r");
+	let inputH = document.getElementById("hide");
 
 	function getDatesSelected(){
 		//Récupération des dates pick
@@ -81,8 +82,6 @@
 		let myJson = JSON.stringify(dates, null, '\t');
 		console.log(myJson);
 
-		//Send dans avec le form
-		var data = new FormData();
-		data.append("data", myJson);
+		inputH.value = myJson;
 	}
 </script>
