@@ -1,6 +1,4 @@
 from app import app
-#from app import db
-#from app.models import Filiere, Etudiant, Presence
 from flask import render_template, request, make_response, redirect, url_for
 from werkzeug import secure_filename
 import mysql.connector
@@ -8,7 +6,7 @@ import mysql.connector
 import os
 from app.pythonScript import pdfgen
 from app.pythonScript import excelGen
-
+from app.pythonScript import fonctionPy
 
 
 cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
@@ -339,21 +337,6 @@ def archiveEtu(id):
 
     return render_template("archiveEtu.html",user=etu, folderContent=fichiersEtu) 
 
-@app.route("/administration")
-def administration():
-
-    # Validation du compte dans le cookie
-    if not cookieEstValide():
-        return redirect("index")
-
-    # Vérifie si le compte est admin, sinon retour à la page d'accueil
-    if not compteEstAdmin():
-        return redirect("choixFiliere")
-
-
-    return render_template("administration.html")
-
-
 @app.route("/ajoutEtu/<nomprenomid>",methods=["GET","POST"])
 def ajoutEtu(nomprenomid):
     np = str(nomprenomid).split('-')
@@ -435,3 +418,26 @@ def pageAdministration():
     print(admin)
  
     return render_template("pageAdministration.html",admin=admin)
+
+
+@app.route("/emploiDuTemps")
+@app.route("/emploiDuTemps", methods=['GET', 'POST'])
+def emploiDuTempsPicker():
+    # Validation du compte dans le cookie
+    if not cookieEstValide():
+        return redirect("index")
+
+    # Vérifie si le compte est admin, sinon retour à la page d'accueil
+    if not compteEstAdmin():
+        return redirect("choixFiliere")
+
+    if request.method == 'POST':
+
+        data = request.form['hide']
+        if data:
+            print("TEST route.py")
+            print(data)
+            fonctionPy.sendEmploiDuTemps(data)
+
+    fonctionPy.recupererEmploiDuTemps()
+    return render_template("emploiDuTempsPicker.html")
