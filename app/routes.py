@@ -337,18 +337,6 @@ def archiveEtu(id):
 
     return render_template("archiveEtu.html",user=etu, folderContent=fichiersEtu) 
 
-@app.route("/administration")
-def administration():
-    # Validation du compte dans le cookie
-    if not cookieEstValide():
-        return redirect("index")
-
-    # Vérifie si le compte est admin, sinon retour à la page d'accueil
-    if not compteEstAdmin():
-        return redirect("choixFiliere")
-
-    return render_template("administration.html")
-
 @app.route("/ajoutEtu/<nomprenomid>",methods=["GET","POST"])
 def ajoutEtu(nomprenomid):
     np = str(nomprenomid).split('-')
@@ -431,10 +419,18 @@ def pageAdministration():
  
     return render_template("pageAdministration.html",admin=admin)
 
-    
+
 @app.route("/emploiDuTemps")
 @app.route("/emploiDuTemps", methods=['GET', 'POST'])
 def emploiDuTempsPicker():
+    # Validation du compte dans le cookie
+    if not cookieEstValide():
+        return redirect("index")
+
+    # Vérifie si le compte est admin, sinon retour à la page d'accueil
+    if not compteEstAdmin():
+        return redirect("choixFiliere")
+
     if request.method == 'POST':
 
         data = request.form['hide']
@@ -445,4 +441,3 @@ def emploiDuTempsPicker():
 
     fonctionPy.recupererEmploiDuTemps()
     return render_template("emploiDuTempsPicker.html")
-
