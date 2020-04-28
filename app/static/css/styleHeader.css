@@ -11,6 +11,12 @@ header {
     align-items: center;
 }
 
+#nomUser{
+    position: absolute;
+    right: 10%;
+}
+
+
 .aimg{
     margin: 0;
     position: absolute;

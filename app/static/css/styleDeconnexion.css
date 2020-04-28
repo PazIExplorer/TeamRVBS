@@ -1,0 +1,17 @@
+html{
+    height: 100%;
+}
+
+body {
+    height: 97%;
+    border-width: 4px;
+    border-style: solid;
+    border-color: black;
+    font: 14px Verdana;
+}
+
+p{
+    margin-top: 2em;
+    margin-bottom: 2em;
+    text-align: center;
+}
