@@ -8,7 +8,7 @@ import mysql.connector
 import os
 from app.pythonScript import pdfgen
 from app.pythonScript import excelGen
-
+from app.pythonScript import mdpGen
 
 
 cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
@@ -208,3 +208,47 @@ def archiveEtu(id):
 @app.route("/administration")
 def administration():
     return render_template("administration.html")
+
+
+@app.route("/creationCompte", methods=['GET', 'POST'])
+def creationCompte():
+    if request.method == "POST":
+        email = request.form["nomCompte"]
+        mdp = mdpGen.generateurMDP()
+        typeCompte = request.form["type"]
+        querya = ("INSERT INTO connexion VALUES(%s,%s,%s)")
+        val =(email,mdp,typeCompte)
+        try:
+            cursora.execute(querya,val)
+            cnx.commit()
+            print("mail = "+email)
+            print("mdp = "+mdp)
+            print("type = "+typeCompte)
+            mdpGen.envoiMail(email,mdp)
+            return "Compte créé avec succès"
+        except:
+            print("except")
+            cnx.rollback()
+            return "Echec lors de la création du compte. Veuillez réessayer"
+
+    return render_template("creationCompte.html")
+
+@app.route("/gestionCompte", methods=['GET', 'POST'])
+def gestionCompte():
+    if request.method == "POST":
+        nom = request.form["nomCompte"]
+        mdp = request.form["mdp"]
+        
+        querya = ("UPDATE connexion SET motdepasse=%s WHERE identifiant=%s")
+        val = (mdp,nom)
+        try:
+            cursora.execute(querya,val)
+            cnx.commit()
+            return "Compte modifié avec succès"
+        except:
+            print("except")
+            cnx.rollback()
+            return "Echec lors de la modification du compte. Veuillez réessayer"
+
+    return render_template("gestionCompte.html")
+
