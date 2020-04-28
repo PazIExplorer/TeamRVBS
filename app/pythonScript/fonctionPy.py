@@ -1,5 +1,6 @@
-import mysql.connector
-
+import mysql.connector, json, os
+import datetime
+import sqlite3
 
 # On lui donne un étudiant a partir de son numéro de carte étudiant
 # La fonction renvoie un tableau avec les heures de présences / moi 
@@ -50,3 +51,71 @@ def recupMoi(datePresence):
 
         i = i+1
     return chaine
+
+
+#Récupérer les dates de la bdd
+def recupererEmploiDuTemps():
+    #connection bdd
+    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cursor = cnx.cursor()
+
+    #récupérer les jours de cours de la bdd
+    query = ("SELECT *, DATE_FORMAT(jourDeCour, \"%m/%d/%Y\") FROM calendrier")
+    cursor.execute(query)
+    rows = cursor.fetchall()
+
+    #Met les données dans la list python
+    liste_jours = []
+    for row in rows:
+        liste_jours.append(row[1]) #row[0] la date sql avec le format de base, row[1] avec format %m/%d/%Y
+
+    #[DEBUG] afficher les jours récupérés de la bdd
+    print("\n\n-----------test print j de la bdd recup----------")
+    for t in liste_jours:
+        print(t)
+
+
+    #Ouvre le fichier emploiDuTempse.json en écriture et écrit la liste des jours de cours dedans 
+    with open("app/static/json/emploiDuTempsPick.json", "w") as file:
+        json.dump(liste_jours, file)
+
+#But : convertir une date qui est dans une chaine de caractères de format mm/jj/aaaa en une datetime.date
+def dateStringToDatetime(dateEnString):
+
+    annee = dateEnString[6]+dateEnString[7]+dateEnString[8]+dateEnString[9]
+    moi = dateEnString[0]+dateEnString[1]
+    jour = dateEnString[3]+dateEnString[4]
+
+    myDate = datetime.datetime(int(annee), int(moi), int(jour), 0, 0, 0)
+    return myDate
+
+
+def sendEmploiDuTemps(jsonDates):
+    #connection bdd
+    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cursor = cnx.cursor()
+
+    #récupération de la liste des jours a partir du json
+    liste_jours = json.loads(jsonDates)
+    
+    #vide la table 
+    query = ("TRUNCATE TABLE calendrier")
+    cursor.execute(query)
+
+    #parcour de la liste pour les envoyer dans la bdd
+    print("******************Envoie dans la bdd******************")
+
+    for i in range (0, len(liste_jours)):
+        #Convertion de la date du json qui est en string en format datetime
+        dateCourante = dateStringToDatetime(list(liste_jours[i]))
+       #print(dateCourante.year, dateCourante.month, dateCourante.day)
+        query = ('INSERT INTO calendrier (jourDeCour) values(%s)')
+        var = (dateCourante.strftime('%Y-%m-%d %H:%M:%S'),)
+        cursor.execute(query, var)
+
+    cnx.commit()
+   # except: 
+    #    cnx.rollback()
+     #   print("DEBUG : fonction.py sendEmploiDutemps problème lors de l'insert a la bdd")
+    
+    #cnx.close()
