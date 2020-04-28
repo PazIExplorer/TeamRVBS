@@ -119,3 +119,27 @@ def sendEmploiDuTemps(jsonDates):
      #   print("DEBUG : fonction.py sendEmploiDutemps problème lors de l'insert a la bdd")
     
     #cnx.close()
+
+def tabHeureCoursParMoi(anneeScolaireDebut, anneeScolaireFin):
+    #initialisation tab
+    tab_heureCourParMoi = {"Sept":0, "Oct":0, "Nov":0, "Déc":0, "Jan":0, "Fev":0, "Mars":0, "Avril":0, "Mai":0, "Juin":0}
+    tab_des_mois = {"01":"Janv", "02":"Fev", "03":"Mars", "04":"Avril", "05":"Mai", "06":"Juin", "07":"Juil", "08":"Aout", "09": "Sept", "10":"Oct", "11":"Nov", "12":"Déc"}
+
+    #connection bdd
+    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cursor = cnx.cursor()
+
+    #Récupération des jours ou les étudiants doivent être présent
+    query = ("SELECT *, DATE_FORMAT(jourDeCour, \"%m/%d/%Y\") FROM calendrier")
+    cursor.execute(query)
+    rows = cursor.fetchall()
+
+    #row[0] la date sql avec le format de base, row[1] avec format %m
+    for row in rows:
+        jourCourant = row[1]
+        num_moi = jourCourant[0]+jourCourant[1] 
+        annee = jourCourant[6]+jourCourant[7]+jourCourant[8]+jourCourant[9]
+        if(int(annee) == anneeScolaireDebut or int(annee) == anneeScolaireFin):
+            nom_moi = tab_des_mois[num_moi]
+            tab_heureCourParMoi[nom_moi] = tab_heureCourParMoi[nom_moi] + 7 #on ajoute 7h (le nb d'heure de cours dans une journée)
+    return tab_heureCourParMoi
