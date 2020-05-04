@@ -70,9 +70,9 @@ def recupererEmploiDuTemps():
         liste_jours.append(row[1]) #row[0] la date sql avec le format de base, row[1] avec format %m/%d/%Y
 
     #[DEBUG] afficher les jours récupérés de la bdd
-    print("\n\n-----------test print j de la bdd recup----------")
-    for t in liste_jours:
-        print(t)
+    #print("\n\n-----------test print j de la bdd recup----------")
+    #for t in liste_jours:
+    #    print(t)
 
 
     #Ouvre le fichier emploiDuTempse.json en écriture et écrit la liste des jours de cours dedans 
@@ -103,7 +103,6 @@ def sendEmploiDuTemps(jsonDates):
     cursor.execute(query)
 
     #parcour de la liste pour les envoyer dans la bdd
-    print("******************Envoie dans la bdd******************")
 
     for i in range (0, len(liste_jours)):
         #Convertion de la date du json qui est en string en format datetime

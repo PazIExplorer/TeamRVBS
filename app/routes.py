@@ -354,70 +354,17 @@ def ajoutEtu(nomprenomid):
         print(e)
         return render_template("failure.html")
 
-@app.route("/pageAdministration", methods=["GET", "POST"])
+@app.route("/pageAdministration")
 def pageAdministration():
-    
-    if request.method == "POST":
-       
-        
-        debutAnnee = request.form["debutAnnee"]
-        finAnnee = request.form["finAnnee"]
-        debutAffiche = request.form["debutPeriode"]
-        finAffiche = request.form["finPeriode"]
-        presidentSMB = request.form["presidentUSMB"]
-        presidentSFC = request.form["presidentSFC"]
-        tarifMaster = int(request.form["tarifMaster"])
+    # Validation du compte dans le cookie
+    if not cookieEstValide():
+        return redirect("index")
 
-       
-        print("test")
-        print(debutAnnee)
-        print("test")
-        print("test")
-        print(finAnnee)
-        print("test")
-        print("test")
-        print(debutAffiche)
-        print("test")
-        print("test")
-        print(finAffiche)
-        print("test")
-        print("test")
-        print(presidentSMB)
-        print("test")
-        print("test")
-        print(presidentSFC)
-        print("test")
-        print("test")
-        print(tarifMaster)
-        print("test")
-
-        query = ("UPDATE administration SET debutAnnee=%s,finAnnee=%s,debutAffiche=%s,finAffiche=%s,presidentSMB=%s,presidentSFC=%s,tarfiMaster=%s")
-        val = (debutAnnee,finAnnee,debutAffiche,finAffiche,presidentSMB,presidentSFC,tarifMaster)
-
-        print("1")
-        try:
-            print("3")
-            cursora.execute(query,val)
-           
-            querya = ("SELECT * FROM administration" )
-            cursora.execute(querya)
-            admin = cursora.fetchall()
-            print(admin)
-            print("4")
-
-
-            return render_template("pageAdministration.html",admin=admin)
-        
-        except:
-            print("ALED")
-            cnx.rollback()
-        
-    querya = ("SELECT * FROM administration ")
-    cursora.execute(querya)
-    admin = cursora.fetchall()
-    print(admin)
+    # Vérifie si le compte est admin, sinon retour à la page d'accueil
+    if not compteEstAdmin():
+        return redirect("choixFiliere")
  
-    return render_template("pageAdministration.html",admin=admin)
+    return render_template("pageAdministration.html")
 
 
 @app.route("/emploiDuTemps")
@@ -441,3 +388,37 @@ def emploiDuTempsPicker():
 
     fonctionPy.recupererEmploiDuTemps()
     return render_template("emploiDuTempsPicker.html")
+
+
+@app.route("/adminModifVariable")
+@app.route("/adminModifVariable", methods=["GET", "POST"])
+def adminModifVariable():
+    if request.method == "POST":
+        debutAnnee = request.form["debutAnnee"]
+        finAnnee = request.form["finAnnee"]
+        debutAffiche = request.form["debutPeriode"]
+        finAffiche = request.form["finPeriode"]
+        presidentSMB = request.form["presidentUSMB"]
+        presidentSFC = request.form["presidentSFC"]
+        tarifMaster = int(request.form["tarifMaster"])
+
+        query = ("UPDATE administration SET debutAnnee=%s,finAnnee=%s,debutAffiche=%s,finAffiche=%s,presidentSMB=%s,presidentSFC=%s,tarfiMaster=%s")
+        val = (debutAnnee,finAnnee,debutAffiche,finAffiche,presidentSMB,presidentSFC,tarifMaster)
+
+        try:
+            cursora.execute(query,val)
+            cnx.commit()
+            querya = ("SELECT * FROM administration" )
+            cursora.execute(querya)
+            admin = cursora.fetchall()
+            return render_template("adminModifVariable.html",admin=admin)
+        
+        except:
+            print("erreur route.py pageAdminModifVariable passe dans le except !")
+            cnx.rollback()
+        
+    querya = ("SELECT * FROM administration ")
+    cursora.execute(querya)
+    admin = cursora.fetchall()
+ 
+    return render_template("adminModifVariable.html",admin=admin)
