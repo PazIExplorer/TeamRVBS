@@ -235,9 +235,10 @@ def pageAdministration():
 
        
         try:
-           
+            
             cursora.execute(query,val)
-           
+            cnx.commit()
+
             querya = ("SELECT * FROM administration" )
             cursora.execute(querya)
             admin = cursora.fetchall()
@@ -249,6 +250,4 @@ def pageAdministration():
     querya = ("SELECT * FROM administration ")
     cursora.execute(querya)
     admin = cursora.fetchall()
-    
- 
     return render_template("pageAdministration.html",admin=admin)
