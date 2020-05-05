@@ -73,3 +73,22 @@ form input[type=submit] {
 	border-radius: 15px;
 	font-weight: bold;
 }
+
+/* Pour faire le bouton annuler qui est une balise <a> */
+p#annuler{
+	text-align: center;
+}
+
+p#annuler a{
+	text-decoration: none;
+	padding: 4px 5px 4px 5px;
+	color: black;
+	line-height: 2em;
+	border-color: #ffffff;
+	border-style: solid;
+	border-width: 2px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 15px;
+	font-weight: bold;
+}

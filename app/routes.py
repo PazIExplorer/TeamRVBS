@@ -133,7 +133,7 @@ def pageGenerale():
     excelGen.creation()
     return render_template("pageGenerale.html",user=etu,presence=presence)
 
-
+@app.route("/pageEtu/<id>")
 @app.route("/pageEtu/<id>", methods=["GET", "POST"])
 def pageEtu(id):
 
