@@ -144,10 +144,14 @@ def pdf(etu,master,presence,administration):
 
 
 
-def presence(etu,master,presenceJour):
+def presence(etu,master,presenceJour,administration):
     
     from reportlab.lib.units import cm,inch
-    anneeScolaire="2019/2020"
+    #obtention de l'année scolaire
+    debutScol=datetime.strptime(administration[0][0], '%d/%m/%Y').date()
+    finScol=datetime.strptime(administration[0][1], '%d/%m/%Y').date()
+    anneeScolaire=str(debutScol.year)+"/"+str(finScol.year)
+
     master= master
     alternant=etu
 
