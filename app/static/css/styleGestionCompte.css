@@ -1,20 +1,5 @@
-html{
-    height: 100%;
-}
-
-
 h1{
     text-align: center;
-}
-
-body {
-    margin:5px;
-    border-width: 5px;
-    border-style: solid;
-    border-color: black;
-    padding-bottom:5px;
-    font: 14px Verdana;
-    height: 95%;
 }
 
 input[type="submit"]{

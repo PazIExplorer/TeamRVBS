@@ -1,0 +1,38 @@
+<html>
+
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>Archive</title>
+    <link rel="stylesheet" href="../static/css/styleHeader.css">
+    <link rel="stylesheet" href="../static/css/styleAdmin.css">
+    <script> 
+        $(function(){
+          $("#header").load("./header.html"); 
+          $("#footer").load("./footer.html"); 
+        });
+    </script> 
+</head>
+
+<body>
+    {% include 'header.html' %}
+    <form action="{{url_for('archiveEtu',id=0 )}}" method="POST">
+        <h1>Archive </h1>
+        <fieldset>
+            <legend>Recherche de l'archive d'un étudiant</legend>
+            <ol>
+                <li>
+                    <label for="nom">Nom :</label>
+                    <input type="text" name="nom" id="nom">  
+                </li>
+                <li>
+                    <label for="prenom">Prénom :</label>
+                    <input type="text" name="prenom" id="prenom">  
+                </li>
+            </ol>
+        </fieldset>
+        <input type="submit" value="Valider">
+    </form>
+</body>
+</html>
