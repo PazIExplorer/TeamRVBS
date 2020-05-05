@@ -11,16 +11,47 @@ h1{
     text-align: center;
 }
 
-form input{
-    border:none;
-    border-radius: 20px;
-    background-color: #5fc7f6;
+div#descriptEtu {
+    background: #9CEBF8;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 25px;
+	padding: 20px;
+	width: 50%;
+	margin : auto;
+	margin-top: 2em;
+	margin-bottom: 1em;
+}
+
+div#descriptEtu ol {
+    background: #b9cf6a;
+	background: rgba(255,255,255,.3);
+	border-color: #e3ebc3;
+	border-color: rgba(255,255,255,.6);
+	border-style: solid;
+	border-width: 2px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	border-radius: 15px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+div#descriptEtu ol li{
+    list-style: none;
+	padding: 8px 10px;
+	margin-bottom: 2px;
+}
+
+p.gauche {
+    float: left;
+	font-size: 15px;
+    width: 30%;
+    padding: 0 15% 0 10%;
+}
+
+p.droite{
     text-align: center;
-    padding: 10px;
-    margin-bottom: 10px;
-    padding-left: 40px;
-    padding-right: 40px
-    
 }
 
 table{
@@ -29,25 +60,6 @@ table{
     text-align: center;
     border: none;
     margin:auto;
-}
-
-table.etu{
-    background-color:#e0e0d1;
-    border:1px solid #9FC6FF;
-    padding:5px;
-    border:2px solid black;
-    -moz-border-radius:15px;
-    -webkit-border-radius:15px;
-    border-radius:15px;
-    text-align: center;
-    border: 0px solid black;
-}
-
-td.etu,th.etu{
-    border: 0px solid black;
-    width: 200px;
-    height: 50px;
-    
 }
 
 th.disparait{
