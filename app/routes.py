@@ -1,37 +1,107 @@
 from app import app
-#from app import db
-#from app.models import Filiere, Etudiant, Presence
-from flask import render_template, request
+from flask import render_template, request, make_response, redirect, url_for
 from werkzeug import secure_filename
 import mysql.connector
 
 import os
 from app.pythonScript import pdfgen
 from app.pythonScript import excelGen
-
+from app.pythonScript import fonctionPy
 
 
 cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
 cursor = cnx.cursor()
 cursora = cnx.cursor()
 cursorb = cnx.cursor()
+
+# Vérification de la validité du cookie
+def cookieEstValide():
+    # Vérification de connexion déjà valable (cookies)
+    if ('compteConnecte' in request.cookies) and ('typeCompte' in request.cookies):
+        # On vérifie que le compte est un compte valide
+        user_name = request.cookies.get('compteConnecte')
+        user_accType = request.cookies.get('typeCompte')
+        query = ("SELECT identifiant FROM connexion WHERE identifiant=%s AND typeCompte=%s")
+        val = (user_name, user_accType)
+        cursor.execute(query, val)
+        user_result = cursor.fetchall()
+
+        if len(user_result) != 0:
+            # Cookie correct
+            return True
+
+    # Cookie incorrect
+    return False
+
+
+# Vérification que le compte connecté est administrateur
+def compteEstAdmin():
+    if 'typeCompte' in request.cookies:
+        if request.cookies.get('typeCompte') == "administrateur":
+            return True
+    
+    # Non connecté ou non admin
+    return False
+
+
+
 @app.route("/", methods=["GET", "POST"])
 @app.route("/index", methods=["GET", "POST"])
 def index():
-    if request.method == "POST":
-        user_name = request.form["user_name"]
-        user_mdp = request.form["user_mdp"]
+
+
+    if cookieEstValide():
+        return redirect("choixFiliere")
         
-        #----------------
+    
+    # CONNEXION
+    if request.method == "POST":
+        
+        #--------------------
         # Voir la connexion a partir de la bdd
         #--------------------
-        if user_name == "Admin" and user_mdp == "Admin":
-            return render_template("choixFiliere.html")
         
+        user_name = request.form["user_name"]
+        user_mdp = request.form["user_mdp"]
+
+        query = ("SELECT * FROM connexion WHERE identifiant=%s AND motdepasse=%s")
+        val = (user_name,user_mdp)
+        cursor.execute(query, val)
+        user_result = cursor.fetchall()
+
+        if len(user_result) == 0:
+            # ID / MDP Incorrect
+            return render_template('index.html', connexionError=True)
+
+        else:
+            # ID et MDP Correct
+            res = make_response(render_template("choixFiliere.html"))
+            res.set_cookie('compteConnecte', user_result[0][0], max_age=60*60*24)
+
+            res.set_cookie('typeCompte', user_result[0][2], max_age=60*60*24) # Type de compte: "administrateur" ou "enseignant"
+            return res
+        
+    # PAGE D'INDEX
     return render_template('index.html')
+
+
+@app.route("/deconnexion", methods=["GET"])
+def deconnexion():
+    if 'compteConnecte' in request.cookies:
+        res = make_response(render_template('deconnexion.html'))
+        res.set_cookie('compteConnecte', "null", max_age=0)
+        res.set_cookie('typeCompte', "null", max_age=0)
+        return res
+    else:
+        return redirect("index")
 
 @app.route("/choixFiliere", methods=["GET","POST"])
 def choixFiliere():
+
+    # Validation du compte dans le cookie
+    if not cookieEstValide():
+        return redirect("index")
+
     if request.method == "POST":
         tabSemA = request.form["tsa"]
         
@@ -39,8 +109,14 @@ def choixFiliere():
 
     return render_template("choixFiliere.html")
 
+
 @app.route("/pageGenerale")
 def pageGenerale():
+
+    # Validation du compte dans le cookie
+    if not cookieEstValide():
+        return redirect("index")
+
     query = ("SELECT * FROM etudiant")
     cursor.execute(query)
     etu = cursor.fetchall()
@@ -60,6 +136,11 @@ def pageGenerale():
 
 @app.route("/pageEtu/<id>", methods=["GET", "POST"])
 def pageEtu(id):
+
+    # Validation du compte dans le cookie
+    if not cookieEstValide():
+        return redirect("index")
+
     id=id
     if request.method == "POST":
         #idCarteEtu = int(request.form["idCarteEtu"],16)
@@ -133,6 +214,16 @@ def pageEtu(id):
 
 @app.route("/pageConvention/<id>", methods=["GET", "POST"])
 def pageConvention(id):
+
+    # Validation du compte dans le cookie
+    if not cookieEstValide():
+        return redirect("index")
+
+    # Vérifie si le compte est admin, sinon retour à la page étudiant
+    if not compteEstAdmin():
+        return redirect(url_for("pageEtu", id=id))
+
+
     id=id
     querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
     cursora.execute(querya)
@@ -152,15 +243,38 @@ def pageConvention(id):
 
 @app.route("/pageModifEtu/<id>")
 def pageModifEtu(id):
+
+    # Validation du compte dans le cookie
+    if not cookieEstValide():
+        return redirect("index")
+
+    # Vérifie si le compte est admin, sinon retour à la page étudiant
+    if not compteEstAdmin():
+        return redirect(url_for("pageEtu", id=id))
+
     id=id
     querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
     cursora.execute(querya)
     etu = cursora.fetchall()
+
+    querya = ("SELECT * FROM filiere")
+    cursora.execute(querya)
+    filiere = cursora.fetchall()
     #etu[0][0]= hex(etu[0][0])
-    return render_template("pageModifEtu.html", user=etu)
+    return render_template("pageModifEtu.html", user=etu, fil=filiere)
 
 @app.route("/pdfEtuPresence/<id>")
 def pdfEtuPresence(id): 
+
+    # Validation du compte dans le cookie
+    if not cookieEstValide():
+        return redirect("index")
+
+    # Vérifie si le compte est admin, sinon retour à la page étudiant
+    if not compteEstAdmin():
+        return redirect(url_for("pageEtu", id=id))
+
+
     id=id
     querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
     cursora.execute(querya)
@@ -179,6 +293,15 @@ def pdfEtuPresence(id):
 
 @app.route("/pdfEtu/<id>")
 def pdfEtu(id): 
+
+    # Validation du compte dans le cookie
+    if not cookieEstValide():
+        return redirect("index")
+
+    # Vérifie si le compte est admin, sinon retour à la page étudiant
+    if not compteEstAdmin():
+        return redirect(url_for("pageEtu", id=id))
+
     id=id 
     querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
     cursora.execute(querya)
@@ -198,6 +321,15 @@ def pdfEtu(id):
 
 @app.route("/archiveEtu/<id>")
 def archiveEtu(id):
+
+    # Validation du compte dans le cookie
+    if not cookieEstValide():
+        return redirect("index")
+
+    # Vérifie si le compte est admin, sinon retour à la page étudiant
+    if not compteEstAdmin():
+        return redirect(url_for("pageEtu", id=id))
+
     import re
     querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
     cursora.execute(querya)
@@ -214,6 +346,22 @@ def archiveEtu(id):
 
     return render_template("archiveEtu.html",user=etu, folderContent=fichiersEtu) 
 
+@app.route("/ajoutEtu/<nomprenomid>",methods=["GET","POST"])
+def ajoutEtu(nomprenomid):
+    np = str(nomprenomid).split('-')
+    idCarte = int(np[2])
+    nom = np[0]
+    prenom = np[1]
+    numEtu = np[3]
+    query = ("INSERT INTO etudiant (idCarteEtu,nom,prenom,numeroEtudiant) VALUES (%s,%s,%s,%s)")
+    arg = (idCarte,nom,prenom,numEtu)
+    try:
+        cursor.execute(query,arg)
+        cnx.commit()
+        return render_template("success.html")
+    except Exception as e:
+        print(e)
+        return render_template("failure.html")
 
 @app.route("/pageAdministration", methods=["GET", "POST"])
 def pageAdministration():
@@ -250,4 +398,30 @@ def pageAdministration():
     querya = ("SELECT * FROM administration ")
     cursora.execute(querya)
     admin = cursora.fetchall()
+
+ 
     return render_template("pageAdministration.html",admin=admin)
+
+
+@app.route("/emploiDuTemps")
+@app.route("/emploiDuTemps", methods=['GET', 'POST'])
+def emploiDuTempsPicker():
+    # Validation du compte dans le cookie
+    if not cookieEstValide():
+        return redirect("index")
+
+    # Vérifie si le compte est admin, sinon retour à la page d'accueil
+    if not compteEstAdmin():
+        return redirect("choixFiliere")
+
+    if request.method == 'POST':
+
+        data = request.form['hide']
+        if data:
+            print("TEST route.py")
+            print(data)
+            fonctionPy.sendEmploiDuTemps(data)
+
+    fonctionPy.recupererEmploiDuTemps()
+    return render_template("emploiDuTempsPicker.html")
+

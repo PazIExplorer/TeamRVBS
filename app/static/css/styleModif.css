@@ -11,27 +11,57 @@ body {
     font: 14px Verdana;
 }
 
-form input{
-    cursor: pointer;
+h1{
+    text-align: center;
+}
+
+
+form{
+    display: block;
+    margin: auto;
+    width: 50em;
+    text-align: left;
+}
+
+#info{
+    background-color: #e0e0d1;
+    border:1px solid #9FC6FF;
+    padding:5px;
+    border:2px solid black;
+    -moz-border-radius:15px;
+    -webkit-border-radius:15px;
+    border-radius:15px;
+    width: 50em;
+    position: relative;
+    margin-bottom: 10px
+}
+
+#info input ,select{
+    margin-left: 2em;
+     cursor: pointer;
     border-radius: 20px;
-    background-color: #61c6f4c7;
+    background-color: white;
     border: none;
     text-align: center;
-    padding: 8px;
-    margin-top:5px;
-    width: 60%;
+    margin-top:10px;
     font: 16px Verdana;
 }
 
-form{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 80%;
-    margin-left: 10%;
+
+#info .ligne{
+    position: relative;
+    left: 20%;
 }
 
-form label{
-    padding-top:20px;
-
+input[type="submit"]{
+    cursor: pointer;
+    border-radius: 20px;
+    background-color: #61c6f4c7;;
+    border: none;
+    text-align: center;
+    padding: 10px;
+    display:block;
+    margin:auto;
+    font: 16px Verdana;
 }
+

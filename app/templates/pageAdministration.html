@@ -16,7 +16,9 @@ $(function(){
 <body>
   {% include 'header.html' %}
   <h1 id="titre">Changement des informations :</h1>
-  <a href="administration">Accès à l'emploi du temps alternant</a>
+
+  <a href="./emploiDuTemps">Accès à l'emploi du temps alternant</a>
+
   <form action="{{url_for('pageAdministration')}}" method="POST">
     Année scolaire courante
     <label for="debutAnnee">Debut d'année : </label>
