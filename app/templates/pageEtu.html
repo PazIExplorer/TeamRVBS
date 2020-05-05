@@ -45,23 +45,23 @@
                 <p class="droite">{{user[0][9]}}</p>
             </li>
             <li>
-                <form method="GET" action="{{url_for('archiveEtu',id=user[0][0]) }}">
-                    <input type="submit" value="archive de l'étudiant">
+                <form class="gauche" method="GET" action="{{url_for('archiveEtu',id=user[0][0]) }}">
+                    <input type="submit" value="Archive de l'étudiant">
                 </form>
-                <form method="GET" action="{{url_for('pageConvention', id=user[0][0])}}">
+                <form class="droite" method="GET" action="{{url_for('pageConvention', id=user[0][0])}}">
                     <input type="submit" value="Convention">
                 </form>
             </li>
             <li>
-                <form method="GET" action="{{url_for('pdfEtuPresence', id=user[0][0])}}">
+                <form class="gauche" method="GET" action="{{url_for('pdfEtuPresence', id=user[0][0])}}">
                     <input type="submit" value="Fiche de présence">
                 </form>
-                <form method="GET" action="{{url_for('pdfEtu',id=user[0][0]) }}">
-                    <input type="submit" value="Attestation de présence (mois courant)">
+                <form class="droite" method="GET" action="{{url_for('pdfEtu',id=user[0][0]) }}">
+                    <input type="submit" value="Attestation de présence">
                 </form>
             </li>
             <li>
-                <form method="GET" action="{{url_for('pageModifEtu', id=user[0][0])}}">
+                <form class="gauche" method="GET" action="{{url_for('pageModifEtu', id=user[0][0])}}">
                     <input type="submit" value="Modifier">
                 </form>
             </li>
