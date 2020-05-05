@@ -364,19 +364,6 @@ def ajoutEtu(nomprenomid):
         print(e)
         return render_template("failure.html")
 
-@app.route("/pageAdministration")
-def pageAdministration():
-    # Validation du compte dans le cookie
-    if not cookieEstValide():
-        return redirect("index")
-
-    # Vérifie si le compte est admin, sinon retour à la page d'accueil
-    if not compteEstAdmin():
-        return redirect("choixFiliere")
- 
-    return render_template("pageAdministration.html")
-
-
 @app.route("/emploiDuTemps")
 @app.route("/emploiDuTemps", methods=['GET', 'POST'])
 def emploiDuTempsPicker():
@@ -398,6 +385,51 @@ def emploiDuTempsPicker():
 
     fonctionPy.recupererEmploiDuTemps()
     return render_template("emploiDuTempsPicker.html")
+    
+@app.route("/pageAdministration")
+def pageAdministration():
+    # Validation du compte dans le cookie
+    if not cookieEstValide():
+        return redirect("index")
+
+    # Vérifie si le compte est admin, sinon retour à la page d'accueil
+    if not compteEstAdmin():
+        return redirect("choixFiliere")
+ 
+    return render_template("pageAdministration.html")
+
+@app.route("/adminModifVariable")
+@app.route("/adminModifVariable", methods=["GET", "POST"])
+def adminModifVariable():
+    if request.method == "POST":
+        debutAnnee = request.form["debutAnnee"]
+        finAnnee = request.form["finAnnee"]
+        debutAffiche = request.form["debutPeriode"]
+        finAffiche = request.form["finPeriode"]
+        presidentSMB = request.form["presidentUSMB"]
+        presidentSFC = request.form["presidentSFC"]
+        tarifMaster = int(request.form["tarifMaster"])
+
+        query = ("UPDATE administration SET debutAnnee=%s,finAnnee=%s,debutAffiche=%s,finAffiche=%s,presidentSMB=%s,presidentSFC=%s,tarfiMaster=%s")
+        val = (debutAnnee,finAnnee,debutAffiche,finAffiche,presidentSMB,presidentSFC,tarifMaster)
+
+        try:
+            cursora.execute(query,val)
+            cnx.commit()
+            querya = ("SELECT * FROM administration" )
+            cursora.execute(querya)
+            admin = cursora.fetchall()
+            return render_template("adminModifVariable.html",admin=admin)
+        
+        except:
+            print("erreur route.py pageAdminModifVariable passe dans le except !")
+            cnx.rollback()
+        
+    querya = ("SELECT * FROM administration ")
+    cursora.execute(querya)
+    admin = cursora.fetchall()
+ 
+    return render_template("adminModifVariable.html",admin=admin)
 
 @app.route("/creationCompte", methods=['GET', 'POST'])
 def creationCompte():
@@ -444,37 +476,3 @@ def gestionCompte():
             return render_template("gestionCompte.html")
 
     return render_template("gestionCompte.html")
-
-@app.route("/adminModifVariable")
-@app.route("/adminModifVariable", methods=["GET", "POST"])
-def adminModifVariable():
-    if request.method == "POST":
-        debutAnnee = request.form["debutAnnee"]
-        finAnnee = request.form["finAnnee"]
-        debutAffiche = request.form["debutPeriode"]
-        finAffiche = request.form["finPeriode"]
-        presidentSMB = request.form["presidentUSMB"]
-        presidentSFC = request.form["presidentSFC"]
-        tarifMaster = int(request.form["tarifMaster"])
-
-        query = ("UPDATE administration SET debutAnnee=%s,finAnnee=%s,debutAffiche=%s,finAffiche=%s,presidentSMB=%s,presidentSFC=%s,tarfiMaster=%s")
-        val = (debutAnnee,finAnnee,debutAffiche,finAffiche,presidentSMB,presidentSFC,tarifMaster)
-
-        try:
-            cursora.execute(query,val)
-            cnx.commit()
-            querya = ("SELECT * FROM administration" )
-            cursora.execute(querya)
-            admin = cursora.fetchall()
-            return render_template("adminModifVariable.html",admin=admin)
-        
-        except:
-            print("erreur route.py pageAdminModifVariable passe dans le except !")
-            cnx.rollback()
-        
-    querya = ("SELECT * FROM administration ")
-    cursora.execute(querya)
-    admin = cursora.fetchall()
- 
-    return render_template("adminModifVariable.html",admin=admin)
-

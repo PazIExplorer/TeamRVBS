@@ -14,20 +14,11 @@ $(function(){
 </script> 
 </head>
 <body>
-<<<<<<< HEAD
-    {% include 'header.html' %}
-    <h1>Modifier les informations de l'étudiant</h1>
-    <form action="{{url_for('pageEtu', id=user[0][0])}}" method="POST">
-
-        <div id="info">
-                <div class="ligne">
-=======
         {% include 'header.html' %}
         <form action="{{url_for('pageEtu', id=user[0][0])}}" method="POST">
         <h1>Modifier les informations de l'étudiant</h1>
         <ol>
                 <li>
->>>>>>> affichagePageAdmin
                         <label for="nom">Nom:</label>
                         <input type="text" name="nom" id="nom" value='{{user[0][1]}}' onClick="this.value = '';"> 
                 </li>
@@ -74,23 +65,11 @@ $(function(){
                 <li>
                         <label for="mailEntreprise">Mail Entreprise: </label>
                         <input type="text" name="mailEntreprise" id="mailEntreprise" value='{{user[0][9]}}' onClick="this.value = '';">
-<<<<<<< HEAD
-                </div>
-                <div class="ligne">
-                      <label for="rupture">Rupture</label>
-                      <input type="checkbox" name="rupture" id="rupture" value="rupture">
-               </div>
-        </div>
-
-	<input type="submit" value="Valider les modifications">
-
-=======
                 </li>
         </ol>
        
         <input type="submit" value="Valider">
         <p id="annuler" ><a href="{{url_for('pageEtu', id=user[0][0])}}">Annuler</a></p>
->>>>>>> affichagePageAdmin
     </form>
 </body>
 </html>
