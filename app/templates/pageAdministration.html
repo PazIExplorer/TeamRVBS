@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <title>Choix des filières</title>
   <link rel="stylesheet" href="../static/css/styleHeader.css">
-  <link rel="stylesheet" href="../static/css/styleAcceuil.css">
+  <link rel="stylesheet" href="../static/css/styleAdmin.css">
   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script> 
 $(function(){
@@ -15,37 +15,11 @@ $(function(){
 </head>
 <body>
   {% include 'header.html' %}
-  <h1 id="titre">Changement des informations :</h1>
-
-  <a href="./emploiDuTemps">Accès à l'emploi du temps alternant</a>
-
-  <form action="{{url_for('pageAdministration')}}" method="POST">
-    Année scolaire courante
-    <label for="debutAnnee">Debut d'année : </label>
-      <input type="text" name="debutAnnee" id="debutAnnee" value="{{admin[0][0]}}" placeholder="jj/mm/aaaa" onClick="this.value = '';" >
-    <label for="finAnnee">  Fin d'année :</label>
-        <input type="text" name="finAnnee" id="finAnnee" value="{{admin[0][1]}}" placeholder="jj/mm/aaaa"  onClick="this.value = '';" >
-<br>
-       Choix de la periode d'affichage (attestation,excel) 
-       <label for="debutPeriode">Du:</label>
-        <input type="text" name="debutPeriode" id="debutPeriode" value="{{admin[0][2]}}" placeholder="jj/mm/aaaa" onClick="this.value = '';" >
-      <label for="finPeriode">Au :</label>
-        <input type="text" name="finPeriode" id="finPeriode" value="{{admin[0][3]}}" placeholder="jj/mm/aaaa" onClick="this.value = '';" >
-<br>  
-      Noms des Presidents</label>
-      <label for="presidentUSMB">President de l'USMB:</label>
-        <input type="text" name="presidentUSMB" id="presidentUSMB" value="{{admin[0][4]}}" onClick="this.value = '';" >
-      <label for ="presidentSFC">President du SFC:</label>
-        <input type="text" name="presidentSFC" id="presidentSFC" value="{{admin[0][5]}}" onClick="this.value = '';" >
-<br>
-    <label for="tarifMaster">Tarifage des master</label>
-        <input type="text" name="tarifMaster" id="tarifMaster" value="{{admin[0][6]}}" onclick="this.value='';">
-<br>
-    <input type="submit" value="Valider les modifications">
-
-
-
-</form>
- 
+  <h1 id="titre">Page Administration</h1>
+  <ol id="menuAdministration">
+    <li><a href="./emploiDuTemps">Gérer le calendrier des alternants</a></li>
+    <li><a href="./adminModifVariable">Valeurs a modifier</a></li>
+    <li><a href="./pageAdministration">Archive TODO</a></li>
+  </ol>
 </body>
 </html>
