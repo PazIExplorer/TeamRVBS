@@ -17,16 +17,15 @@ $(function(){
   {% include 'header.html' %}
 
   <h1 id="titre">Choix du master</h1>
-  <form action="pageGenerale" method="GET">
-    <input class="button" type="submit" value="Informatique">
+    {% for f in filieres %}
+    <form action="{{url_for('pageGenerale',idFiliere=f[0])}}" method="GET">
+      <input class="button" type="submit" value="{{f[1]}}">
+    </form>
     <br>
-    <input class="button" type="submit" value="Mathématiques et applications">
-    <br>
-    <input class="button" type="submit" value="Réseaux et télécommunications">
-    <br>
-    <input class="button" type="submit" value="Chimie">
-    <br>
-    <input class="button" type="submit" value="Energétique Thermique">
-  </form>
+    {% endfor %}
+
+    <form action="{{url_for('pageGenerale',idFiliere='NULL')}}" method="GET">
+        <input class="button" type="submit" value="Étudiants sans filière">
+      </form>
 </body>
 </html>
