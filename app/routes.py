@@ -322,6 +322,7 @@ def pdfEtu(id):
     return render_template("pdfEtu.html",myPDF=myPDF,user=etu)
 
 @app.route("/archiveEtu/<id>")
+@app.route("/archiveEtu", methods=["GET","POST"])
 def archiveEtu(id):
 
     # Validation du compte dans le cookie
@@ -331,6 +332,10 @@ def archiveEtu(id):
     # Vérifie si le compte est admin, sinon retour à la page étudiant
     if not compteEstAdmin():
         return redirect(url_for("pageEtu", id=id))
+
+
+    if request.method == 'POST':
+        print("todo") #TODO si arrive ici avec formulaire alors il faut trouver l'id de l'étudiant
 
     import re
     querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
@@ -469,3 +474,15 @@ def gestionCompte():
             return render_template("gestionCompte.html")
 
     return render_template("gestionCompte.html")
+
+@app.route("/archive")
+def archive():
+    # Validation du compte dans le cookie
+    if not cookieEstValide():
+        return redirect("index")
+
+    # Vérifie si le compte est admin, sinon retour à la page d'accueil
+    if not compteEstAdmin():
+        return redirect("choixFiliere")
+
+    return render_template("archive.html")
