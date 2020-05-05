@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <title>Étudiant : {{user[0][1]}} {{user[0][2]}} </title>
   <link rel="stylesheet" href="../static/css/styleHeader.css">
-  <link rel="stylesheet" href="../static/css/stylepdf.css">
+  <link rel="stylesheet" href="../static/css/styleAdmin.css">
   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 <script> 
 $(function(){
@@ -14,9 +14,29 @@ $(function(){
 </script> 
 </head>
 <body">
-    {% for file in folderContent %}
-    <a href='{{url_for("static", filename="archive/"+file)}}'>{{file}}</h3> <br>
-    {% endfor %}
+    {% include 'header.html' %}
+
+    <div id="archive">
+      <h1>Archive de : </h1>
+
+      <ol>
+        <h2>Les attestations de présence :</h2>
+        {% for file in folderAttestation %}
+        <li>
+          <a href='{{url_for("static", filename="archive/"+file)}}'>{{file}}</a>
+        </li>
+        {% endfor %}
+      </ol>
+      
+      <ol>
+        <h2>Les fiches de présence : </h2>
+        {% for file in folderFichePresence %}
+        <li>
+          <a href='{{url_for("static", filename="archive/"+file)}}'>{{file}}</a> 
+        </li>
+        {% endfor %}
+      </ol>
+    </div>
 </body>
 </html> 
 

@@ -352,16 +352,22 @@ def archiveEtu(id):
     querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
     cursora.execute(querya)
     etu = cursora.fetchall()
-    eturegex=rf".*{etu[0][1]}\s{etu[0][2]}.*"
+
+    attestationRegex=rf".*{etu[0][1]}\s{etu[0][2]}\sAttestation\.pdf"
+    presenceRegex=rf".*{etu[0][1]}\s{etu[0][2]}\sPresence\.pdf"
 
     folderContent = os.listdir(os.path.join("./app/static/archive"))
-    fichiersEtu = []
+    fichiersAttestation = []
+    fichierPresence = []
 
     for i in folderContent:
-        if (re.match(eturegex,i)!=None):
-            fichiersEtu.append(i)
+        if (re.match(attestationRegex,i)!=None):
+            fichiersAttestation.append(i)
 
-    return render_template("archiveEtu.html",user=etu, folderContent=fichiersEtu) 
+        if(re.match(presenceRegex,i)!=None):
+            fichierPresence.append(i)
+
+    return render_template("archiveEtu.html",user=etu, folderAttestation=fichiersAttestation, folderFichePresence=fichierPresence) 
 
 @app.route("/ajoutEtu/<nomprenomid>",methods=["GET","POST"])
 def ajoutEtu(nomprenomid):
