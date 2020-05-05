@@ -3,6 +3,9 @@ from flask import render_template, request, make_response, redirect, url_for
 from werkzeug import secure_filename
 import mysql.connector
 
+import os.path
+from os import path
+
 import os
 from app.pythonScript import pdfgen
 from app.pythonScript import excelGen
@@ -236,8 +239,15 @@ def pageConvention(id):
         #nom_conv = '{{etu[0][1]}}_{{etu[0][2]}}_convention.pdf'
         non_conv = secure_filename(conv.filename)
         conv.save('/root/TeamRVBS/app/static/convention/'+non_conv)
-    
-    return render_template("pageConvention.html",user=etu)
+    p = "C:/Users/Benjamin/TeamRVBS/app/static/convention/"+str(etu[0][1]) + "_" + str(etu[0][2])+"_Convention.pdf"
+    print(p)
+    if not(path.exists(p)):
+        p = "../static/convention/conventionBase.pdf"
+    else:
+        p = "../static/convention/"+ str(etu[0][1]) + "_" + str(etu[0][2]) +"_Convention.pdf"
+
+    print(p)
+    return render_template("pageConvention.html",user=etu,path=p) 
 
 
 
@@ -315,18 +325,14 @@ def pdfEtu(id):
     querya = ("SELECT * FROM filiere WHERE idFiliere="+str(etu[0][6]))
     cursora.execute(querya)
     filiere = cursora.fetchall()
-
-    querya=("SELECT * FROM administration")
-    cursora.execute(querya)
-    administration = cursora.fetchall()
     #etu= Etudiant.query.get(int(id))
     #filiere=Filiere.query.get(int(etu.filiere))
-    myPDF=pdfgen.pdf(etu[0][1]+" "+etu[0][2],filiere[0][1],presence,administration)
-    return render_template("pdfEtuAttest.html",myPDF=myPDF,user=etu)
+    myPDF=pdfgen.pdf(etu[0][1]+" "+etu[0][2],filiere[0][1],presence)
+    return render_template("pdfEtu.html",myPDF=myPDF,user=etu)
 
 @app.route("/archiveEtu/<id>")
-@app.route("/archiveEtu/<id>", methods=["GET","POST"])
 def archiveEtu(id):
+
     # Validation du compte dans le cookie
     if not cookieEstValide():
         return redirect("index")
@@ -335,42 +341,21 @@ def archiveEtu(id):
     if not compteEstAdmin():
         return redirect(url_for("pageEtu", id=id))
 
-    if request.method == 'POST':
-        #si arrive ici avec formulaire alors il faut trouver l'id de l'étudiant
-        nom = request.form["nom"]
-        prenom = request.form["prenom"]
-        query = ("SELECT * FROM etudiant WHERE nom=%s AND prenom=%s")
-        val = (nom,prenom)
-        cursor.execute(query,val)
-        rows = cursor.fetchall()
-        #Il ne doit avoir récupérer qu'un étudiant
-        for row in rows:
-            id = row[0] #idCarteEtu
-
-        #On regarde que l'id a bien était initialisé (si id = 0 l'étudiant n'est pas dans la bdd)
-        if(int(id) == 0):
-            return render_template("archive.html")
-            
     import re
     querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
     cursora.execute(querya)
     etu = cursora.fetchall()
-
-    attestationRegex=rf".*{etu[0][1]}\s{etu[0][2]}\sAttestation\.pdf"
-    presenceRegex=rf".*{etu[0][1]}\s{etu[0][2]}\sPresence\.pdf"
+    eturegex=rf".*{etu[0][1]}\s{etu[0][2]}.*"
 
     folderContent = os.listdir(os.path.join("./app/static/archive"))
-    fichiersAttestation = []
-    fichierPresence = []
+    fichiersEtu = []
 
     for i in folderContent:
-        if (re.match(attestationRegex,i)!=None):
-            fichiersAttestation.append(i)
+        if (re.match(eturegex,i)!=None):
+            fichiersEtu.append(i)
+    print(fichiersEtu)
 
-        if(re.match(presenceRegex,i)!=None):
-            fichierPresence.append(i)
-
-    return render_template("archiveEtu.html",user=etu, folderAttestation=fichiersAttestation, folderFichePresence=fichierPresence) 
+    return render_template("archiveEtu.html",user=etu, folderContent=fichiersEtu) 
 
 @app.route("/ajoutEtu/<nomprenomid>",methods=["GET","POST"])
 def ajoutEtu(nomprenomid):
@@ -453,6 +438,7 @@ def adminModifVariable():
     querya = ("SELECT * FROM administration ")
     cursora.execute(querya)
     admin = cursora.fetchall()
+ 
     return render_template("adminModifVariable.html",admin=admin)
 
 @app.route("/creationCompte", methods=['GET', 'POST'])
@@ -500,15 +486,3 @@ def gestionCompte():
             return render_template("gestionCompte.html")
 
     return render_template("gestionCompte.html")
-
-@app.route("/archive")
-def archive():
-    # Validation du compte dans le cookie
-    if not cookieEstValide():
-        return redirect("index")
-
-    # Vérifie si le compte est admin, sinon retour à la page d'accueil
-    if not compteEstAdmin():
-        return redirect("choixFiliere")
-
-    return render_template("archive.html")
