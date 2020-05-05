@@ -157,13 +157,22 @@ def pageEtu(id):
         filiere = int(request.form["filiere"])
         numeroTel = int(request.form["numeroTel"])
         mailEtu = request.form["mailEtu"]
-        mailEntreprise = request.form["mailEntreprise"]	
+        mailEntreprise = request.form["mailEntreprise"]
+        print("isok")
+        if(request.form.get('rupture')=='rupture'):
+            rupture = request.form["rupture"]
+            print("rupture ok")
+            val = (idCarteEtu,nom,prenom,numeroEtudiant,rupture,tarif,filiere,numeroTel,mailEtu,mailEntreprise,id)
+        else:
+            val = (idCarteEtu,nom,prenom,numeroEtudiant,typeContratEtudiant,tarif,filiere,numeroTel,mailEtu,mailEntreprise,id)
         
         #print(idCarteEtu)
         #print(nom)
         #print(prenom)
+        
+
         querya = ("UPDATE etudiant SET idCarteEtu=%s,nom=%s,prenom=%s,numeroEtudiant=%s,typeContratEtudiant=%s,tarif=%s,filiere=%s,numeroTel=%s,mailEtu=%s,mailEntreprise=%s WHERE idCarteEtu=%s")
-        val = (idCarteEtu,nom,prenom,numeroEtudiant,typeContratEtudiant,tarif,filiere,numeroTel,mailEtu,mailEntreprise,id)
+        
         
         queryb = ("UPDATE presence SET idCarteEtu=%s WHERE idCarteEtu=%s")
         valb = (idCarteEtu,id)
@@ -369,54 +378,28 @@ def pageAdministration():
         presidentSFC = request.form["presidentSFC"]
         tarifMaster = int(request.form["tarifMaster"])
 
-       
-        print("test")
-        print(debutAnnee)
-        print("test")
-        print("test")
-        print(finAnnee)
-        print("test")
-        print("test")
-        print(debutAffiche)
-        print("test")
-        print("test")
-        print(finAffiche)
-        print("test")
-        print("test")
-        print(presidentSMB)
-        print("test")
-        print("test")
-        print(presidentSFC)
-        print("test")
-        print("test")
-        print(tarifMaster)
-        print("test")
 
         query = ("UPDATE administration SET debutAnnee=%s,finAnnee=%s,debutAffiche=%s,finAffiche=%s,presidentSMB=%s,presidentSFC=%s,tarfiMaster=%s")
         val = (debutAnnee,finAnnee,debutAffiche,finAffiche,presidentSMB,presidentSFC,tarifMaster)
 
-        print("1")
+       
         try:
-            print("3")
+            
             cursora.execute(query,val)
-           
+            cnx.commit()
+
             querya = ("SELECT * FROM administration" )
             cursora.execute(querya)
             admin = cursora.fetchall()
-            print(admin)
-            print("4")
-
-
             return render_template("pageAdministration.html",admin=admin)
         
         except:
-            print("ALED")
             cnx.rollback()
         
     querya = ("SELECT * FROM administration ")
     cursora.execute(querya)
     admin = cursora.fetchall()
-    print(admin)
+
  
     return render_template("pageAdministration.html",admin=admin)
 
@@ -442,6 +425,7 @@ def emploiDuTempsPicker():
 
     fonctionPy.recupererEmploiDuTemps()
     return render_template("emploiDuTempsPicker.html")
+
 @app.route("/administration")
 def administration():
     return render_template("administration.html")
@@ -492,4 +476,5 @@ def gestionCompte():
             return render_template("gestionCompte.html")
 
     return render_template("gestionCompte.html")
+
 

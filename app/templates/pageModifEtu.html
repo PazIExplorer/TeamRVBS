@@ -17,6 +17,7 @@ $(function(){
     {% include 'header.html' %}
     <h1>Modifier les informations de l'étudiant</h1>
     <form action="{{url_for('pageEtu', id=user[0][0])}}" method="POST">
+
         <div id="info">
                 <div class="ligne">
                         <label for="nom">Nom:</label>
@@ -65,7 +66,11 @@ $(function(){
                 <div class="ligne">
                         <label for="mailEntreprise">Mail Entreprise: </label>
                         <input type="text" name="mailEntreprise" id="mailEntreprise" value='{{user[0][9]}}' onClick="this.value = '';">
-                </div>	        
+                </div>
+                <div class="ligne">
+                      <label for="rupture">Rupture</label>
+                      <input type="checkbox" name="rupture" id="rupture" value="rupture">
+               </div>
         </div>
 
 	<input type="submit" value="Valider les modifications">
