@@ -1,6 +1,5 @@
 
 /* Affichage de la description d'un étudiant */
-
 h1{
     text-align: center;
 }
@@ -48,7 +47,8 @@ p.droite{
     text-align: center;
 }
 
-
+/*Pour les bouttons, la technique pour avoir deux colonnes et les garder dans le cadre bleu s'est de bien aligner 
+les boutons de gauche et de mettre en float ceux de droite, tant qu'il y a plus de bouton a gauche l'affichage marche*/
 form.gauche{
     width: 30%;
     padding: 0 0 0 10%;
