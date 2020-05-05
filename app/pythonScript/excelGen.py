@@ -3,16 +3,24 @@ import mysql.connector
 from app.pythonScript import fonctionPy
 
 def creation():
-    #VALEUR A MODIFIER
-    dateDebut = 2019
-    dateFin = 2020
-    du = '09/09/2019'
-    au = '08/09/2020'
-    tarifConv = '8 500,00€'
-
     #connection bdd
     cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
     cursor = cnx.cursor()
+
+    query = ("SELECT * FROM administration")
+    cursor.execute(query)
+    recup = cursor.fetchall()
+    #normalement ici il n'a récup qu'une ligne
+    for element in recup:
+        du = element[0]
+        au = element[1]
+    
+    #VALEUR A MODIFIER
+    dateDebut = du[6]+du[7]+du[8]+du[9]
+    dateFin = au[6]+au[7]+au[8]+au[9]
+    tarifConv = '8 500,00€'
+
+   
 
     #Création du fichier et de la feuille
     wb = xlsxwriter.Workbook('app/static/excel/forfaitHorraire.xlsx') #création d'un classeur
