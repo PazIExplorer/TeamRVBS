@@ -3,6 +3,9 @@ from flask import render_template, request, make_response, redirect, url_for
 from werkzeug import secure_filename
 import mysql.connector
 
+import os.path
+from os import path
+
 import os
 from app.pythonScript import pdfgen
 from app.pythonScript import excelGen
@@ -237,6 +240,12 @@ def pageConvention(id):
         conv = request.files["conv"]
         non_conv = secure_filename(conv.filename)
         conv.save('/root/TeamRVBS/app/static/convention/'+non_conv)
+   
+    p = "/root/TeamRVBS/app/static/convention/"+str(etu[0][1]) + "_" + str(etu[0][2])+"_Convention.pdf"
+    if not(path.exists(p)):
+        p = "../static/convention/conventionBase.pdf"
+    else:
+        p = "../static/convention/"+ str(etu[0][1]) + "_" + str(etu[0][2]) +"_Convention.pdf"
     
     return render_template("pageConvention.html",user=etu)
 
