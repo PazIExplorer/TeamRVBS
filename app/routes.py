@@ -462,11 +462,13 @@ def creationCompte():
             print("mdp = "+mdp)
             print("type = "+typeCompte)
             mdpGen.envoiMail(email,mdp)
-            return "Compte créé avec succès"
+            #return "Compte créé avec succès"
+            return render_template("choixFiliere.html")
         except:
             print("except")
             cnx.rollback()
-            return "Echec lors de la création du compte. Veuillez réessayer"
+            #return "Echec lors de la création du compte. Veuillez réessayer"
+            return render_template("creationCompte.html")
 
     return render_template("creationCompte.html")
 
@@ -481,11 +483,13 @@ def gestionCompte():
         try:
             cursora.execute(querya,val)
             cnx.commit()
-            return "Compte modifié avec succès"
+            #return "Compte modifié avec succès"
+            return render_template("choixFiliere.html")
         except:
             print("except")
             cnx.rollback()
-            return "Echec lors de la modification du compte. Veuillez réessayer"
+            #return "Echec lors de la modification du compte. Veuillez réessayer"
+            return render_template("gestionCompte.html")
 
     return render_template("gestionCompte.html")
 
