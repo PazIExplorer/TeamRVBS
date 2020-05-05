@@ -337,7 +337,7 @@ def pdfEtu(id):
     #etu= Etudiant.query.get(int(id))
     #filiere=Filiere.query.get(int(etu.filiere))
     myPDF=pdfgen.pdf(etu[0][1]+" "+etu[0][2],filiere[0][1],presence,administration)
-    return render_template("pdfEtu.html",myPDF=myPDF,user=etu)
+    return render_template("pdfEtuAttest.html",myPDF=myPDF,user=etu)
 
 @app.route("/archiveEtu/<id>")
 @app.route("/archiveEtu/<id>", methods=["GET","POST"])
