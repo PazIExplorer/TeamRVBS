@@ -16,7 +16,7 @@ $(function(){
 <body>
   {% include 'header.html' %}
 
-  <div id="titre">Master Informatique</div>
+  <div id="titre">{{filieres[0][1]}}</div>
   <br>
   
   <h2>Liste des étudiants</h2>
@@ -77,6 +77,13 @@ $(function(){
   
   <a id="buttonExcel" href="../static/excel/forfaitHorraire.xlsx" download="tableau_de_facturation_alternants.xlsx">Générer le tableau du mois</a>
  
+  <script>
+      // Suppression des boutons administrateur
+      // La fonction getCookie est écrite dans header.html, on peut s'en servir car le header est importé
+      if (getCookie("typeCompte") != "administrateur") {
+          $("[id=buttonExcel]").remove();
+      }
+  </script>
 
 
   <script type="text/javascript">

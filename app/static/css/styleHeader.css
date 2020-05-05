@@ -1,3 +1,7 @@
+html {
+    height: 100%;
+}
+
 header {
     color: white;
     background-color: #5fc7f6; 
@@ -10,6 +14,12 @@ header {
     text-align: center;
     align-items: center;
 }
+
+#nomUser{
+    position: absolute;
+    right: 10%;
+}
+
 
 .aimg{
     margin: 0;
@@ -45,4 +55,16 @@ header {
 }
 #menu li:hover ul {
     left: auto;
+}
+
+
+/*Le cadre noir pour former la page*/
+body {
+    min-height: 100%;
+    margin:5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: black;
+    padding-bottom:5px;
+    font: 14px Verdana;
 }

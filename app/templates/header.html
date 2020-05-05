@@ -1,5 +1,7 @@
 <header class="header">
+    
     <img id="logoUSMB" src="../static/img/logoUSMB1.png" width="100"/>
+
     <a href="/choixFiliere">
         <img id="logoMaison" src="../static/img/logoMaison.png" width="50"/>
     </a>
@@ -8,12 +10,37 @@
         <li><h1>Menu</h1>
             <ul>
                 <li><a id="headera" href="/choixFiliere">Accueil</a></li>
-                <li><a id="headera" href="/administration">Administration</a></li>
+                <li><a id="headera" href="/pageAdministration">Administration</a></li>
+                <li><a id="headera" href="/creationCompte">Créer un compte</a></li>
+                <li><a id="headera" href="/gestionCompte">Gestion du compte</a></li>
               
             </ul>
         </li>
     </ul>
-    <a class="aimg" href="index">
+
+    <div id="nomUser"></div>
+
+    <a class="aimg" href="{{url_for('deconnexion')}}">
         <img id="logoDeco" src="../static/img/logoDeco.png" width="50"/>
     </a>
+
+    <script>
+        // Fonction getCookie
+        function getCookie(cname) {
+            var name = cname + "=";
+            var decodedCookie = decodeURIComponent(document.cookie);
+            var ca = decodedCookie.split(';');
+            for (var i = 0; i < ca.length; i++) {
+                var c = ca[i];
+                while (c.charAt(0) == ' ') {
+                    c = c.substring(1);
+                }
+                if (c.indexOf(name) == 0) {
+                    return c.substring(name.length, c.length);
+                }
+            }
+            return "";
+        }
+        document.getElementById('nomUser').innerText = `Bonjour, ${getCookie("compteConnecte")}`;
+    </script>
 </header>

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv='refresh' content="5; URL={{url_for('index')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styleDeconnexion.css') }}">
+    <title>Déconnexion</title>
+</head>
+<body>
+    <p>Déconnexion réalisée avec succès.</p>
+    <p>Vous allez être redirigé vers la page de connexion dans 5 secondes. Si cela n'a pas lieu, <a href="{{url_for('index')}}">cliquez ici</a>.</p>
+</body>
+</html>
