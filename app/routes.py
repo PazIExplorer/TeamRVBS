@@ -247,7 +247,7 @@ def pageConvention(id):
     else:
         p = "../static/convention/"+ str(etu[0][1]) + "_" + str(etu[0][2]) +"_Convention.pdf"
     
-    return render_template("pageConvention.html",user=etu)
+    return render_template("pageConvention.html",user=etu,path=p)
 
 
 
