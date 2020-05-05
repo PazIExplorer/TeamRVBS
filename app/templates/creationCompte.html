@@ -1,0 +1,37 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+		<title>Création de compte</title>
+
+        <link rel="stylesheet" href="../static/css/styleHeader.css">
+        <link rel="stylesheet" href="../static/css/styleCreaCompte.css">
+        
+</head>
+
+<body>
+    {% include 'header.html' %}
+
+    <h1>Création de compte :</h1>
+    
+    <form method="POST" action="{{url_for('creationCompte')}}">
+        <div>
+        <label for="nomCompte">Nom du compte (adresse mail du proprietaire):</label>
+        <input type="email" id="nomCompte" name="nomCompte">
+        </div>
+        <div>
+        <input type="radio" id="administrateur" name="type" value="administrateur">
+        <label for="administrateur">Administrateur</label>
+        
+        <input type="radio" id="enseignant" name="type" value="enseignant">
+        <label for="enseignant">Professeur</label>
+        </div>
+
+        <input type="submit" value="Valider">
+    </form>
+
+</body>
+
+</html>
