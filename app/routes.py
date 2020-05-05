@@ -76,9 +76,15 @@ def index():
 
         else:
             # ID et MDP Correct
-            res = make_response(render_template("choixFiliere.html"))
-            res.set_cookie('compteConnecte', user_result[0][0], max_age=60*60*24)
 
+            # Sélection des filières (copiée car la redirection est forcée pour le set_cookie)
+            query = ("SELECT * FROM filiere")
+            cursor.execute(query)
+            filieres = cursor.fetchall()
+
+            # Redirection forcée + ajout du cookie
+            res = make_response(render_template("choixFiliere.html", filieres=filieres))
+            res.set_cookie('compteConnecte', user_result[0][0], max_age=60*60*24)
             res.set_cookie('typeCompte', user_result[0][2], max_age=60*60*24) # Type de compte: "administrateur" ou "enseignant"
             return res
         
@@ -105,34 +111,49 @@ def choixFiliere():
 
     if request.method == "POST":
         tabSemA = request.form["tsa"]
-        
-        print("tabAlternant"+tabSemA)
 
-    return render_template("choixFiliere.html")
+    
+    # Liste des filières
+    query = ("SELECT * FROM filiere")
+    cursor.execute(query)
+    filieres = cursor.fetchall()
 
 
-@app.route("/pageGenerale")
-def pageGenerale():
+    return render_template("choixFiliere.html",filieres=filieres)
+
+
+@app.route("/pageGenerale/<idFiliere>")
+def pageGenerale(idFiliere):
 
     # Validation du compte dans le cookie
     if not cookieEstValide():
         return redirect("index")
 
-    query = ("SELECT * FROM etudiant")
+    # Etudiants
+    if idFiliere == "NULL":
+        query = ("SELECT * FROM etudiant WHERE filiere IS NULL")
+    else:
+        query = ("SELECT * FROM etudiant WHERE filiere="+str(idFiliere))
     cursor.execute(query)
     etu = cursor.fetchall()
-    for e in etu:
-        print(str(e[0]))
+
+    # Filières (récupération du nom)
+    if idFiliere == "NULL":
+        filieres = [("NULL", "Étudiants sans filière")]
+    else:
+        query = ("SELECT * FROM filiere WHERE idfiliere="+str(idFiliere))
+        cursor.execute(query)
+        filieres = cursor.fetchall()
 
 
-
-    query = ("SELECT * FROM presence")
+    # Présences étudiant
+    query = ("SELECT * FROM presence") # Améliorer la durée de chargement ?
     cursor.execute(query)
     presence = cursor.fetchall()
     
-    #génération du excel a chaque fois qu'on est sur la page générale
+    # Génération du excel a chaque fois qu'on est sur la page générale
     excelGen.creation()
-    return render_template("pageGenerale.html",user=etu,presence=presence)
+    return render_template("pageGenerale.html",user=etu,presence=presence,filieres=filieres)
 
 
 @app.route("/pageEtu/<id>", methods=["GET", "POST"])
@@ -144,10 +165,6 @@ def pageEtu(id):
 
     id=id
     if request.method == "POST":
-        #idCarteEtu = int(request.form["idCarteEtu"],16)
-        #print("idCarteEtu => "+str(idCarteEtu))
-        #idC = idCarteEtu
-        #print("idCarte= "+str(idC))
         idCarteEtu = id
         nom = request.form["nom"]
         prenom = request.form["prenom"]
@@ -158,48 +175,34 @@ def pageEtu(id):
         numeroTel = int(request.form["numeroTel"])
         mailEtu = request.form["mailEtu"]
         mailEntreprise = request.form["mailEntreprise"]
-        print("isok")
+        
         if(request.form.get('rupture')=='rupture'):
             rupture = request.form["rupture"]
-            print("rupture ok")
             val = (idCarteEtu,nom,prenom,numeroEtudiant,rupture,tarif,filiere,numeroTel,mailEtu,mailEntreprise,id)
         else:
             val = (idCarteEtu,nom,prenom,numeroEtudiant,typeContratEtudiant,tarif,filiere,numeroTel,mailEtu,mailEntreprise,id)
-        
-        #print(idCarteEtu)
-        #print(nom)
-        #print(prenom)
-        
+
 
         querya = ("UPDATE etudiant SET idCarteEtu=%s,nom=%s,prenom=%s,numeroEtudiant=%s,typeContratEtudiant=%s,tarif=%s,filiere=%s,numeroTel=%s,mailEtu=%s,mailEntreprise=%s WHERE idCarteEtu=%s")
         
         
         queryb = ("UPDATE presence SET idCarteEtu=%s WHERE idCarteEtu=%s")
         valb = (idCarteEtu,id)
-	#querya = ("UPDATE etudiant SET nom = %s WHERE idCarteEtu=%s")
-        #val = (nom,id)
-        print("1")
+
         try:
-            print("3")
             cursora.execute(querya,val)
-            #cursorb.execute(queryb,valb)
             cnx.commit()
-            print("2")
             
             querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
             cursora.execute(querya)
             etu = cursora.fetchall()
-            print("4")
 
             queryb = ("SELECT * FROM presence WHERE idCarteEtu="+str(id))
             cursorb.execute(queryb)
             presence = cursorb.fetchall()
-            print("5")
-
             return render_template("pageEtu.html",user=etu,presence=presence)
         
         except:
-            print("except")
             cnx.rollback()
         
     querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
@@ -232,8 +235,6 @@ def pageConvention(id):
 
     if request.method == "POST":
         conv = request.files["conv"]
-        #print(secure_filename(conv.filename))
-        #nom_conv = '{{etu[0][1]}}_{{etu[0][2]}}_convention.pdf'
         non_conv = secure_filename(conv.filename)
         conv.save('/root/TeamRVBS/app/static/convention/'+non_conv)
     
@@ -343,7 +344,6 @@ def archiveEtu(id):
     for i in folderContent:
         if (re.match(eturegex,i)!=None):
             fichiersEtu.append(i)
-    print(fichiersEtu)
 
     return render_template("archiveEtu.html",user=etu, folderContent=fichiersEtu) 
 
@@ -361,7 +361,6 @@ def ajoutEtu(nomprenomid):
         cnx.commit()
         return render_template("success.html")
     except Exception as e:
-        print(e)
         return render_template("failure.html")
 
 @app.route("/pageAdministration", methods=["GET", "POST"])
@@ -419,8 +418,6 @@ def emploiDuTempsPicker():
 
         data = request.form['hide']
         if data:
-            print("TEST route.py")
-            print(data)
             fonctionPy.sendEmploiDuTemps(data)
 
     fonctionPy.recupererEmploiDuTemps()
@@ -442,14 +439,10 @@ def creationCompte():
         try:
             cursora.execute(querya,val)
             cnx.commit()
-            print("mail = "+email)
-            print("mdp = "+mdp)
-            print("type = "+typeCompte)
             mdpGen.envoiMail(email,mdp)
             #return "Compte créé avec succès"
             return render_template("choixFiliere.html")
         except:
-            print("except")
             cnx.rollback()
             #return "Echec lors de la création du compte. Veuillez réessayer"
             return render_template("creationCompte.html")
@@ -470,7 +463,6 @@ def gestionCompte():
             #return "Compte modifié avec succès"
             return render_template("choixFiliere.html")
         except:
-            print("except")
             cnx.rollback()
             #return "Echec lors de la modification du compte. Veuillez réessayer"
             return render_template("gestionCompte.html")
