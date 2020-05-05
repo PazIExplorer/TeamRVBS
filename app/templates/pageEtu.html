@@ -17,64 +17,56 @@
 
 <body>
     {% include 'header.html' %}
-
-    <h1>Description de l'étudiant</h1>
-    <table class="etu">
-        <tbody>
-            <tr>
-                <th class="etu">Nom :</thclass="etu">
-                <td class="etu" colspan="2">{{user[0][1]}}</tdcolspan="2">
-            </tr>
-            <tr>
-                <th class="etu">Prénom :</th>
-                <td class="etu" colspan="2">{{user[0][2]}}</td>
-            </tr>
-            <tr>
-                <th class="etu">Numéro étudiant :</th>
-                <td class="etu" colspan="2">{{user[0][3]}}</tdcolspan="2">
-            </tr>
-            <tr>
-                <th class="etu">Contact :</th>
-                <td class="etu" colspan="2">{{user[0][8]}}</td>
-            </tr>
-            <tr>
-                <th class="etu">Numéro de téléphone :</th>
-                <td class="etu" colspan="2">{{user[0][7]}}</td>
-            </tr>
-            <tr>
-                <th class="etu">Mail entreprise :</th>
-                <td class="etu" colspan="2">{{user[0][9]}}</td>
-            </tr>
-            <tr id="btnsAdmin">
-                <td class="etu">
-                    <form method="GET" action="{{url_for('pageModifEtu', id=user[0][0])}}">
-                        <input type="submit" value="Modifier">
-                    </form>
-                </td>
-                <td class="etu">
-                    <form method="GET" action="{{url_for('pageConvention', id=user[0][0])}}">
-                        <input type="submit" value="Convention">
-                    </form>
-                </td>
-                <td class="etu">
-                    <form method="GET" action="{{url_for('pdfEtuPresence', id=user[0][0])}}">
-                        <input type="submit" value="Fiche de présence">
-                    </form>
-                </td>
-            </tr>
-            <tr id="btnsAdmin">
-                <td class="etu">
-                    <form method="GET" action="{{url_for('pdfEtu',id=user[0][0]) }}">
-                        <input type="submit" value="Attestation de présence (mois courant)">
-                    </form>
-                <td class="etu">
-                    <form method="GET" action="{{url_for('archiveEtu',id=user[0][0]) }}">
-                        <input type="submit" value="archive de l'étudiant">
-                    </form>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+    <div id="descriptEtu">
+        <h1>Description de l'étudiant</h1>
+        <ol>
+            <li>
+                <p class="gauche">Nom :</p>
+                <p class="droite">{{user[0][1]}}</p>
+            </li>
+            <li>
+                <p class="gauche">Prénom :</p>
+                <p class="droite">{{user[0][2]}}</p>
+            </li>
+            <li>
+                <p class="gauche">Numéro étudiant :</p>
+                <p class="droite">{{user[0][3]}}</p>
+            </li>
+            <li>
+                <p class="gauche">Contact :</p>
+                <p class="droite">{{user[0][8]}}</p>
+            </li>
+            <li>
+                <p class="gauche">Numéro de téléphone :</p>
+                <p class="droite">{{user[0][7]}}</p>
+            </li>
+            <li>
+                <p class="gauche">Mail entreprise :</p>
+                <p class="droite">{{user[0][9]}}</p>
+            </li>
+            <li>
+                <form class="gauche" method="GET" action="{{url_for('archiveEtu',id=user[0][0]) }}">
+                    <input type="submit" value="Archive de l'étudiant">
+                </form>
+                <form class="droite" method="GET" action="{{url_for('pageConvention', id=user[0][0])}}">
+                    <input type="submit" value="Convention">
+                </form>
+            </li>
+            <li>
+                <form class="gauche" method="GET" action="{{url_for('pdfEtuPresence', id=user[0][0])}}">
+                    <input type="submit" value="Fiche de présence">
+                </form>
+                <form class="droite" method="GET" action="{{url_for('pdfEtu',id=user[0][0]) }}">
+                    <input type="submit" value="Attestation de présence">
+                </form>
+            </li>
+            <li>
+                <form class="gauche" method="GET" action="{{url_for('pageModifEtu', id=user[0][0])}}">
+                    <input type="submit" value="Modifier">
+                </form>
+            </li>
+        </ol>
+    </div>
 
     <script>
         // Suppression des boutons administrateur

@@ -108,9 +108,9 @@ def creation():
     ws.set_column('D:D', 9)
     ws.set_column('J:J', 14)
     ws.set_column('O:O', 14)
-    ws.set_column('S:S', 14)
-    ws.set_column('T:T', 10)
-    ws.set_column('U:U', 11)
+    ws.set_column('T:T', 14)
+    ws.set_column('U:U', 10)
+    ws.set_column('V:V', 11)
 
     #Créations de l'en-tête 
     ws.merge_range('B3:F3', 'RECAPITULATIF DES HEURES SUIVIES PAR STAGIARES EN M2 ISC _ 400 HEURES')
@@ -146,9 +146,10 @@ def creation():
     ws.write('P6:P6', 'Avril', formatT3BoldTitle)
     ws.write('Q6:Q6', 'Mai', formatT3BoldTitle)
     ws.write('R6:R6', 'Juin', formatT3BoldTitle)
-    ws.merge_range('S6:S7', 'FACTURATION\nT3', formatT3BoldTitle)
-    ws.write('T6:T6', 'TOTAL H', formatTotalBoldTitle)
-    ws.merge_range('U6:U7', 'TOTAL €', formatTotalBoldTitle)
+    ws.write('S6:S6', str(dateFin)+' T3', formatT3BoldTitle)
+    ws.merge_range('T6:T7', 'FACTURATION\nT3', formatT3BoldTitle)
+    ws.write('U6:U6', 'TOTAL H', formatTotalBoldTitle)
+    ws.merge_range('V6:V7', 'TOTAL €', formatTotalBoldTitle)
 
     #afficher le nombre d'heures de cours par moi 
     tabHeure = fonctionPy.tabHeureCoursParMoi(dateDebut, dateFin)
@@ -157,15 +158,23 @@ def creation():
     ws.write('F7:F7', str(tabHeure["Oct"]), formatT1Bold)
     ws.write('G7:G7', str(tabHeure["Nov"]), formatT1Bold)
     ws.write('H7:H7', str(tabHeure["Déc"]), formatT1Bold)
-    ws.write('I7:I7', str((tabHeure["Sept"]+tabHeure["Oct"]+tabHeure["Nov"]+tabHeure["Déc"])), formatT1Bold)
+    sommeT1 = "=E7+F7+G7+H7"
+    ws.write_formula('I7:I7', sommeT1, formatT1Bold)
+
     ws.write('K7:K7', str(tabHeure["Jan"]), formatT2Bold)
     ws.write('L7:L7', str(tabHeure["Fev"]), formatT2Bold)
     ws.write('M7:M7', str(tabHeure["Mars"]), formatT2Bold)
-    ws.write('N7:N7', str((tabHeure["Jan"]+tabHeure["Fev"]+tabHeure["Mars"])), formatT2Bold)
+    sommeT2 = "=K7+L7+M7"
+    ws.write_formula('N7:N7', sommeT2, formatT2Bold)
+
     ws.write('P7:P7', str(tabHeure["Avril"]), formatT3Bold)
     ws.write('Q7:Q7', str(tabHeure["Mai"]), formatT3Bold)
     ws.write('R7:R7', str(tabHeure["Juin"]), formatT3Bold)
-    ws.write('T7:T7', str((tabHeure["Avril"]+tabHeure["Mai"]+tabHeure["Juin"])), formatTotalBold)
+    sommeT3 = "=P7+Q7+R7"
+    ws.write_formula('S7:S7', sommeT3, formatT3Bold)
+
+    sommeTotal = "=I7+N7+S7"
+    ws.write_formula('U7:U7', sommeTotal, formatTotalBold)
     
     #Affichage des CP :
     row = 6
@@ -201,21 +210,21 @@ def creation():
         formule2 = "=K"+str(lc)+"+L"+str(lc)+"+M"+str(lc)
         ws.write_formula(row+i, 13,formule2, formatT2Bold)
 
-        #formule3 = "=P"+str(lc)+"+Q"+str(lc)+"+R"+str(lc)
-        #ws.write_formula(row+i, 18, formule3, formatT3Bold)
+        formule3 = "=P"+str(lc)+"+Q"+str(lc)+"+R"+str(lc)
+        ws.write_formula(row+i, 18, formule3, formatT3Bold)
 
         #Formule pour le total
         formuleTotalHeure = "=I"+str(lc)+"+N"+str(lc)+"+P"+str(lc)
-        ws.write_formula(row+i, 19, formuleTotalHeure, formatTotalBold)
+        ws.write_formula(row+i, 20, formuleTotalHeure, formatTotalBold)
 
         formuleTotalEuro = "=J"+str(lc)+"+O"+str(lc)+"+S"+str(lc)
-        ws.write_formula(row+i, 20, formuleTotalEuro, formatTotalBold)
+        ws.write_formula(row+i, 21, formuleTotalEuro, formatTotalBold)
 
 
         #TODO complete les cases vide que je ne comprend pas l'utilité avec le format
         ws.write("J"+str(row+i+1), "", formatT1Base)
         ws.write("O"+str(row+i+1), "", formatT2Base)
-        ws.write("S"+str(row+i+1), "", formatT3Base)
+        ws.write("T"+str(row+i+1), "", formatT3Base)
 
         i = i+1
 
@@ -255,20 +264,20 @@ def creation():
         formule2 = "=K"+str(lc)+"+L"+str(lc)+"+M"+str(lc)
         ws.write_formula(row+i, 13,formule2, formatT2Bold)
 
-        #formule3 = "=P"+str(lc)+"+Q"+str(lc)+"+R"+str(lc)
-        #ws.write_formula(row+i, 18, formule3, formatT3Bold)
+        formule3 = "=P"+str(lc)+"+Q"+str(lc)+"+R"+str(lc)
+        ws.write_formula(row+i, 18, formule3, formatT3Bold)
 
         #Formule pour le total
         formuleTotalHeure = "=I"+str(lc)+"+N"+str(lc)+"+P"+str(lc)
-        ws.write_formula(row+i, 19, formuleTotalHeure, formatTotalBold)
+        ws.write_formula(row+i, 20, formuleTotalHeure, formatTotalBold)
 
         formuleTotalEuro = "=J"+str(lc)+"+O"+str(lc)+"+S"+str(lc)
-        ws.write_formula(row+i, 20, formuleTotalEuro, formatTotalBold)
+        ws.write_formula(row+i, 21, formuleTotalEuro, formatTotalBold)
 
         #TODO complete les cases vide que je ne comprend pas l'utilité avec le format
         ws.write("J"+str(row+i+1), "", formatT1Base)
         ws.write("O"+str(row+i+1), "", formatT2Base)
-        ws.write("S"+str(row+i+1), "", formatT3Base)
+        ws.write("T"+str(row+i+1), "", formatT3Base)
 
         #incrémentation des var
         num = num+1
@@ -284,7 +293,7 @@ def creation():
     ws.write("C"+str(row+i+1), "", formatBasic)
     ws.write("D"+str(row+i+1), "", formatT1Base)
     ws.write(row+i, 1, "Totaux présence :", formatBasic)
-    ws.write_formula(row+i, 4, "=SUM(E8:E15)", formatT1Base)
+    ws.write_formula(row+i, 4, "=SUM(E8:E"+str(7+i-1)+")", formatT1Base)
     ws.write_formula(row+i, 5, "=SUM(F8:F"+str(7+i-1)+")", formatT1Base)
     ws.write_formula(row+i, 6, "=SUM(G8:G"+str(7+i-1)+")", formatT1Base)
     ws.write_formula(row+i, 7, "=SUM(H8:H"+str(7+i-1)+")", formatT1Base)
@@ -299,17 +308,18 @@ def creation():
     ws.write_formula(row+i, 16, "=SUM(Q8:Q"+str(7+i-1)+")", formatT3Base)
     ws.write_formula(row+i, 17, "=SUM(R8:R"+str(7+i-1)+")", formatT3Base)
     ws.write_formula(row+i, 18, "=SUM(S8:S"+str(7+i-1)+")", formatT3Bold)
-    ws.write(row+i, 19, "", formatTotalBase)
+    ws.write_formula(row+i, 19, "=SUM(T8:T"+str(7+i-1)+")", formatT3Bold)
     ws.write(row+i, 20, "", formatTotalBase)
+    ws.write(row+i, 21, "", formatTotalBase)
    
     ws.set_row(row+i, 24)
 
 
     ws.write_formula(row+i+1, 9, " ", formatT1Bold)
     ws.write_formula(row+i+1, 14, " ", formatT2Bold)
-    ws.write_formula(row+i+1, 18, " ", formatT3Bold)
-    ws.write_formula(row+i+1, 19, " ", formatTotalBold)
+    ws.write_formula(row+i+1, 19, " ", formatT3Bold)
     ws.write_formula(row+i+1, 20, " ", formatTotalBold)
+    ws.write_formula(row+i+1, 21, " ", formatTotalBold)
     ws.write(row+i+2, 1, "FACTURATION trimestrielle heures suivies", formatBold)
 
     ws.write(row+i+1, 1, "", formatBasic)
@@ -328,9 +338,9 @@ def creation():
 
     ws.write_formula(row+i+2, 9, "=SUM(J8:J"+str(7+i-1)+")", formatT1Bold)
     ws.write_formula(row+i+2, 14, "=SUM(O8:O"+str(7+i-1)+")", formatT2Bold)
-    ws.write_formula(row+i+2, 18, "=SUM(S8:S"+str(7+i-1)+")", formatT3Bold)
-    ws.write_formula(row+i+2, 19, "=SUM(T8:T"+str(7+i-1)+")", formatTotalBold)
+    ws.write_formula(row+i+2, 19, "=SUM(T8:T"+str(7+i-1)+")", formatT3Bold)
     ws.write_formula(row+i+2, 20, "=SUM(U8:U"+str(7+i-1)+")", formatTotalBold)
+    ws.write_formula(row+i+2, 21, "=SUM(V8:V"+str(7+i-1)+")", formatTotalBold)
     ws.set_row(row+i+1, 24)
    
     

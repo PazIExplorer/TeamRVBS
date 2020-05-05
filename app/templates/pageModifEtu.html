@@ -14,36 +14,44 @@ $(function(){
 </script> 
 </head>
 <body>
+<<<<<<< HEAD
     {% include 'header.html' %}
     <h1>Modifier les informations de l'étudiant</h1>
     <form action="{{url_for('pageEtu', id=user[0][0])}}" method="POST">
 
         <div id="info">
                 <div class="ligne">
+=======
+        {% include 'header.html' %}
+        <form action="{{url_for('pageEtu', id=user[0][0])}}" method="POST">
+        <h1>Modifier les informations de l'étudiant</h1>
+        <ol>
+                <li>
+>>>>>>> affichagePageAdmin
                         <label for="nom">Nom:</label>
-                        <input type="text" name="nom" id="nom" value='{{user[0][1]}}' onClick="this.value = '';">  
-                </div>    
-                <div class="ligne">
+                        <input type="text" name="nom" id="nom" value='{{user[0][1]}}' onClick="this.value = '';"> 
+                </li>
+                <li>
                         <label for="prenom">Prenom:</label>
-                        <input type="text" name="prenom" id="prenom" value='{{user[0][2]}}' onClick="this.value = '';">       
-                </div class="ligne">
-                <div class="ligne">
+                        <input type="text" name="prenom" id="prenom" value='{{user[0][2]}}' onClick="this.value = '';"> 
+                </li>
+                <li>
                         <label for="numeroEtudiant">Numero Etudiant: </label>
-                        <input type="text" name="numeroEtudiant" id="numeroEtudiant" value='{{user[0][3]}}' onClick="this.value = '';">  
-                </div>
-                <div class="ligne">
+                        <input type="text" name="numeroEtudiant" id="numeroEtudiant" value='{{user[0][3]}}' onClick="this.value = '';">
+                </li>
+                <li>
                         <label for="idCarteEtu">Numero badgage: </label>
                         <input type="text" name="idCarteEtu" id="idCarteEtu" value="{{'%0x' % user[0][0]}}" onClick="this.value = '';" >
-                </div>
-                <div class="ligne">
+                </li>
+                <li>
                         <label for="typeContratEtudiant">Type de Contrat: </label>
                         <input type="text" name="typeContratEtudiant" id="typeContratEtudiant" value='{{user[0][4]}}' onClick="this.value = '';">
-                </div>
-                <div class="ligne">
+                </li>
+                <li>
                         <label for="tarif">Tarif: </label>
                         <input type="text" name="tarif" id="tarif" value='{{user[0][5]}}' onClick="this.value = '';">
-                </div>
-                <div class="ligne">
+                </li>
+                <li>
                         <label for="filiere">Filiere: </label>
                         <select name="filiere">
                                 {% for f in fil %}
@@ -54,18 +62,19 @@ $(function(){
                                         {% endif %}
                                 {% endfor %}
                         </select>
-                </div>
-                <div class="ligne">
+                </li>
+                <li>
                         <label for="numeroTel">Numero de Telephone: </label>
                         <input type="text" name="numeroTel" id="numeroTel" value='{{user[0][7]}}' onClick="this.value = '';">
-                </div>
-                <div class="ligne">
+                </li>
+                <li>
                         <label for="mailEtu">Mail Etudiant: </label>
                         <input type="text" name="mailEtu" id="mailEtu" value='{{user[0][8]}}' onClick="this.value = '';">
-                </div>       
-                <div class="ligne">
+                </li>
+                <li>
                         <label for="mailEntreprise">Mail Entreprise: </label>
                         <input type="text" name="mailEntreprise" id="mailEntreprise" value='{{user[0][9]}}' onClick="this.value = '';">
+<<<<<<< HEAD
                 </div>
                 <div class="ligne">
                       <label for="rupture">Rupture</label>
@@ -75,6 +84,13 @@ $(function(){
 
 	<input type="submit" value="Valider les modifications">
 
+=======
+                </li>
+        </ol>
+       
+        <input type="submit" value="Valider">
+        <p id="annuler" ><a href="{{url_for('pageEtu', id=user[0][0])}}">Annuler</a></p>
+>>>>>>> affichagePageAdmin
     </form>
 </body>
 </html>
