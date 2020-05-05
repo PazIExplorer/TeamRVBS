@@ -13,14 +13,17 @@
 
 <body>
     {% include 'header.html' %}
+    <h1>Gestion du compte :</h1>
     
     <form method="POST" action="{{url_for('gestionCompte')}}">
+        <div>
         <label for="nomCompte">Nom du compte (adresse mail du proprietaire):</label>
         <input type="email" id="nomCompte" name="nomCompte">
-
+        </div>
+        <div>
         <label for="mdp">Nouveau mot de passe :</label>
         <input type="text" id="mdp" name="mdp">
-
+        </div>
 
 
         <input type="submit" value="Valider">
