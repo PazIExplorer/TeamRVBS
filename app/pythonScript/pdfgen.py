@@ -23,27 +23,60 @@ from reportlab.platypus import Paragraph
 
 alternant = "test2"
 
-def pdf(etu,master,presence):
+def pdf(etu,master,presence,administration):
     
     from reportlab.lib.units import cm,inch
     usmb=os.path.join("./app/static/img",'logoUSMB2.png')
     fc=os.path.join("./app/static/img","logoFC.jpg")
     signaturePNG=os.path.join("./app/static/img","signature.png")
-    anneeScolaire="2019/2020"
-    president="Denis VARASCHIN"
-    SFC="ERIC WEISS"
+    
+    president=administration[0][4] 
+    SFC=administration[0][5] 
    
     master= master
     alternant=etu
-    periodeDebut="9 septembre 2019"
-    periodeFin="13 décembre 2019"
+    periodeDebut=administration[0][2]
+    periodeFin=administration[0][3]
 
     pathPDF = "./app/static/pdf"
     pathArchive = "./app/static/archive"
-    filename = alternant+".pdf"
-    
+    filename = alternant+" Attestation.pdf"
+    currDate = datetime.now()
     c = canvas.Canvas(os.path.join(pathPDF,filename))
+    #obtention de l'année scolaire
+    debutScol=datetime.strptime(administration[0][0], '%d/%m/%Y').date()
+    finScol=datetime.strptime(administration[0][1], '%d/%m/%Y').date()
+    anneeScolaire=str(debutScol.year)+"/"+str(finScol.year)
+    #calcul de la présence
+    dateDebut=datetime.strptime(periodeDebut, '%d/%m/%Y').date()
+    dateFin=datetime.strptime(periodeFin, '%d/%m/%Y').date()
+    for i in range(0,len(presence)):
+        presence[i] = list(presence[i])
+        
+        presence[i][3]=datetime.strptime(presence[i][3], '%d/%m/%Y').date()   
+    presence = sorted(presence, key=lambda presence: presence[3])
+    
+    i=0
+    while (i!=len(presence)):
+        if(presence[i][3] < dateDebut):
+            
+            presence.remove(presence[i])
+        elif(presence[i][3]>dateFin):
+            
+            presence.remove(presence[i])
+        else:
+            i+=1
+    
 
+    presenceVirtuel = len(presence)*7
+
+    presenceEffective = 0
+    for i in range(0,len(presence)):
+        if(presence[i][0]!=3):
+            presenceEffective+=4
+        if(presence[i][1]!=3):
+            presenceEffective+=3
+    
     # move the origin up and to the left
     c.translate(inch,inch)
 
@@ -81,7 +114,11 @@ def pdf(etu,master,presence):
         textobject.textLine(line.rstrip())
     c.drawText(textobject)
 
-    c.drawString(200,150,"Le Bourget du Lac,le ")
+    c.drawString(0,350,"Nombre d'heures de cours: "+ str(presenceVirtuel))
+    c.drawString(0,300,"Nombre d'heures de présence: "+str(presenceEffective))
+
+
+    c.drawString(200,150,"Le Bourget du Lac,le "+str(currDate.day) + "/" + str(currDate.month)+ "/" + str(currDate.year))
     # #ajoute la date
     c.drawString(0,120,"Signature du stagiaire")
     c.setFont("Helvetica-Bold",12)
@@ -100,7 +137,7 @@ def pdf(etu,master,presence):
     c.save()
 
     # ARCHIVAGE
-    currDate = datetime.now()
+    
     dateStr = str(currDate.year) + "-" + str(currDate.month)+ "-" + str(currDate.day) + "-" + str(currDate.hour) + "-" + str(currDate.minute) + "-" + str(currDate.second) + "-" + filename
     shutil.copy2(os.path.join(pathPDF,filename), os.path.join(pathArchive,dateStr))
     return c
