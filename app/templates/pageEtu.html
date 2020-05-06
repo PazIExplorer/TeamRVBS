@@ -17,6 +17,17 @@
 
 <body>
     {% include 'header.html' %}
+
+
+    {% if modifType == 1 %}
+        <!-- MODIFICATIONS RÉUSSIES -->
+        <div style="margin-top: 10px; text-align: center; border: 3px solid green;">Modifications de l'étudiant enregistrées.</div>
+    {% elif modifType == -1 %}
+        <!-- MODIFICATIONS ÉCHOUÉES -->
+        <div style="margin-top: 10px; text-align: center; border: 3px solid red;">Une erreur a eu lieu lors de la modification de l'étudiant : {{msgErreur}}</div>
+    {% endif %}
+
+
     <div id="descriptEtu">
         <h1>Description de l'étudiant</h1>
         <ol>

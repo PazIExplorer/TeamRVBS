@@ -188,6 +188,10 @@ def pageEtu(id):
     cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
     cursor = cnx.cursor()
     
+    modifType = 0   # Utilisé en cas de modifs utilisateur
+                    # 0 = rien, 1 = succès, -1 = erreur
+    msgErr = ""     # Utilisé en cas d'erreur (pour l'affichage)
+
     if request.method == "POST":
         idCarteEtu = id
         nom = request.form["nom"]
@@ -200,17 +204,11 @@ def pageEtu(id):
         mailEtu = request.form["mailEtu"]
         mailEntreprise = request.form["mailEntreprise"]
         
-
         val = (idCarteEtu,nom,prenom,numeroEtudiant,typeContratEtudiant,tarif,filiere,numeroTel,mailEtu,mailEntreprise,id)
 
-
         query = ("UPDATE etudiant SET idCarteEtu=%s,nom=%s,prenom=%s,numeroEtudiant=%s,typeContratEtudiant=%s,tarif=%s,filiere=%s,numeroTel=%s,mailEtu=%s,mailEntreprise=%s WHERE idCarteEtu=%s")
-        
-        
-        
 
         try:
-            
             cursor.execute(query,val)
 
             query = ("UPDATE presence SET idCarteEtu=%s WHERE idCarteEtu=%s")
@@ -218,9 +216,13 @@ def pageEtu(id):
 
             cursor.execute(query,val)
             cnx.commit()
+
+            modifType = 1
             
-        except:
+        except Exception as ex:
             cnx.rollback()
+            modifType = -1
+            msgErr = repr(ex)
             
     query = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
     cursor.execute(query)
@@ -231,7 +233,7 @@ def pageEtu(id):
     cursor.execute(query)
     presence = cursor.fetchall()
     cnx.close()
-    return render_template("pageEtu.html", user=etu , presence=presence)
+    return render_template("pageEtu.html", user=etu , presence=presence, modifType=modifType, msgErreur=msgErr)
 
 @app.route("/pageConvention/<id>", methods=["GET", "POST"])
 def pageConvention(id):
@@ -395,7 +397,7 @@ def archiveEtu(id):
 
         #On regarde que l'id a bien était initialisé (si id = 0 l'étudiant n'est pas dans la bdd)
         if(int(id) == 0):
-            return render_template("archive.html")
+            return render_template("archive.html", aucunResultat=True, nomEtu=nom, prenomEtu=prenom)
             
     import re
     query = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
@@ -417,6 +419,9 @@ def archiveEtu(id):
 
         if(re.match(presenceRegex,i)!=None):
             fichierPresence.append(i)
+
+    
+    print(etu)
 
     return render_template("archiveEtu.html",user=etu, folderAttestation=fichiersAttestation, folderFichePresence=fichierPresence) 
 
@@ -480,6 +485,11 @@ def pageAdministration():
 def adminModifVariable():
     cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
     cursor = cnx.cursor()
+
+    modifType = 0   # Utilisé en cas de modifs utilisateur
+                    # 0 = rien, 1 = succès, -1 = erreur
+    msgErr = ""     # Utilisé en cas d'erreur (pour l'affichage)
+
     
     if request.method == "POST":
         debutAnnee = request.form["debutAnnee"]
@@ -495,25 +505,19 @@ def adminModifVariable():
 
         try:
             cursor.execute(query,val)
-            cnx.commit()
-            query = ("SELECT * FROM administration" )
-            cursor.execute(query)
-            admin = cursor.fetchall()
-
-            cnx.close()
-
-            return render_template("adminModifVariable.html",admin=admin)
+            cnx.commit()            
+            modifType = 1     
         
-        except:
+        except Exception as ex:
             cnx.rollback()
+            modifType = -1
+            msgErr = repr(ex)
         
     query = ("SELECT * FROM administration ")
     cursor.execute(query)
     admin = cursor.fetchall()
-
     cnx.close()
-
-    return render_template("adminModifVariable.html",admin=admin)
+    return render_template("adminModifVariable.html",admin=admin, modifType=modifType, msgErreur=msgErr)
 
 @app.route("/creationCompte", methods=['GET', 'POST'])
 def creationCompte():
@@ -527,25 +531,34 @@ def creationCompte():
 
     cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
     cursor = cnx.cursor()
+    
+    modifType = 0   # Utilisé en cas de modification
+                    # 0 = rien, 1 = succès, -1 = erreur
+    idCompte = ""   # Utilisé en cas de modification
+    msgErr = ""     # Utilisé en cas d'erreur (pour l'affichage)
 
     if request.method == "POST":
         email = request.form["nomCompte"]
         mdp = mdpGen.generateurMDP()
         typeCompte = request.form["type"]
+        idCompte = email
         query = ("INSERT INTO connexion VALUES(%s,%s,%s)")
         val =(email,mdp,typeCompte)
+
         try:
             cursor.execute(query,val)
             cnx.commit()
             cnx.close()
             mdpGen.envoiMail(email,mdp)
-            return render_template("choixFiliere.html")
-        except:
+            modifType = 1
+
+        except Exception as ex:
             cnx.rollback()
             cnx.close()
-            return render_template("creationCompte.html")
+            modifType = -1
+            msgErr = repr(ex)
     cnx.close()
-    return render_template("creationCompte.html")
+    return render_template("creationCompte.html", modifType=modifType, msgErreur=msgErr, identifiant=idCompte)
 
 @app.route("/gestionCompte", methods=['GET', 'POST'])
 def gestionCompte():
@@ -556,10 +569,17 @@ def gestionCompte():
     # Vérifie si le compte est admin, sinon retour à la page d'accueil
     if not compteEstAdmin():
         return redirect("choixFiliere")
-
+    
+    modifType = 0   # Utilisé en cas de modification
+                    # 0 = rien, 1 = succès, -1 = erreur
+    idCompte = ""   # Utilisé en cas de modification
+    msgErr = ""     # Utilisé en cas d'erreur (pour l'affichage)
+    
     if request.method == "POST":
         nom = request.form["nomCompte"]
         mdp = request.form["mdp"]
+
+        idCompte = nom
 
         cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
         cursor = cnx.cursor()
@@ -570,13 +590,16 @@ def gestionCompte():
             cursor.execute(query,val)
             cnx.commit()
             cnx.close()
-            return render_template("choixFiliere.html")
-        except:
+            mdpGen.envoiMailModif(nom,mdp)
+            modifType = 1
+            
+        except Exception as ex:
             cnx.rollback()
             cnx.close()
-            return render_template("gestionCompte.html")
+            modifType = -1
+            msgErr = repr(ex)
 
-    return render_template("gestionCompte.html")
+    return render_template("gestionCompte.html", modifType=modifType, msgErreur=msgErr, identifiant=idCompte)
 
 @app.route("/archive")
 def archive():
@@ -588,4 +611,4 @@ def archive():
     if not compteEstAdmin():
         return redirect("choixFiliere")
 
-    return render_template("archive.html")
+    return render_template("archive.html", aucunResultat=False, nomEtu="", prenomEtu="")
