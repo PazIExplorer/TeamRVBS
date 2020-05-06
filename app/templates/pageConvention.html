@@ -17,15 +17,18 @@ $(function(){
   {% include 'header.html' %}
 
   <h1 id="titre">Convention</h1>
+
   <form enctype="multipart/form-data" action="{{url_for('pageConvention', id=user[0][0])}}" method="POST">
-	<label for="conv">Ajouter une convention(au format "Nom Prenom Convention.pdf"):</label>
-	<input id="conv" type="file" name="conv" />    
-        <input id="upload" type="submit" value="Envoyer la convention" />
+	  <label for="conv">Ajouter une convention(au format "Nom Prenom Convention.pdf"):</label>
+	  <input id="conv" type="file" name="conv" />    
+    <input id="upload" type="submit" value="Envoyer la convention" />
   </form>
+
     {% if path == '../static/convention/conventionBase.pdf' %}
-        <h1>Convention pas encore ajoutée</h1>
+      <h1>Convention pas encore ajoutée</h1>
     {% else %}
-        <embed style="height: 100%;" src="{{path}}" type="application/pdf" width="100%" height="100%"/>
+      <embed style="height: 100%;" src="{{path}}" type="application/pdf" width="100%" height="100%"/>
     {% endif %}
+    
 </body>
 </html>
