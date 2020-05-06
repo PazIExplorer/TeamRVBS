@@ -486,44 +486,73 @@ def adminModifVariable():
 
 @app.route("/creationCompte", methods=['GET', 'POST'])
 def creationCompte():
+    
+    modifType = 0   # Utilisé en cas de modification
+                    # 0 = rien, 1 = succès, -1 = erreur
+    idCompte = ""   # Utilisé en cas de modification
+    msgErr = ""     # Utilisé en cas d'erreur (pour l'affichage)
+
     if request.method == "POST":
         email = request.form["nomCompte"]
         mdp = mdpGen.generateurMDP()
         typeCompte = request.form["type"]
+
+        idCompte = email
+
         querya = ("INSERT INTO connexion VALUES(%s,%s,%s)")
         val =(email,mdp,typeCompte)
         try:
             cursora.execute(querya,val)
             cnx.commit()
             mdpGen.envoiMail(email,mdp)
+            
+            modifType = 1
             #return "Compte créé avec succès"
-            return render_template("choixFiliere.html")
-        except:
+            #return render_template("choixFiliere.html")
+        except Exception as ex:
             cnx.rollback()
-            #return "Echec lors de la création du compte. Veuillez réessayer"
-            return render_template("creationCompte.html")
 
-    return render_template("creationCompte.html")
+            modifType = -1
+            msgErr = repr(ex)
+            #return "Echec lors de la création du compte. Veuillez réessayer"
+            #return render_template("creationCompte.html")
+
+    return render_template("creationCompte.html", modifType=modifType, msgErreur=msgErr, identifiant=idCompte)
 
 @app.route("/gestionCompte", methods=['GET', 'POST'])
 def gestionCompte():
+    
+    modifType = 0   # Utilisé en cas de modification
+                    # 0 = rien, 1 = succès, -1 = erreur
+    idCompte = ""   # Utilisé en cas de modification
+    msgErr = ""     # Utilisé en cas d'erreur (pour l'affichage)
+    
     if request.method == "POST":
         nom = request.form["nomCompte"]
         mdp = request.form["mdp"]
+
+        idCompte = nom
         
         querya = ("UPDATE connexion SET motdepasse=%s WHERE identifiant=%s")
         val = (mdp,nom)
         try:
             cursora.execute(querya,val)
             cnx.commit()
-            #return "Compte modifié avec succès"
-            return render_template("choixFiliere.html")
-        except:
-            cnx.rollback()
-            #return "Echec lors de la modification du compte. Veuillez réessayer"
-            return render_template("gestionCompte.html")
+            mdpGen.envoiMailModif(nom,mdp)
 
-    return render_template("gestionCompte.html")
+            modifType = 1
+
+            #return "Compte modifié avec succès"
+            #return render_template("choixFiliere.html")
+        except Exception as ex:
+            cnx.rollback()
+
+            modifType = -1
+            msgErr = repr(ex)
+            #return "Echec lors de la modification du compte. Veuillez réessayer"
+            #return render_template("gestionCompte.html")
+
+    return render_template("gestionCompte.html", modifType=modifType, msgErreur=msgErr, identifiant=idCompte)
 
 @app.route("/archive")
 def archive():
