@@ -455,34 +455,46 @@ def pageAdministration():
 @app.route("/adminModifVariable")
 @app.route("/adminModifVariable", methods=["GET", "POST"])
 def adminModifVariable():
+    
+    modifType = 0   # Utilisé en cas de modifs utilisateur
+                    # 0 = rien, 1 = succès, -1 = erreur
+    msgErr = ""     # Utilisé en cas d'erreur (pour l'affichage)
+    
     if request.method == "POST":
-        debutAnnee = request.form["debutAnnee"]
-        finAnnee = request.form["finAnnee"]
-        debutAffiche = request.form["debutPeriode"]
-        finAffiche = request.form["finPeriode"]
-        presidentSMB = request.form["presidentUSMB"]
-        presidentSFC = request.form["presidentSFC"]
-        tarifMaster = int(request.form["tarifMaster"])
-
-        query = ("UPDATE administration SET debutAnnee=%s,finAnnee=%s,debutAffiche=%s,finAffiche=%s,presidentSMB=%s,presidentSFC=%s,tarfiMaster=%s")
-        val = (debutAnnee,finAnnee,debutAffiche,finAffiche,presidentSMB,presidentSFC,tarifMaster)
 
         try:
+            debutAnnee = request.form["debutAnnee"]
+            finAnnee = request.form["finAnnee"]
+            debutAffiche = request.form["debutPeriode"]
+            finAffiche = request.form["finPeriode"]
+            presidentSMB = request.form["presidentUSMB"]
+            presidentSFC = request.form["presidentSFC"]
+            tarifMaster = int(request.form["tarifMaster"])
+
+            query = ("UPDATE administration SET debutAnnee=%s,finAnnee=%s,debutAffiche=%s,finAffiche=%s,presidentSMB=%s,presidentSFC=%s,tarfiMaster=%s")
+            val = (debutAnnee,finAnnee,debutAffiche,finAffiche,presidentSMB,presidentSFC,tarifMaster)
+            
             cursora.execute(query,val)
             cnx.commit()
-            querya = ("SELECT * FROM administration" )
-            cursora.execute(querya)
-            admin = cursora.fetchall()
-            return render_template("adminModifVariable.html",admin=admin)
+
+            modifType = 1
+            
+            # querya = ("SELECT * FROM administration" )
+            # cursora.execute(querya)
+            # admin = cursora.fetchall()
+            # return render_template("adminModifVariable.html",admin=admin)
         
-        except:
+        except Exception as ex:
             print("erreur route.py pageAdminModifVariable passe dans le except !")
             cnx.rollback()
+
+            modifType = -1
+            msgErr = repr(ex)
         
     querya = ("SELECT * FROM administration ")
     cursora.execute(querya)
     admin = cursora.fetchall()
-    return render_template("adminModifVariable.html",admin=admin)
+    return render_template("adminModifVariable.html",admin=admin, modifType=modifType, msgErreur=msgErr)
 
 @app.route("/creationCompte", methods=['GET', 'POST'])
 def creationCompte():
