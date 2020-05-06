@@ -1311,3 +1311,16 @@ a.ui-button:active,
     background: #743620 none;
     color: white;
 }
+
+
+button#valider{
+    display: block;
+    border-radius: 20px;
+    background-color: #5fc7f6;
+    text-align: center;
+    padding: 10px;
+	margin:auto;
+	margin-top: 1em;
+    text-decoration: none;
+    color: black;
+}

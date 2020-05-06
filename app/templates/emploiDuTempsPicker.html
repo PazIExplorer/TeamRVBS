@@ -24,26 +24,24 @@
 			//----------------------------------------------------------
 			var liste_jours_cours;
 			$.getJSON("../static/json/emploiDuTempsPick.json", function(data){
+				//récupère le tableau de date du format json
 				liste_jours_cours = data;
-				console.log("test :");
-				console.log(data);
 			})
 			.done(function() {
-				console.log(liste_jours_cours); //Bien récup le json
-
+				//transforme le tableau de date qui est en string en un tableau de format date
 				var date = new Date();
-
-				var a = new Array();
+				var tab_date = new Array();
 				for(let i=0; i<liste_jours_cours.length; i++){
-					a[i] = date.setDate(liste_jours_cours[i].substring(3,5));
+					tab_date[i] = date.setDate(liste_jours_cours[i].substring(3,5));
 				}
 
+				//utilise la fonction multiDatesPicker pour sélectionner les jours du tableau dans le calendrier
            		$('#calendar').multiDatesPicker({
-					addDates: a 
+					addDates: tab_date 
 				});
   			})
   			.fail(function() {
-    			console.log( "error" ); //TODO si jamais il y a un pb lors du chargement du json
+    			console.log( "error" );
   			})
 		})
 	</script>
@@ -63,7 +61,7 @@
 	</div>
 	<form method="post">
 		<input id="hide" name="hide" type="hidden" value="">
-		<button id="test" type="submit" onclick="getDatesSelected()">Afficher dans la console les jours select</button>
+		<button id="valider" type="submit" onclick="getDatesSelected()">Valider</button>
 	</form>
 	
 </body>
