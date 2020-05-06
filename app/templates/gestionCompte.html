@@ -28,11 +28,11 @@
     <form method="POST" action="{{url_for('gestionCompte')}}">
         <div>
         <label for="nomCompte">Nom du compte (adresse mail du proprietaire):</label>
-        <input type="email" id="nomCompte" name="nomCompte">
+        <input type="email" id="nomCompte" name="nomCompte" required>
         </div>
         <div>
         <label for="mdp">Nouveau mot de passe :</label>
-        <input type="text" id="mdp" name="mdp">
+        <input type="text" id="mdp" name="mdp" required>
         </div>
 
 
