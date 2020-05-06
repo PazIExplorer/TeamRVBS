@@ -27,10 +27,10 @@
     <form method="POST" action="{{url_for('creationCompte')}}">
         <div>
         <label for="nomCompte">Nom du compte (adresse mail du proprietaire):</label>
-        <input type="email" id="nomCompte" name="nomCompte">
+        <input type="email" id="nomCompte" name="nomCompte"required>
         </div>
         <div>
-        <input type="radio" id="administrateur" name="type" value="administrateur">
+        <input type="radio" id="administrateur" name="type" value="administrateur" required>
         <label for="administrateur">Administrateur</label>
         
         <input type="radio" id="enseignant" name="type" value="enseignant">
