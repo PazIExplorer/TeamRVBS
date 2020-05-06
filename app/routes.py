@@ -167,46 +167,58 @@ def pageEtu(id):
         return redirect("index")
 
     id=id
+
+    modifType = 0   # Utilisé en cas de modifs utilisateur
+                    # 0 = rien, 1 = succès, -1 = erreur
+    msgErr = ""     # Utilisé en cas d'erreur (pour l'affichage)
+
     if request.method == "POST":
-        idCarteEtu = id
-        nom = request.form["nom"]
-        prenom = request.form["prenom"]
-        numeroEtudiant = int(request.form["numeroEtudiant"])
-        typeContratEtudiant = request.form["typeContratEtudiant"]
-        tarif = float(request.form["tarif"])
-        filiere = int(request.form["filiere"])
-        numeroTel = int(request.form["numeroTel"])
-        mailEtu = request.form["mailEtu"]
-        mailEntreprise = request.form["mailEntreprise"]
-        
-        if(request.form.get('rupture')=='rupture'):
-            rupture = request.form["rupture"]
-            val = (idCarteEtu,nom,prenom,numeroEtudiant,rupture,tarif,filiere,numeroTel,mailEtu,mailEntreprise,id)
-        else:
-            val = (idCarteEtu,nom,prenom,numeroEtudiant,typeContratEtudiant,tarif,filiere,numeroTel,mailEtu,mailEntreprise,id)
 
-
-        querya = ("UPDATE etudiant SET idCarteEtu=%s,nom=%s,prenom=%s,numeroEtudiant=%s,typeContratEtudiant=%s,tarif=%s,filiere=%s,numeroTel=%s,mailEtu=%s,mailEntreprise=%s WHERE idCarteEtu=%s")
-        
-        
-        queryb = ("UPDATE presence SET idCarteEtu=%s WHERE idCarteEtu=%s")
-        valb = (idCarteEtu,id)
 
         try:
-            cursora.execute(querya,val)
-            cnx.commit()
+            idCarteEtu = id
+            nom = request.form["nom"]
+            prenom = request.form["prenom"]
+            numeroEtudiant = int(request.form["numeroEtudiant"])
+            typeContratEtudiant = request.form["typeContratEtudiant"]
+            tarif = float(request.form["tarif"])
+            filiere = int(request.form["filiere"])
+            numeroTel = int(request.form["numeroTel"])
+            mailEtu = request.form["mailEtu"]
+            mailEntreprise = request.form["mailEntreprise"]
             
-            querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
-            cursora.execute(querya)
-            etu = cursora.fetchall()
+            if(request.form.get('rupture')=='rupture'):
+                rupture = request.form["rupture"]
+                val = (idCarteEtu,nom,prenom,numeroEtudiant,rupture,tarif,filiere,numeroTel,mailEtu,mailEntreprise,id)
+            else:
+                val = (idCarteEtu,nom,prenom,numeroEtudiant,typeContratEtudiant,tarif,filiere,numeroTel,mailEtu,mailEntreprise,id)
 
-            queryb = ("SELECT * FROM presence WHERE idCarteEtu="+str(id))
-            cursorb.execute(queryb)
-            presence = cursorb.fetchall()
-            return render_template("pageEtu.html",user=etu,presence=presence)
+
+            querya = ("UPDATE etudiant SET idCarteEtu=%s,nom=%s,prenom=%s,numeroEtudiant=%s,typeContratEtudiant=%s,tarif=%s,filiere=%s,numeroTel=%s,mailEtu=%s,mailEntreprise=%s WHERE idCarteEtu=%s")
+            
+            
+            queryb = ("UPDATE presence SET idCarteEtu=%s WHERE idCarteEtu=%s")
+            valb = (idCarteEtu,id)
+
+            cursora.execute(querya,val)
+            cursorb.execute(queryb,valb)
+            cnx.commit()
+
+            modifType = 1
+            
+            # querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
+            # cursora.execute(querya)
+            # etu = cursora.fetchall()
+
+            # queryb = ("SELECT * FROM presence WHERE idCarteEtu="+str(id))
+            # cursorb.execute(queryb)
+            # presence = cursorb.fetchall()
+            # return render_template("pageEtu.html",user=etu,presence=presence)
         
-        except:
+        except Exception as ex:
             cnx.rollback()
+            modifType = -1
+            msgErr = repr(ex)
         
     querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
     cursora.execute(querya)
@@ -217,7 +229,7 @@ def pageEtu(id):
     cursorb.execute(queryb)
     presence = cursorb.fetchall()
 
-    return render_template("pageEtu.html", user=etu , presence=presence)
+    return render_template("pageEtu.html", user=etu , presence=presence, modifType=modifType, msgErreur=msgErr)
 
 @app.route("/pageConvention/<id>", methods=["GET", "POST"])
 def pageConvention(id):
