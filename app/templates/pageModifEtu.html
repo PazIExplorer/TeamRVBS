@@ -32,11 +32,16 @@ $(function(){
                 </li>
                 <li>
                         <label for="idCarteEtu">Numero badgage: </label>
-                        <input type="text" name="idCarteEtu" id="idCarteEtu" value="{{'%0x' % user[0][0]}}" onClick="this.value = '';" >
+                        <input type="text" name="idCarteEtu" readonly id="idCarteEtu" value="{{'%0x' % user[0][0]}}" onClick="this.value = '';" >
                 </li>
                 <li>
                         <label for="typeContratEtudiant">Type de Contrat: </label>
-                        <input type="text" name="typeContratEtudiant" id="typeContratEtudiant" value='{{user[0][4]}}' onClick="this.value = '';">
+                        <select name="typeContratEtudiant">
+                                <option id="contrat appr" value="contrat appr">contrat apprentissage</option>
+                                <option id="contrat pro" value="contrat pro">contrat professionnel</option>
+                                <option id="pas alternant" value="pas alternant">pas alternant</option>
+                                <option id="rupture" value="rupture">rupture</option>
+                        </select>
                 </li>
                 <li>
                         <label for="tarif">Tarif: </label>
@@ -67,9 +72,31 @@ $(function(){
                         <input type="text" name="mailEntreprise" id="mailEntreprise" value='{{user[0][9]}}' onClick="this.value = '';">
                 </li>
         </ol>
-       
         <input type="submit" value="Valider">
         <p id="annuler" ><a href="{{url_for('pageEtu', id=user[0][0])}}">Annuler</a></p>
+
+        <input type="hidden" id="typeContrat" value='{{user[0][4]}}'>
     </form>
 </body>
 </html>
+
+<script type="text/javascript">
+	let typeContrat = document.getElementById("typeContrat");
+        if(typeContrat.value == document.getElementById("contrat appr").value){
+                //Contrat alternant :
+                document.getElementById("contrat appr").selected = true;
+        }
+        else if(typeContrat.value == document.getElementById("contrat pro").value){
+                //Contrat pro : 
+                document.getElementById("contrat pro").selected = true;
+        }
+        else if(typeContrat.value == document.getElementById("rupture").value){
+                //Pas alternant :
+                document.getElementById("rupture").selected = true;
+        }
+        else{
+                //Rupture :
+                document.getElementById("pas alternant").selected = true;
+        }
+	
+</script>

@@ -132,7 +132,7 @@ def creation():
     rowsCP = cursor.fetchall()
 
     #Récupérer les CA
-    query = ("SELECT * FROM etudiant WHERE typeContratEtudiant = 'contrat alt'")
+    query = ("SELECT * FROM etudiant WHERE typeContratEtudiant = 'contrat appr'")
     cursor.execute(query)
     rowsCA = cursor.fetchall()
 

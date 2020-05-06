@@ -179,11 +179,8 @@ def pageEtu(id):
         mailEtu = request.form["mailEtu"]
         mailEntreprise = request.form["mailEntreprise"]
         
-        if(request.form.get('rupture')=='rupture'):
-            rupture = request.form["rupture"]
-            val = (idCarteEtu,nom,prenom,numeroEtudiant,rupture,tarif,filiere,numeroTel,mailEtu,mailEntreprise,id)
-        else:
-            val = (idCarteEtu,nom,prenom,numeroEtudiant,typeContratEtudiant,tarif,filiere,numeroTel,mailEtu,mailEntreprise,id)
+
+        val = (idCarteEtu,nom,prenom,numeroEtudiant,typeContratEtudiant,tarif,filiere,numeroTel,mailEtu,mailEntreprise,id)
 
 
         querya = ("UPDATE etudiant SET idCarteEtu=%s,nom=%s,prenom=%s,numeroEtudiant=%s,typeContratEtudiant=%s,tarif=%s,filiere=%s,numeroTel=%s,mailEtu=%s,mailEntreprise=%s WHERE idCarteEtu=%s")
