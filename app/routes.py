@@ -376,7 +376,7 @@ def archiveEtu(id):
 
         #On regarde que l'id a bien était initialisé (si id = 0 l'étudiant n'est pas dans la bdd)
         if(int(id) == 0):
-            return render_template("archive.html")
+            return render_template("archive.html", aucunResultat=True, nomEtu=nom, prenomEtu=prenom)
             
     import re
     querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
@@ -396,6 +396,9 @@ def archiveEtu(id):
 
         if(re.match(presenceRegex,i)!=None):
             fichierPresence.append(i)
+
+    
+    print(etu)
 
     return render_template("archiveEtu.html",user=etu, folderAttestation=fichiersAttestation, folderFichePresence=fichierPresence) 
 
@@ -532,4 +535,4 @@ def archive():
     if not compteEstAdmin():
         return redirect("choixFiliere")
 
-    return render_template("archive.html")
+    return render_template("archive.html", aucunResultat=False, nomEtu="", prenomEtu="")
