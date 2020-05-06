@@ -13,10 +13,6 @@ from app.pythonScript import pdfgen
 from app.pythonScript import excelGen
 from app.pythonScript import fonctionPy
 from app.pythonScript import mdpGen
-from app.pythonScript import bdd
-
-
-
 
 # Vérification de la validité du cookie
 def cookieEstValide():
