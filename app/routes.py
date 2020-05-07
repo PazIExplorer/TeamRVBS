@@ -435,9 +435,6 @@ def archiveEtu(id):
         if(re.match(presenceRegex,i)!=None):
             fichierPresence.append(i)
 
-    
-    print(etu)
-
     return render_template("archiveEtu.html",user=etu, folderAttestation=fichiersAttestation, folderFichePresence=fichierPresence) 
 
 

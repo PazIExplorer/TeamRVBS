@@ -229,7 +229,7 @@ def creation():
         ws.write_formula(row+i, 21, formuleTotalEuro, formatTotalBold)
 
 
-        #TODO complete les cases vide que je ne comprend pas l'utilité avec le format
+        #complete les cases vide que je ne comprend pas l'utilité avec le format
         ws.write("J"+str(row+i+1), "", formatT1Base)
         ws.write("O"+str(row+i+1), "", formatT2Base)
         ws.write("T"+str(row+i+1), "", formatT3Base)
@@ -237,7 +237,7 @@ def creation():
         i = i+1
 
 
-    #TODO la ligne de séparation
+    #la ligne de séparation
     num = 1
     #Affichage des CA
     for element in rowsCA:
@@ -282,7 +282,7 @@ def creation():
         formuleTotalEuro = "=J"+str(lc)+"+O"+str(lc)+"+S"+str(lc)
         ws.write_formula(row+i, 21, formuleTotalEuro, formatTotalBold)
 
-        #TODO complete les cases vide que je ne comprend pas l'utilité avec le format
+        #complete les cases vide que je ne comprend pas l'utilité avec le format
         ws.write("J"+str(row+i+1), "", formatT1Base)
         ws.write("O"+str(row+i+1), "", formatT2Base)
         ws.write("T"+str(row+i+1), "", formatT3Base)

@@ -67,13 +67,7 @@ def recupererEmploiDuTemps():
     #Met les données dans la list python
     liste_jours = []
     for row in rows:
-        liste_jours.append(row[1]) #row[0] la date sql avec le format de base, row[1] avec format %m/%d/%Y
-
-    #[DEBUG] afficher les jours récupérés de la bdd
-    #print("\n\n-----------test print j de la bdd recup----------")
-    #for t in liste_jours:
-    #    print(t)
-
+        liste_jours.append(row[1]) #row[0] la date sql avec le format de base, row[1] avec format %m/%d/%
 
     #Ouvre le fichier emploiDuTempse.json en écriture et écrit la liste des jours de cours dedans 
     with open("app/static/json/emploiDuTempsPick.json", "w") as file:
@@ -107,7 +101,6 @@ def sendEmploiDuTemps(jsonDates):
     for i in range (0, len(liste_jours)):
         #Convertion de la date du json qui est en string en format datetime
         dateCourante = dateStringToDatetime(list(liste_jours[i]))
-       #print(dateCourante.year, dateCourante.month, dateCourante.day)
         query = ('INSERT INTO calendrier (jourDeCour) values(%s)')
         var = (dateCourante.strftime('%Y-%m-%d %H:%M:%S'),)
         cursor.execute(query, var)
@@ -115,7 +108,6 @@ def sendEmploiDuTemps(jsonDates):
     cnx.commit()
    # except: 
     #    cnx.rollback()
-     #   print("DEBUG : fonction.py sendEmploiDutemps problème lors de l'insert a la bdd")
     
     #cnx.close()
 
