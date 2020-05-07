@@ -225,8 +225,6 @@ function showCalendar(monday) {
         let lunAM = document.getElementById(getJourApresMidi[joursem]);
 
         for(let jourpres=0;jourpres<datePresence.length;jourpres++){
-            console.log(datePresence[jourpres]);
-            console.log(dateSemaine[joursem]);
             if(datePresence[jourpres] == dateSemaine[joursem]){
                 if(presenceMatin[jourpres] == 1){
                     lunM.style.backgroundColor = "#8cff66";
