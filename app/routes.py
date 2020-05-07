@@ -107,6 +107,7 @@ def index():
 @app.route("/deconnexion", methods=["GET"])
 def deconnexion():
     if 'compteConnecte' in request.cookies:
+        #Vide le cookie
         res = make_response(render_template('deconnexion.html'))
         res.set_cookie('compteConnecte', "null", max_age=0)
         res.set_cookie('typeCompte', "null", max_age=0)
@@ -313,7 +314,6 @@ def pageModifEtu(id):
 
 @app.route("/pdfEtuPresence/<id>")
 def pdfEtuPresence(id): 
-
     # Validation du compte dans le cookie
     if not cookieEstValide():
         return redirect("index")
@@ -415,20 +415,25 @@ def archiveEtu(id):
             return render_template("archive.html", aucunResultat=True, nomEtu=nom, prenomEtu=prenom)
             
     import re
+    #On récupère les informations de l'étudiant 
     query = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
     cursor.execute(query)
     etu = cursor.fetchall()
 
     cnx.close()
-
+    #Création de deux regex pour récupérer les fichiers attestation.pdf et presence.pdf de l'étudiant en question
     attestationRegex=rf".*{etu[0][1]}\s{etu[0][2]}\sAttestation\.pdf"
     presenceRegex=rf".*{etu[0][1]}\s{etu[0][2]}\sPresence\.pdf"
 
+    #Récupération de la liste des fichiers de l'archive
     folderContent = os.listdir(os.path.join("./app/static/archive"))
+
+    #Création de deux tableaux pour récupérer dans chacun deux les fichiers voulu
     fichiersAttestation = []
     fichierPresence = []
 
     for i in folderContent:
+        #on passe tout les fichiers de l'archive dans les regex, quand ils correspondent on les ajoutes au tableau correspondant
         if (re.match(attestationRegex,i)!=None):
             fichiersAttestation.append(i)
 
@@ -507,6 +512,7 @@ def adminModifVariable():
 
     
     if request.method == "POST":
+        #Récupération des valeurs du formulaire (cas ou on a cliqué sur valider depuis la page adminModifVariable.html)
         debutAnnee = request.form["debutAnnee"]
         finAnnee = request.form["finAnnee"]
         debutAffiche = request.form["debutPeriode"]
@@ -515,6 +521,7 @@ def adminModifVariable():
         presidentSFC = request.form["presidentSFC"]
         tarifMaster = int(request.form["tarifMaster"])
 
+        #On met a jour la bdd
         query = ("UPDATE administration SET debutAnnee=%s,finAnnee=%s,debutAffiche=%s,finAffiche=%s,presidentSMB=%s,presidentSFC=%s,tarfiMaster=%s")
         val = (debutAnnee,finAnnee,debutAffiche,finAffiche,presidentSMB,presidentSFC,tarifMaster)
 
@@ -527,7 +534,8 @@ def adminModifVariable():
             cnx.rollback()
             modifType = -1
             msgErr = repr(ex)
-        
+    
+    #On récupère les informations de la bdd pour les affichers dans le formulaire
     query = ("SELECT * FROM administration ")
     cursor.execute(query)
     admin = cursor.fetchall()
