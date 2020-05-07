@@ -2,6 +2,8 @@ import mysql.connector, json, os
 import datetime
 import sqlite3
 
+from app.pythonScript import config
+
 # On lui donne un étudiant a partir de son numéro de carte étudiant
 # La fonction renvoie un tableau avec les heures de présences / moi 
 #
@@ -11,7 +13,7 @@ def heurePresentParMoi(numCarteEtu):
     tab_des_mois = {"1":"Janv", "2":"Fev", "3":"Mars", "4":"Avril", "5":"Mai", "6":"Juin", "7":"Juil", "8":"Aout", "9": "Sept", "10":"Oct", "11":"Nov", "12":"Déc"}
 
     #connection bdd
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
 
     #Récupération de la présence de l'étu
@@ -56,7 +58,7 @@ def recupMoi(datePresence):
 #Récupérer les dates de la bdd
 def recupererEmploiDuTemps():
     #connection bdd
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
 
     #récupérer les jours de cours de la bdd
@@ -86,7 +88,7 @@ def dateStringToDatetime(dateEnString):
 
 def sendEmploiDuTemps(jsonDates):
     #connection bdd
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
 
     #récupération de la liste des jours a partir du json
@@ -117,7 +119,7 @@ def tabHeureCoursParMoi(anneeScolaireDebut, anneeScolaireFin):
     tab_des_mois = {"01":"Janv", "02":"Fev", "03":"Mars", "04":"Avril", "05":"Mai", "06":"Juin", "07":"Juil", "08":"Aout", "09": "Sept", "10":"Oct", "11":"Nov", "12":"Déc"}
 
     #connection bdd
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
 
     #Récupération des jours ou les étudiants doivent être présent

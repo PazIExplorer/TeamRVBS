@@ -4,6 +4,8 @@
 from random import randint
 import smtplib
 
+from app.pythonScript import config
+
 def generateurMDP():
     caracteres="0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
     longueur=8
@@ -16,9 +18,9 @@ def generateurMDP():
     return mdp
 
 def envoiMail(dest,mdp):
-    serveur = smtplib.SMTP('smtp.gmail.com', 587) # Connexion au serveur (en précisant son nom et son port)
+    serveur = smtplib.SMTP(config.MAIL_host, config.MAIL_port) # Connexion au serveur (en précisant son nom et son port)
     serveur.starttls()
-    serveur.login("badgeuseusmb@gmail.com", "teamRVBS") # Authentification
+    serveur.login(config.MAIL_usermail, config.MAIL_password) # Authentification
     sujet = "Compte pour la badgeuse"
     message = u"""\
 Bonjour,
@@ -30,7 +32,8 @@ Site accessible au travers du VPN universitaire : vpn.univ-savoie.fr
 User : %s
 Mot de passe : %s
 """ % (dest,mdp)
-    
+
+    user =  config.MAIL_username + " <" + config.MAIL_usermail + ">"   # Ressemble à "NomCompte <adresse@mail.fr>"
     
     msg = """\
 From: %s\r\n\
@@ -38,14 +41,16 @@ To: %s\r\n\
 Subject: %s\r\n\
 \r\n\
 %s
-""" % ("badgeuseUSMB <badgeuseusmb@gmail.com>",dest, sujet, message)
-    serveur.sendmail("badgeuseusmb@gmail.com",str(dest),msg) # Envoie du message
+""" % (user, dest, sujet, message)
+    serveur.sendmail(config.MAIL_usermail,str(dest),msg) # Envoi du message
     serveur.quit() # Déconnexion du serveur
 
+
+
 def envoiMailModif(dest,mdp):
-    serveur = smtplib.SMTP('smtp.gmail.com', 587) # Connexion au serveur (en précisant son nom et son port)
+    serveur = smtplib.SMTP(config.MAIL_host, config.MAIL_port) # Connexion au serveur (en précisant son nom et son port)
     serveur.starttls()
-    serveur.login("badgeuseusmb@gmail.com", "teamRVBS") # Authentification
+    serveur.login(config.MAIL_usermail, config.MAIL_password) # Authentification
     sujet = "Modification de votre mot de passe pour la badgeuse"
     message = u"""\
 Bonjour,
@@ -59,13 +64,15 @@ User : %s
 Mot de passe : %s
 """ % (dest,mdp)
     
-    
+
+    user =  config.MAIL_username + " <" + config.MAIL_usermail + ">"   # Ressemble à "NomCompte <adresse@mail.fr>"
+
     msg = """\
 From: %s\r\n\
 To: %s\r\n\
 Subject: %s\r\n\
 \r\n\
 %s
-""" % ("badgeuseUSMB <badgeuseusmb@gmail.com>",dest, sujet, message)
-    serveur.sendmail("badgeuseusmb@gmail.com",str(dest),msg) # Envoie du message
+""" % (user, dest, sujet, message)
+    serveur.sendmail(config.MAIL_usermail,str(dest),msg) # Envoi du message
     serveur.quit() # Déconnexion du serveur
