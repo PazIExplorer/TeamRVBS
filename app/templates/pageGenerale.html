@@ -6,12 +6,6 @@
   <link rel="stylesheet" href="../static/css/styleHeader.css">
   <link rel="stylesheet" href="../static/css/styleGenerale.css">
   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
-<script> 
-$(function(){
-  $("#header").load("./header.html"); 
-  $("#footer").load("./footer.html"); 
-});
-</script> 
 </head>
 <body>
   {% include 'header.html' %}
@@ -58,7 +52,7 @@ $(function(){
         <th>Vendredi</th>
       </tr>
       <tr>
-        <th class="disparait" style="width: 50px;"></th>
+        <th class="disparait" class="th_jours"></th>
         <th id="semaine-lun"></th>
         <th id="semaine-mar"></th>
         <th id="semaine-mer"></th>

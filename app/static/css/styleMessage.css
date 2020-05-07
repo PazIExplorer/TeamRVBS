@@ -1,0 +1,11 @@
+div.erreur{
+    margin-top: 10px;
+    text-align: center;
+    border: 3px solid red;
+}
+
+div.reussit{
+    margin-top: 10px; 
+    text-align: center; 
+    border: 3px solid green;
+}
