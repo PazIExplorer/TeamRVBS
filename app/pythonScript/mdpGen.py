@@ -25,6 +25,39 @@ def envoiMail(dest,mdp):
     message = u"""\
 Bonjour,
 Voici votre compte pour acceder au site de la badgeuse.
+
+Adresse du site : http://mau-59-pointeuse.local.univ-savoie.fr/
+Site accessible au travers du VPN universitaire : vpn.univ-savoie.fr
+
+User : %s
+Mot de passe : %s
+""" % (dest,mdp)
+    
+    
+    msg = """\
+From: %s\r\n\
+To: %s\r\n\
+Subject: %s\r\n\
+\r\n\
+%s
+""" % ("badgeuseUSMB <badgeuseusmb@gmail.com>",dest, sujet, message)
+    serveur.sendmail("badgeuseusmb@gmail.com",str(dest),msg)    ## Envoie du message
+    serveur.quit()    ## Déconnexion du serveur
+
+def envoiMailModif(dest,mdp):
+    serveur = smtplib.SMTP('smtp.gmail.com', 587)    ## Connexion au serveur sortant (en précisant son nom et son port)
+    serveur.starttls()    ## Spécification de la sécurisation
+    serveur.login("badgeuseusmb@gmail.com", "teamRVBS")    ## Authentification
+    #message = ("Votre compte pour avoir accès au site de la badgeuse - User : " + dest + " --- Mot de passe : " + mdp).encode("utf-8")    ## Message à envoyer
+    sujet = "Modification de votre mot de passe pour la badgeuse"
+    message = u"""\
+Bonjour,
+Votre mot de passe pour acceder au site de la badgeuse est modifie.
+Voici vos nouveaux identifiants.
+
+Adresse du site : http://mau-59-pointeuse.local.univ-savoie.fr/
+Site accessible au travers du VPN universitaire : vpn.univ-savoie.fr
+
 User : %s
 Mot de passe : %s
 """ % (dest,mdp)

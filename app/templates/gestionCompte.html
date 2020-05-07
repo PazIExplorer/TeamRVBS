@@ -13,16 +13,26 @@
 
 <body>
     {% include 'header.html' %}
+
+    {% if modifType == 1 %}
+        <!-- MODIFICATIONS RÉUSSIES -->
+        <div style="margin-top: 10px; text-align: center; border: 3px solid green;">Modifications du compte {{identifiant}} enregistrées.</div>
+    {% elif modifType == -1 %}
+        <!-- MODIFICATIONS ÉCHOUÉES -->
+        <div style="margin-top: 10px; text-align: center; border: 3px solid red;">Une erreur a eu lieu lors de la modification du compte {{identifiant}} : {{msgErreur}}</div>
+    {% endif %}
+
+
     <h1>Gestion du compte :</h1>
     
     <form method="POST" action="{{url_for('gestionCompte')}}">
         <div>
         <label for="nomCompte">Nom du compte (adresse mail du proprietaire):</label>
-        <input type="email" id="nomCompte" name="nomCompte">
+        <input type="email" id="nomCompte" name="nomCompte" required>
         </div>
         <div>
         <label for="mdp">Nouveau mot de passe :</label>
-        <input type="text" id="mdp" name="mdp">
+        <input type="text" id="mdp" name="mdp" required>
         </div>
 
 

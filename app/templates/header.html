@@ -10,9 +10,9 @@
         <li><h1>Menu</h1>
             <ul>
                 <li><a id="headera" href="/choixFiliere">Accueil</a></li>
-                <li><a id="headera" href="/pageAdministration">Administration</a></li>
-                <li><a id="headera" href="/creationCompte">Créer un compte</a></li>
-                <li><a id="headera" href="/gestionCompte">Gestion du compte</a></li>
+                <li class="admina"><a id="headera" href="/pageAdministration" >Administration</a></li>
+                <li class="admina"><a id="headera" href="/creationCompte">Créer un compte</a></li>
+                <li class="admina"><a id="headera" href="/gestionCompte">Gestion du compte</a></li>
               
             </ul>
         </li>
@@ -42,5 +42,12 @@
             return "";
         }
         document.getElementById('nomUser').innerText = `Bonjour, ${getCookie("compteConnecte")}`;
+        if (getCookie("typeCompte") != "administrateur") {
+            // Ce n'est pas un administrateur, on supprime les liens du menu menant à des pages admin
+            var elements = document.getElementsByClassName("admina");
+            while(elements.length > 0){
+                elements[0].parentNode.removeChild(elements[0]);
+            }
+        }
     </script>
 </header>

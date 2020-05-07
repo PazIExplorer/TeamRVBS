@@ -6,17 +6,13 @@ import mysql.connector
 import os.path
 from os import path
 
+
+
 import os
 from app.pythonScript import pdfgen
 from app.pythonScript import excelGen
 from app.pythonScript import fonctionPy
 from app.pythonScript import mdpGen
-
-
-cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
-cursor = cnx.cursor()
-cursora = cnx.cursor()
-cursorb = cnx.cursor()
 
 # Vérification de la validité du cookie
 def cookieEstValide():
@@ -25,10 +21,16 @@ def cookieEstValide():
         # On vérifie que le compte est un compte valide
         user_name = request.cookies.get('compteConnecte')
         user_accType = request.cookies.get('typeCompte')
+
+        cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+        cursor = cnx.cursor()
+
         query = ("SELECT identifiant FROM connexion WHERE identifiant=%s AND typeCompte=%s")
         val = (user_name, user_accType)
         cursor.execute(query, val)
         user_result = cursor.fetchall()
+
+        cnx.close()
 
         if len(user_result) != 0:
             # Cookie correct
@@ -68,10 +70,15 @@ def index():
         user_name = request.form["user_name"]
         user_mdp = request.form["user_mdp"]
 
+        cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+        cursor = cnx.cursor()
+
         query = ("SELECT * FROM connexion WHERE identifiant=%s AND motdepasse=%s")
         val = (user_name,user_mdp)
         cursor.execute(query, val)
         user_result = cursor.fetchall()
+
+        
 
         if len(user_result) == 0:
             # ID / MDP Incorrect
@@ -84,6 +91,8 @@ def index():
             query = ("SELECT * FROM filiere")
             cursor.execute(query)
             filieres = cursor.fetchall()
+
+            cnx.close()
 
             # Redirection forcée + ajout du cookie
             res = make_response(render_template("choixFiliere.html", filieres=filieres))
@@ -116,11 +125,15 @@ def choixFiliere():
         tabSemA = request.form["tsa"]
 
     
+
+    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cursor = cnx.cursor()
     # Liste des filières
     query = ("SELECT * FROM filiere")
     cursor.execute(query)
     filieres = cursor.fetchall()
 
+    cnx.close()
 
     return render_template("choixFiliere.html",filieres=filieres)
 
@@ -137,6 +150,10 @@ def pageGenerale(idFiliere):
         query = ("SELECT * FROM etudiant WHERE filiere IS NULL")
     else:
         query = ("SELECT * FROM etudiant WHERE filiere="+str(idFiliere))
+
+    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cursor = cnx.cursor()
+
     cursor.execute(query)
     etu = cursor.fetchall()
 
@@ -153,7 +170,7 @@ def pageGenerale(idFiliere):
     query = ("SELECT * FROM presence") # Améliorer la durée de chargement ?
     cursor.execute(query)
     presence = cursor.fetchall()
-    
+    cnx.close()
     # Génération du excel a chaque fois qu'on est sur la page générale
     excelGen.creation()
     return render_template("pageGenerale.html",user=etu,presence=presence,filieres=filieres)
@@ -167,6 +184,14 @@ def pageEtu(id):
         return redirect("index")
 
     id=id
+
+    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cursor = cnx.cursor()
+    
+    modifType = 0   # Utilisé en cas de modifs utilisateur
+                    # 0 = rien, 1 = succès, -1 = erreur
+    msgErr = ""     # Utilisé en cas d'erreur (pour l'affichage)
+
     if request.method == "POST":
         idCarteEtu = id
         nom = request.form["nom"]
@@ -179,45 +204,36 @@ def pageEtu(id):
         mailEtu = request.form["mailEtu"]
         mailEntreprise = request.form["mailEntreprise"]
         
-        if(request.form.get('rupture')=='rupture'):
-            rupture = request.form["rupture"]
-            val = (idCarteEtu,nom,prenom,numeroEtudiant,rupture,tarif,filiere,numeroTel,mailEtu,mailEntreprise,id)
-        else:
-            val = (idCarteEtu,nom,prenom,numeroEtudiant,typeContratEtudiant,tarif,filiere,numeroTel,mailEtu,mailEntreprise,id)
+        val = (idCarteEtu,nom,prenom,numeroEtudiant,typeContratEtudiant,tarif,filiere,numeroTel,mailEtu,mailEntreprise,id)
 
-
-        querya = ("UPDATE etudiant SET idCarteEtu=%s,nom=%s,prenom=%s,numeroEtudiant=%s,typeContratEtudiant=%s,tarif=%s,filiere=%s,numeroTel=%s,mailEtu=%s,mailEntreprise=%s WHERE idCarteEtu=%s")
-        
-        
-        queryb = ("UPDATE presence SET idCarteEtu=%s WHERE idCarteEtu=%s")
-        valb = (idCarteEtu,id)
+        query = ("UPDATE etudiant SET idCarteEtu=%s,nom=%s,prenom=%s,numeroEtudiant=%s,typeContratEtudiant=%s,tarif=%s,filiere=%s,numeroTel=%s,mailEtu=%s,mailEntreprise=%s WHERE idCarteEtu=%s")
 
         try:
-            cursora.execute(querya,val)
-            cnx.commit()
-            
-            querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
-            cursora.execute(querya)
-            etu = cursora.fetchall()
+            cursor.execute(query,val)
 
-            queryb = ("SELECT * FROM presence WHERE idCarteEtu="+str(id))
-            cursorb.execute(queryb)
-            presence = cursorb.fetchall()
-            return render_template("pageEtu.html",user=etu,presence=presence)
-        
-        except:
+            query = ("UPDATE presence SET idCarteEtu=%s WHERE idCarteEtu=%s")
+            val = (idCarteEtu,id)
+
+            cursor.execute(query,val)
+            cnx.commit()
+
+            modifType = 1
+            
+        except Exception as ex:
             cnx.rollback()
-        
-    querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
-    cursora.execute(querya)
-    etu = cursora.fetchall()
+            modifType = -1
+            msgErr = repr(ex)
+            
+    query = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
+    cursor.execute(query)
+    etu = cursor.fetchall()
  
     
-    queryb = ("SELECT * FROM presence WHERE idCarteEtu="+str(id))
-    cursorb.execute(queryb)
-    presence = cursorb.fetchall()
-
-    return render_template("pageEtu.html", user=etu , presence=presence)
+    query = ("SELECT * FROM presence WHERE idCarteEtu="+str(id))
+    cursor.execute(query)
+    presence = cursor.fetchall()
+    cnx.close()
+    return render_template("pageEtu.html", user=etu , presence=presence, modifType=modifType, msgErreur=msgErr)
 
 @app.route("/pageConvention/<id>", methods=["GET", "POST"])
 def pageConvention(id):
@@ -230,12 +246,14 @@ def pageConvention(id):
     if not compteEstAdmin():
         return redirect(url_for("pageEtu", id=id))
 
+    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cursor = cnx.cursor()
 
     id=id
-    querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
-    cursora.execute(querya)
-    etu = cursora.fetchall()
-
+    query = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
+    cursor.execute(query)
+    etu = cursor.fetchall()
+    cnx.close()
     if request.method == "POST":
         conv = request.files["conv"]
         non_conv = secure_filename(conv.filename)
@@ -263,15 +281,19 @@ def pageModifEtu(id):
     if not compteEstAdmin():
         return redirect(url_for("pageEtu", id=id))
 
-    id=id
-    querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
-    cursora.execute(querya)
-    etu = cursora.fetchall()
+    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cursor = cnx.cursor()
 
-    querya = ("SELECT * FROM filiere")
-    cursora.execute(querya)
-    filiere = cursora.fetchall()
-    #etu[0][0]= hex(etu[0][0])
+    id=id
+    query = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
+    cursor.execute(query)
+    etu = cursor.fetchall()
+
+    query = ("SELECT * FROM filiere")
+    cursor.execute(query)
+    filiere = cursor.fetchall()
+    cnx.close()
+    
     return render_template("pageModifEtu.html", user=etu, fil=filiere)
 
 @app.route("/pdfEtuPresence/<id>")
@@ -285,21 +307,29 @@ def pdfEtuPresence(id):
     if not compteEstAdmin():
         return redirect(url_for("pageEtu", id=id))
 
+    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cursor = cnx.cursor()
 
     id=id
-    querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
-    cursora.execute(querya)
-    etu = cursora.fetchall()
+    query = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
+    cursor.execute(query)
+    etu = cursor.fetchall()
 
-    querya = ("SELECT * FROM filiere WHERE idFiliere="+str(etu[0][6]))
-    cursora.execute(querya)
-    filiere = cursora.fetchall()
+    query = ("SELECT * FROM filiere WHERE idFiliere="+str(etu[0][6]))
+    cursor.execute(query)
+    filiere = cursor.fetchall()
 
-    querya = ("SELECT * FROM presence WHERE idCarteEtu="+str(id))
-    cursora.execute(querya)
-    presence = cursora.fetchall()
+    query = ("SELECT * FROM presence WHERE idCarteEtu="+str(id))
+    cursor.execute(query)
+    presence = cursor.fetchall()
 
-    myPresence= pdfgen.presence(etu[0][1]+" "+etu[0][2],filiere[0][1],presence)
+    query=("SELECT * FROM administration")
+    cursor.execute(query)
+    administration = cursor.fetchall()
+
+    cnx.close()
+
+    myPresence= pdfgen.presence(etu[0][1]+" "+etu[0][2],filiere[0][1],presence,administration)
     return render_template("pdfEtu.html",myPresence=myPresence,user=etu)
 
 @app.route("/pdfEtu/<id>")
@@ -313,22 +343,31 @@ def pdfEtu(id):
     if not compteEstAdmin():
         return redirect(url_for("pageEtu", id=id))
 
+    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cursor = cnx.cursor()
+
     id=id 
-    querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
-    cursora.execute(querya)
-    etu = cursora.fetchall()
+    query = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
+    cursor.execute(query)
+    etu = cursor.fetchall()
 
-    querya = ("SELECT * FROM presence WHERE idCarteEtu="+str(id))
-    cursora.execute(querya)
-    presence = cursora.fetchall()
+    query = ("SELECT * FROM presence WHERE idCarteEtu="+str(id))
+    cursor.execute(query)
+    presence = cursor.fetchall()
 
-    querya = ("SELECT * FROM filiere WHERE idFiliere="+str(etu[0][6]))
-    cursora.execute(querya)
-    filiere = cursora.fetchall()
-    #etu= Etudiant.query.get(int(id))
-    #filiere=Filiere.query.get(int(etu.filiere))
-    myPDF=pdfgen.pdf(etu[0][1]+" "+etu[0][2],filiere[0][1],presence)
-    return render_template("pdfEtu.html",myPDF=myPDF,user=etu)
+    query = ("SELECT * FROM filiere WHERE idFiliere="+str(etu[0][6]))
+    cursor.execute(query)
+    filiere = cursor.fetchall()
+    
+    query=("SELECT * FROM administration")
+    cursor.execute(query)
+    administration = cursor.fetchall()
+
+    cnx.close()
+
+
+    myPDF=pdfgen.pdf(etu[0][1]+" "+etu[0][2],filiere[0][1],presence,administration)
+    return render_template("pdfEtuAttest.html",myPDF=myPDF,user=etu)
 
 @app.route("/archiveEtu/<id>")
 @app.route("/archiveEtu/<id>", methods=["GET","POST"])
@@ -341,6 +380,9 @@ def archiveEtu(id):
     if not compteEstAdmin():
         return redirect(url_for("pageEtu", id=id))
 
+    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cursor = cnx.cursor()
+    
     if request.method == 'POST':
         #si arrive ici avec formulaire alors il faut trouver l'id de l'étudiant
         nom = request.form["nom"]
@@ -355,12 +397,14 @@ def archiveEtu(id):
 
         #On regarde que l'id a bien était initialisé (si id = 0 l'étudiant n'est pas dans la bdd)
         if(int(id) == 0):
-            return render_template("archive.html")
+            return render_template("archive.html", aucunResultat=True, nomEtu=nom, prenomEtu=prenom)
             
     import re
-    querya = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
-    cursora.execute(querya)
-    etu = cursora.fetchall()
+    query = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
+    cursor.execute(query)
+    etu = cursor.fetchall()
+
+    cnx.close()
 
     attestationRegex=rf".*{etu[0][1]}\s{etu[0][2]}\sAttestation\.pdf"
     presenceRegex=rf".*{etu[0][1]}\s{etu[0][2]}\sPresence\.pdf"
@@ -376,6 +420,9 @@ def archiveEtu(id):
         if(re.match(presenceRegex,i)!=None):
             fichierPresence.append(i)
 
+    
+    print(etu)
+
     return render_template("archiveEtu.html",user=etu, folderAttestation=fichiersAttestation, folderFichePresence=fichierPresence) 
 
 @app.route("/ajoutEtu/<nomprenomid>",methods=["GET","POST"])
@@ -385,13 +432,20 @@ def ajoutEtu(nomprenomid):
     nom = np[0]
     prenom = np[1]
     numEtu = np[3]
+
+    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cursor = cnx.cursor()
+
     query = ("INSERT INTO etudiant (idCarteEtu,nom,prenom,numeroEtudiant) VALUES (%s,%s,%s,%s)")
     arg = (idCarte,nom,prenom,numEtu)
     try:
         cursor.execute(query,arg)
         cnx.commit()
+        cnx.close()
         return render_template("success.html")
-    except Exception as e:
+    except:
+        cnx.rollback()
+        cnx.close()
         return render_template("failure.html")
 
 @app.route("/emploiDuTemps")
@@ -409,8 +463,6 @@ def emploiDuTempsPicker():
 
         data = request.form['hide']
         if data:
-            print("TEST route.py")
-            print(data)
             fonctionPy.sendEmploiDuTemps(data)
 
     fonctionPy.recupererEmploiDuTemps()
@@ -431,6 +483,14 @@ def pageAdministration():
 @app.route("/adminModifVariable")
 @app.route("/adminModifVariable", methods=["GET", "POST"])
 def adminModifVariable():
+    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cursor = cnx.cursor()
+
+    modifType = 0   # Utilisé en cas de modifs utilisateur
+                    # 0 = rien, 1 = succès, -1 = erreur
+    msgErr = ""     # Utilisé en cas d'erreur (pour l'affichage)
+
+    
     if request.method == "POST":
         debutAnnee = request.form["debutAnnee"]
         finAnnee = request.form["finAnnee"]
@@ -444,62 +504,102 @@ def adminModifVariable():
         val = (debutAnnee,finAnnee,debutAffiche,finAffiche,presidentSMB,presidentSFC,tarifMaster)
 
         try:
-            cursora.execute(query,val)
-            cnx.commit()
-            querya = ("SELECT * FROM administration" )
-            cursora.execute(querya)
-            admin = cursora.fetchall()
-            return render_template("adminModifVariable.html",admin=admin)
+            cursor.execute(query,val)
+            cnx.commit()            
+            modifType = 1     
         
-        except:
-            print("erreur route.py pageAdminModifVariable passe dans le except !")
+        except Exception as ex:
             cnx.rollback()
+            modifType = -1
+            msgErr = repr(ex)
         
-    querya = ("SELECT * FROM administration ")
-    cursora.execute(querya)
-    admin = cursora.fetchall()
-    return render_template("adminModifVariable.html",admin=admin)
+    query = ("SELECT * FROM administration ")
+    cursor.execute(query)
+    admin = cursor.fetchall()
+    cnx.close()
+    return render_template("adminModifVariable.html",admin=admin, modifType=modifType, msgErreur=msgErr)
 
 @app.route("/creationCompte", methods=['GET', 'POST'])
 def creationCompte():
+    # Validation du compte dans le cookie
+    if not cookieEstValide():
+        return redirect("index")
+
+    # Vérifie si le compte est admin, sinon retour à la page d'accueil
+    if not compteEstAdmin():
+        return redirect("choixFiliere")
+
+    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cursor = cnx.cursor()
+    
+    modifType = 0   # Utilisé en cas de modification
+                    # 0 = rien, 1 = succès, -1 = erreur
+    idCompte = ""   # Utilisé en cas de modification
+    msgErr = ""     # Utilisé en cas d'erreur (pour l'affichage)
+
     if request.method == "POST":
         email = request.form["nomCompte"]
         mdp = mdpGen.generateurMDP()
         typeCompte = request.form["type"]
-        querya = ("INSERT INTO connexion VALUES(%s,%s,%s)")
+        idCompte = email
+        query = ("INSERT INTO connexion VALUES(%s,%s,%s)")
         val =(email,mdp,typeCompte)
-        try:
-            cursora.execute(querya,val)
-            cnx.commit()
-            mdpGen.envoiMail(email,mdp)
-            #return "Compte créé avec succès"
-            return render_template("choixFiliere.html")
-        except:
-            cnx.rollback()
-            #return "Echec lors de la création du compte. Veuillez réessayer"
-            return render_template("creationCompte.html")
 
-    return render_template("creationCompte.html")
+        try:
+            cursor.execute(query,val)
+            cnx.commit()
+            cnx.close()
+            mdpGen.envoiMail(email,mdp)
+            modifType = 1
+
+        except Exception as ex:
+            cnx.rollback()
+            cnx.close()
+            modifType = -1
+            msgErr = repr(ex)
+    cnx.close()
+    return render_template("creationCompte.html", modifType=modifType, msgErreur=msgErr, identifiant=idCompte)
 
 @app.route("/gestionCompte", methods=['GET', 'POST'])
 def gestionCompte():
+    # Validation du compte dans le cookie
+    if not cookieEstValide():
+        return redirect("index")
+
+    # Vérifie si le compte est admin, sinon retour à la page d'accueil
+    if not compteEstAdmin():
+        return redirect("choixFiliere")
+    
+    modifType = 0   # Utilisé en cas de modification
+                    # 0 = rien, 1 = succès, -1 = erreur
+    idCompte = ""   # Utilisé en cas de modification
+    msgErr = ""     # Utilisé en cas d'erreur (pour l'affichage)
+    
     if request.method == "POST":
         nom = request.form["nomCompte"]
         mdp = request.form["mdp"]
+
+        idCompte = nom
+
+        cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+        cursor = cnx.cursor()
         
-        querya = ("UPDATE connexion SET motdepasse=%s WHERE identifiant=%s")
+        query = ("UPDATE connexion SET motdepasse=%s WHERE identifiant=%s")
         val = (mdp,nom)
         try:
-            cursora.execute(querya,val)
+            cursor.execute(query,val)
             cnx.commit()
-            #return "Compte modifié avec succès"
-            return render_template("choixFiliere.html")
-        except:
+            cnx.close()
+            mdpGen.envoiMailModif(nom,mdp)
+            modifType = 1
+            
+        except Exception as ex:
             cnx.rollback()
-            #return "Echec lors de la modification du compte. Veuillez réessayer"
-            return render_template("gestionCompte.html")
+            cnx.close()
+            modifType = -1
+            msgErr = repr(ex)
 
-    return render_template("gestionCompte.html")
+    return render_template("gestionCompte.html", modifType=modifType, msgErreur=msgErr, identifiant=idCompte)
 
 @app.route("/archive")
 def archive():
@@ -511,4 +611,4 @@ def archive():
     if not compteEstAdmin():
         return redirect("choixFiliere")
 
-    return render_template("archive.html")
+    return render_template("archive.html", aucunResultat=False, nomEtu="", prenomEtu="")

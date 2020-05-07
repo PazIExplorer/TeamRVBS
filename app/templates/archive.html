@@ -17,6 +17,13 @@
 
 <body>
     {% include 'header.html' %}
+
+    {% if aucunResultat %}
+        <!-- ÉTUDIANT INEXISTANT -->
+        <div style="margin-top: 10px; text-align: center; border: 3px solid red;">L'étudiant {{nomEtu}} {{prenomEtu}} n'existe pas dans la base de données.</div>
+    {% endif %}
+
+
     <form action="{{url_for('archiveEtu',id=0 )}}" method="POST">
         <h1>Archive </h1>
         <fieldset>

@@ -18,6 +18,17 @@
 </head>
 <body>
   {% include 'header.html' %}
+
+
+  {% if modifType == 1 %}
+      <!-- MODIFICATIONS RÉUSSIES -->
+      <div style="margin-top: 10px; text-align: center; border: 3px solid green;">Modifications des données enregistrées.</div>
+  {% elif modifType == -1 %}
+      <!-- MODIFICATIONS ÉCHOUÉES -->
+      <div style="margin-top: 10px; text-align: center; border: 3px solid red;">Une erreur a eu lieu lors de la modification des données : {{msgErreur}}</div>
+  {% endif %}
+
+
   <form action="{{url_for('adminModifVariable')}}" method="POST">
     <h1>Changement des informations</h1>
     <fieldset>
@@ -35,7 +46,7 @@
     </fieldset>
 
     <fieldset>
-      <legend>Période d'affichage pour attestation, excel</legend>
+      <legend>Période d'affichage pour attestation</legend>
       <ol>
         <li>
           <label for="debutPeriode">Du:</label>
@@ -59,6 +70,12 @@
           <label for ="presidentSFC">President du SFC:</label>
           <input type="text" name="presidentSFC" id="presidentSFC" value="{{admin[0][5]}}" onClick="this.value = '';" >
         </li>
+      </ol>
+    </fieldset>
+
+    <fieldset>
+      <legend>Autre</legend>
+      <ol>
         <li>
           <label for="tarifMaster">Tarifage des master</label>
           <input type="text" name="tarifMaster" id="tarifMaster" value="{{admin[0][6]}}" onclick="this.value='';">  
