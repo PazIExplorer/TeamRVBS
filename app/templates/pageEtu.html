@@ -6,6 +6,7 @@
     <title>Étudiant : {{user[0][1]}} {{user[0][2]}} </title>
     <link rel="stylesheet" href="../static/css/styleHeader.css">
     <link rel="stylesheet" href="../static/css/styleEtu.css">
+    <link rel="stylesheet" href="../static/css/styleMessage.css">
     <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 </head>
 
@@ -15,10 +16,10 @@
 
     {% if modifType == 1 %}
         <!-- MODIFICATIONS RÉUSSIES -->
-        <div style="margin-top: 10px; text-align: center; border: 3px solid green;">Modifications de l'étudiant enregistrées.</div>
+        <div class="reussit">Modifications de l'étudiant enregistrées.</div>
     {% elif modifType == -1 %}
         <!-- MODIFICATIONS ÉCHOUÉES -->
-        <div style="margin-top: 10px; text-align: center; border: 3px solid red;">Une erreur a eu lieu lors de la modification de l'étudiant : {{msgErreur}}</div>
+        <div class="erreur">Une erreur a eu lieu lors de la modification de l'étudiant : {{msgErreur}}</div>
     {% endif %}
 
 
@@ -88,7 +89,7 @@
         <table class="table-bordered table-responsive-sm" id="calendar">
             <thead id="calendar-head">
                 <tr>
-                    <th class="disparait" style="width: 50px;"></th>
+                    <th class="disparait" class="th_jours"></th>
                     <th>Lundi</th>
                     <th>Mardi</th>
                     <th>Mercredi</th>
@@ -96,7 +97,7 @@
                     <th>Vendredi</th>
                 </tr>
                 <tr>
-                    <th class="disparait" style="width: 50px;"></th>
+                    <th class="disparait" class="th_jours"></th>
                     <th id="semaine-lun"></th>
                     <th id="semaine-mar"></th>
                     <th id="semaine-mer"></th>

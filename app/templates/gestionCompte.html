@@ -5,10 +5,9 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 		<title>Création de compte</title>
-
         <link rel="stylesheet" href="../static/css/styleHeader.css">
         <link rel="stylesheet" href="../static/css/styleGestionCompte.css">
-        
+        <link rel="stylesheet" href="../static/css/styleMessage.css">
 </head>
 
 <body>
@@ -16,10 +15,10 @@
 
     {% if modifType == 1 %}
         <!-- MODIFICATIONS RÉUSSIES -->
-        <div style="margin-top: 10px; text-align: center; border: 3px solid green;">Modifications du compte {{identifiant}} enregistrées.</div>
+        <div class="reussit">Modifications du compte {{identifiant}} enregistrées.</div>
     {% elif modifType == -1 %}
         <!-- MODIFICATIONS ÉCHOUÉES -->
-        <div style="margin-top: 10px; text-align: center; border: 3px solid red;">Une erreur a eu lieu lors de la modification du compte {{identifiant}} : {{msgErreur}}</div>
+        <div class="erreur">Une erreur a eu lieu lors de la modification du compte {{identifiant}} : {{msgErreur}}</div>
     {% endif %}
 
 

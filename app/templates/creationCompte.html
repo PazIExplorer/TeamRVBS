@@ -7,6 +7,7 @@
 	<title>Création de compte</title>
     <link rel="stylesheet" href="../static/css/styleHeader.css">
     <link rel="stylesheet" href="../static/css/styleCreaCompte.css">
+    <link rel="stylesheet" href="../static/css/styleMessage.css">
         
 </head>
 
@@ -15,10 +16,10 @@
 
     {% if modifType == 1 %}
         <!-- CRÉATION RÉUSSIE -->
-        <div style="margin-top: 10px; text-align: center; border: 3px solid green;">Création du compte {{identifiant}} effectuée. Un mail contenant le mot de passe a été envoyé.</div>
+        <div class="reussit">Création du compte {{identifiant}} effectuée. Un mail contenant le mot de passe a été envoyé.</div>
     {% elif modifType == -1 %}
         <!-- CRÉATION ÉCHOUÉE -->
-        <div style="margin-top: 10px; text-align: center; border: 3px solid red;">Une erreur a eu lieu lors de la création du compte {{identifiant}} : {{msgErreur}}</div>
+        <div class="erreur">Une erreur a eu lieu lors de la création du compte {{identifiant}} : {{msgErreur}}</div>
     {% endif %}
 
     <h1>Création de compte :</h1>

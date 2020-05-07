@@ -5,7 +5,7 @@
   <title>Choix des filières</title>
   <link rel="stylesheet" href="../static/css/styleHeader.css">
   <link rel="stylesheet" href="../static/css/styleAdmin.css">
-
+  <link rel="stylesheet" href="../static/css/styleMessage.css">
   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 </head>
 <body>
@@ -13,10 +13,10 @@
 
   {% if modifType == 1 %}
       <!-- MODIFICATIONS RÉUSSIES -->
-      <div style="margin-top: 10px; text-align: center; border: 3px solid green;">Modifications des données enregistrées.</div>
+      <div class="reussit">Modifications des données enregistrées.</div>
   {% elif modifType == -1 %}
       <!-- MODIFICATIONS ÉCHOUÉES -->
-      <div style="margin-top: 10px; text-align: center; border: 3px solid red;">Une erreur a eu lieu lors de la modification des données : {{msgErreur}}</div>
+      <div class="erreur">Une erreur a eu lieu lors de la modification des données : {{msgErreur}}</div>
   {% endif %}
 
 
