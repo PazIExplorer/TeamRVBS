@@ -7,12 +7,13 @@ import os.path
 from os import path
 
 
-
 import os
 from app.pythonScript import pdfgen
 from app.pythonScript import excelGen
 from app.pythonScript import fonctionPy
 from app.pythonScript import mdpGen
+
+from app.pythonScript import config
 
 # Vérification de la validité du cookie
 def cookieEstValide():
@@ -22,7 +23,7 @@ def cookieEstValide():
         user_name = request.cookies.get('compteConnecte')
         user_accType = request.cookies.get('typeCompte')
 
-        cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+        cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
         cursor = cnx.cursor()
 
         query = ("SELECT identifiant FROM connexion WHERE identifiant=%s AND typeCompte=%s")
@@ -70,7 +71,7 @@ def index():
         user_name = request.form["user_name"]
         user_mdp = request.form["user_mdp"]
 
-        cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+        cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
         cursor = cnx.cursor()
 
         query = ("SELECT * FROM connexion WHERE identifiant=%s AND motdepasse=%s")
@@ -127,7 +128,7 @@ def choixFiliere():
 
     
 
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
     # Recuperation de la liste des filières
     query = ("SELECT * FROM filiere")
@@ -153,7 +154,7 @@ def pageGenerale(idFiliere):
     else:
         query = ("SELECT * FROM etudiant WHERE filiere="+str(idFiliere))
 
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
 
     cursor.execute(query)
@@ -187,7 +188,7 @@ def pageEtu(id):
 
     id=id
 
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
     
     modifType = 0   # Utilisé en cas de modifs utilisateur
@@ -253,7 +254,7 @@ def pageConvention(id):
     if not compteEstAdmin():
         return redirect(url_for("pageEtu", id=id))
 
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
 
     id=id
@@ -294,7 +295,7 @@ def pageModifEtu(id):
     if not compteEstAdmin():
         return redirect(url_for("pageEtu", id=id))
 
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
 
     id=id
@@ -322,7 +323,7 @@ def pdfEtuPresence(id):
     if not compteEstAdmin():
         return redirect(url_for("pageEtu", id=id))
 
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
 
     id=id
@@ -358,7 +359,7 @@ def pdfEtu(id):
     if not compteEstAdmin():
         return redirect(url_for("pageEtu", id=id))
 
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
 
     id=id 
@@ -395,7 +396,7 @@ def archiveEtu(id):
     if not compteEstAdmin():
         return redirect(url_for("pageEtu", id=id))
 
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
     
     if request.method == 'POST':
@@ -452,7 +453,7 @@ def ajoutEtu(nomprenomid):
     prenom = np[1]
     numEtu = np[3]
 
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
 
     #insertion de l'etudiant dans la BDD
@@ -503,7 +504,7 @@ def pageAdministration():
 @app.route("/adminModifVariable")
 @app.route("/adminModifVariable", methods=["GET", "POST"])
 def adminModifVariable():
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
 
     modifType = 0   # Utilisé en cas de modifs utilisateur
@@ -552,7 +553,7 @@ def creationCompte():
     if not compteEstAdmin():
         return redirect("choixFiliere")
 
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
     
     modifType = 0   # Utilisé en cas de modification
@@ -609,24 +610,34 @@ def gestionCompte():
 
         idCompte = nom
 
-        cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+        cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
         cursor = cnx.cursor()
-        
-        #mise à jour de la BDD
-        query = ("UPDATE connexion SET motdepasse=%s WHERE identifiant=%s")
-        val = (mdp,nom)
-        try:
-            cursor.execute(query,val)
-            cnx.commit()
-            cnx.close()
-            mdpGen.envoiMailModif(nom,mdp) # envoi de l'email de modification
-            modifType = 1
-            
-        except Exception as ex:
-            cnx.rollback()
-            cnx.close()
+
+        # Vérifie que le compte existe
+        query = ("SELECT * FROM connexion WHERE identifiant='"+nom+"'")
+        cursor.execute(query)
+        result = cursor.fetchall()
+        if len(result) == 0:
+            # Compte inexistant, erreur
             modifType = -1
-            msgErr = repr(ex)
+            msgErr = "Le compte n'existe pas."
+
+        else:
+            # Le compte existe, mise à jour de la BDD
+            query = ("UPDATE connexion SET motdepasse=%s WHERE identifiant=%s")
+            val = (mdp,nom)
+            try:
+                cursor.execute(query,val)
+                cnx.commit()
+                cnx.close()
+                mdpGen.envoiMailModif(nom,mdp) # envoi de l'email de modification
+                modifType = 1
+                
+            except Exception as ex:
+                cnx.rollback()
+                cnx.close()
+                modifType = -1
+                msgErr = repr(ex)
 
     return render_template("gestionCompte.html", modifType=modifType, msgErreur=msgErr, identifiant=idCompte)
 

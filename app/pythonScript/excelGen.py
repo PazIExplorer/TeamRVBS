@@ -4,7 +4,7 @@ from app.pythonScript import fonctionPy
 
 def creation():
     #connection bdd
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
 
     query = ("SELECT * FROM administration")
