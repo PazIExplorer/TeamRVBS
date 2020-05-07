@@ -128,13 +128,14 @@ def choixFiliere():
 
     cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
     cursor = cnx.cursor()
-    # Liste des filières
+    # Recuperation de la liste des filières
     query = ("SELECT * FROM filiere")
     cursor.execute(query)
     filieres = cursor.fetchall()
 
     cnx.close()
 
+    #redirection vers la page qui affiche les filières disponibles
     return render_template("choixFiliere.html",filieres=filieres)
 
 
@@ -145,7 +146,7 @@ def pageGenerale(idFiliere):
     if not cookieEstValide():
         return redirect("index")
 
-    # Etudiants
+    # Recuperation de tous les étudiants
     if idFiliere == "NULL":
         query = ("SELECT * FROM etudiant WHERE filiere IS NULL")
     else:
@@ -192,7 +193,9 @@ def pageEtu(id):
                     # 0 = rien, 1 = succès, -1 = erreur
     msgErr = ""     # Utilisé en cas d'erreur (pour l'affichage)
 
+    # si un formulaire à été envoyé à cette page
     if request.method == "POST":
+        # recuperation des informations du formulaire
         idCarteEtu = id
         nom = request.form["nom"]
         prenom = request.form["prenom"]
@@ -206,6 +209,7 @@ def pageEtu(id):
         
         val = (idCarteEtu,nom,prenom,numeroEtudiant,typeContratEtudiant,tarif,filiere,numeroTel,mailEtu,mailEntreprise,id)
 
+        # Modification de la table étudiant avec les nouvelles informations 
         query = ("UPDATE etudiant SET idCarteEtu=%s,nom=%s,prenom=%s,numeroEtudiant=%s,typeContratEtudiant=%s,tarif=%s,filiere=%s,numeroTel=%s,mailEtu=%s,mailEntreprise=%s WHERE idCarteEtu=%s")
 
         try:
@@ -224,15 +228,17 @@ def pageEtu(id):
             modifType = -1
             msgErr = repr(ex)
             
+
+    # recuperation des étudiants et de leurs présence
     query = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
     cursor.execute(query)
     etu = cursor.fetchall()
- 
     
     query = ("SELECT * FROM presence WHERE idCarteEtu="+str(id))
     cursor.execute(query)
     presence = cursor.fetchall()
     cnx.close()
+
     return render_template("pageEtu.html", user=etu , presence=presence, modifType=modifType, msgErreur=msgErr)
 
 @app.route("/pageConvention/<id>", methods=["GET", "POST"])
@@ -250,16 +256,22 @@ def pageConvention(id):
     cursor = cnx.cursor()
 
     id=id
+
+    #recuperation de l'étudiants concerné
     query = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
     cursor.execute(query)
     etu = cursor.fetchall()
     cnx.close()
+
+
     if request.method == "POST":
+
+        #Recuperation et sauvegarde du fichier transmis dans le dossier cenvention
         conv = request.files["conv"]
         non_conv = secure_filename(conv.filename)
         conv.save('/root/TeamRVBS/app/static/convention/'+non_conv)
     
-    #TODO récup le chemin ou on est
+    #pour savoir si l'étudiant possède déjà une convention
     p = "/root/TeamRVBS/app/static/convention/"+str(etu[0][1]) + "_" + str(etu[0][2])+"_Convention.pdf"
     if not(path.exists(p)):
         p = "../static/convention/conventionBase.pdf"
@@ -285,6 +297,8 @@ def pageModifEtu(id):
     cursor = cnx.cursor()
 
     id=id
+
+    #recuperation de létudiant et des filières
     query = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
     cursor.execute(query)
     etu = cursor.fetchall()
@@ -292,6 +306,7 @@ def pageModifEtu(id):
     query = ("SELECT * FROM filiere")
     cursor.execute(query)
     filiere = cursor.fetchall()
+    
     cnx.close()
     
     return render_template("pageModifEtu.html", user=etu, fil=filiere)
@@ -425,6 +440,8 @@ def archiveEtu(id):
 
     return render_template("archiveEtu.html",user=etu, folderAttestation=fichiersAttestation, folderFichePresence=fichierPresence) 
 
+
+#Sert a ajouter un étudiant depuis l'application mobile
 @app.route("/ajoutEtu/<nomprenomid>",methods=["GET","POST"])
 def ajoutEtu(nomprenomid):
     np = str(nomprenomid).split('-')
@@ -436,6 +453,7 @@ def ajoutEtu(nomprenomid):
     cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
     cursor = cnx.cursor()
 
+    #insertion de l'etudiant dans la BDD
     query = ("INSERT INTO etudiant (idCarteEtu,nom,prenom,numeroEtudiant) VALUES (%s,%s,%s,%s)")
     arg = (idCarte,nom,prenom,numEtu)
     try:
@@ -538,10 +556,13 @@ def creationCompte():
     msgErr = ""     # Utilisé en cas d'erreur (pour l'affichage)
 
     if request.method == "POST":
+        #Recuperation des information du compte
         email = request.form["nomCompte"]
-        mdp = mdpGen.generateurMDP()
+        mdp = mdpGen.generateurMDP() #generation du mot de passe
         typeCompte = request.form["type"]
         idCompte = email
+
+        #Insertion du compte
         query = ("INSERT INTO connexion VALUES(%s,%s,%s)")
         val =(email,mdp,typeCompte)
 
@@ -549,7 +570,7 @@ def creationCompte():
             cursor.execute(query,val)
             cnx.commit()
             cnx.close()
-            mdpGen.envoiMail(email,mdp)
+            mdpGen.envoiMail(email,mdp) #evoi de l'email recapitulatif
             modifType = 1
 
         except Exception as ex:
@@ -576,6 +597,8 @@ def gestionCompte():
     msgErr = ""     # Utilisé en cas d'erreur (pour l'affichage)
     
     if request.method == "POST":
+
+        #recuperation des nouvelles informations
         nom = request.form["nomCompte"]
         mdp = request.form["mdp"]
 
@@ -584,13 +607,14 @@ def gestionCompte():
         cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
         cursor = cnx.cursor()
         
+        #mise à jour de la BDD
         query = ("UPDATE connexion SET motdepasse=%s WHERE identifiant=%s")
         val = (mdp,nom)
         try:
             cursor.execute(query,val)
             cnx.commit()
             cnx.close()
-            mdpGen.envoiMailModif(nom,mdp)
+            mdpGen.envoiMailModif(nom,mdp) # envoi de l'email de modification
             modifType = 1
             
         except Exception as ex:
