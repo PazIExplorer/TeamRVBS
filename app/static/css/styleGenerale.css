@@ -59,6 +59,11 @@ th.disparait{
     border:0px solid black;
 }
 
+
+th.th_jours{
+    width: 50px;
+}
+
 #ligneEtudiant {
     background-color: #fff;
 }
@@ -104,3 +109,4 @@ button{
     color: black;
     width: 250px;
 }
+
