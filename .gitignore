@@ -12,3 +12,6 @@ venv/
 
 # Autres ignores serveur
 TeamRVBS/
+
+# EXCEL
+*.xlsx

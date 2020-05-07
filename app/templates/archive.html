@@ -7,12 +7,7 @@
     <title>Archive</title>
     <link rel="stylesheet" href="../static/css/styleHeader.css">
     <link rel="stylesheet" href="../static/css/styleAdmin.css">
-    <script> 
-        $(function(){
-          $("#header").load("./header.html"); 
-          $("#footer").load("./footer.html"); 
-        });
-    </script> 
+    <link rel="stylesheet" href="../static/css/styleMessage.css">
 </head>
 
 <body>
@@ -20,7 +15,7 @@
 
     {% if aucunResultat %}
         <!-- ÉTUDIANT INEXISTANT -->
-        <div style="margin-top: 10px; text-align: center; border: 3px solid red;">L'étudiant {{nomEtu}} {{prenomEtu}} n'existe pas dans la base de données.</div>
+        <div class="erreur">L'étudiant {{nomEtu}} {{prenomEtu}} n'existe pas dans la base de données.</div>
     {% endif %}
 
 
