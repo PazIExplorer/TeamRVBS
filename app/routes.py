@@ -436,7 +436,6 @@ def archiveEtu(id):
             fichierPresence.append(i)
 
     
-    print(etu)
 
     return render_template("archiveEtu.html",user=etu, folderAttestation=fichiersAttestation, folderFichePresence=fichierPresence) 
 
@@ -479,11 +478,13 @@ def emploiDuTempsPicker():
 
     if request.method == 'POST':
 
-        data = request.form['hide']
-        if data:
-            fonctionPy.sendEmploiDuTemps(data)
+        data = request.form['tsa']
+        print(data)
+        
+        #if data:
+            #fonctionPy.sendEmploiDuTemps(data)
 
-    fonctionPy.recupererEmploiDuTemps()
+    #fonctionPy.recupererEmploiDuTemps()
     return render_template("emploiDuTempsPicker.html")
     
 @app.route("/pageAdministration")
