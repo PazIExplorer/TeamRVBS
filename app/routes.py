@@ -1,3 +1,5 @@
+# -*-coding:utf-8 -*
+
 from app import app
 from flask import render_template, request, make_response, redirect, url_for
 from werkzeug import secure_filename
@@ -481,11 +483,17 @@ def emploiDuTempsPicker():
         data = request.form['tsa']
         print(data)
         
-        #if data:
-            #fonctionPy.sendEmploiDuTemps(data)
+        if data:
+            fonctionPy.sendDates(data)
 
-    #fonctionPy.recupererEmploiDuTemps()
-    return render_template("emploiDuTempsPicker.html")
+    d = fonctionPy.recupererDates()
+    dates =[]
+    for e in d:
+        dates.append(e[1])
+        print(e[1])
+ 
+
+    return render_template("emploiDuTempsPicker.html",dates=dates)
     
 @app.route("/pageAdministration")
 def pageAdministration():

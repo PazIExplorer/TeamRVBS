@@ -1,6 +1,7 @@
 import mysql.connector, json, os
 import datetime
 import sqlite3
+import time
 
 # On lui donne un étudiant a partir de son numéro de carte étudiant
 # La fonction renvoie un tableau avec les heures de présences / moi 
@@ -142,3 +143,51 @@ def tabHeureCoursParMoi(anneeScolaireDebut, anneeScolaireFin):
             nom_moi = tab_des_mois[num_moi]
             tab_heureCourParMoi[nom_moi] = tab_heureCourParMoi[nom_moi] + 7 #on ajoute 7h (le nb d'heure de cours dans une journée)
     return tab_heureCourParMoi
+
+
+
+#Récupérer les dates de la bdd
+def recupererDates():
+    #connection bdd
+    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cursor = cnx.cursor()
+
+    #récupérer les jours de cours de la bdd
+    query = ("SELECT *, DATE_FORMAT(jourDeCour, \"%Y-%m-%d\") FROM calendrier")
+    cursor.execute(query)
+    rows = cursor.fetchall()
+    return rows
+
+
+
+def sendDates(Dates):
+    #connection bdd
+    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cursor = cnx.cursor()
+
+    #récupération de la liste des jours a partir du json
+    liste_jours = []
+    liste_jours = Dates.split('/')
+
+    
+    #vide la table 
+    query = ("TRUNCATE TABLE calendrier")
+    cursor.execute(query)
+
+    #parcour de la liste pour les envoyer dans la bdd
+
+    for i in range (0, len(liste_jours)-1):
+        print(liste_jours[i])
+        #Convertion de la date du json qui est en string en format datetime
+        dateCourante = time.strptime(str(liste_jours[i]),"%Y-%m-%d")
+       #print(dateCourante.year, dateCourante.month, dateCourante.day)
+        query = ('INSERT INTO calendrier (jourDeCour) values(%s)')
+        var = (time.strftime('%Y-%m-%d', dateCourante),)
+        cursor.execute(query, var)
+    try:
+        cnx.commit()
+    except: 
+        cnx.rollback()
+        print("DEBUG : fonction.py sendEmploiDutemps problème lors de l'insert a la bdd")
+    
+    #cnx.close()

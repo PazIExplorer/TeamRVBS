@@ -1,20 +1,18 @@
-let envoieDate = [];
+envoieDate = [];
+datesSelect = {};
+
+dateBDD = dateBDD.replace(/&#39;/g,'');
+dateBDD = dateBDD.replace(/\[/g,'');
+dateBDD = dateBDD.replace(/\]/g,'');
+dateBDD = dateBDD.split(', ');
+for(i=0;i<dateBDD.length;i++){
+
+    datesSelect[dateBDD[i]] = true;
+    envoieDate.push(dateBDD[i]);
+}
+
 
 function get_Active(){
-    /*
-	b = document.getElementsByClassName("datepainter-cell.datepainter-selected");
-	inputH = document.getElementById("tsa");
-    tabSemainesAlternants = [b.length];
-
-    for (i = 0; i < b.length; i++) {
-        tabSemainesAlternants[i] = b[i].innerText;
-    }
-    a = "";
-    for (i = 0; i < tabSemainesAlternants.length; i++) {
-        a = a + tabSemainesAlternants[i] + "/";
-    }
-    inputH.value = a;
-    */
    a=""
    inputH = document.getElementById("tsa")
     for(i=0;i<envoieDate.length;i++){
@@ -160,7 +158,7 @@ var dayName= ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
             this.yearSelect = this._createYearSelect(this.firstYear, this.lastYear).val(now.year());
             this.monthSelect = this._createMonthSelect().val(now.month());
             this._mouseState = ''; // '', 'set', 'unset'
-            this.selected = {}
+            this.selected = datesSelect;
 
 
               // create week day titles for the calendar
