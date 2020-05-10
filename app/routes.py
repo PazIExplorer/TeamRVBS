@@ -481,17 +481,14 @@ def emploiDuTempsPicker():
     if request.method == 'POST':
 
         data = request.form['tsa']
-        print(data)
-        
+                
         if data:
             fonctionPy.sendDates(data)
+        else:
+            fonctionPy.effacerBase()
 
-    d = fonctionPy.recupererDates()
-    dates =[]
-    for e in d:
-        dates.append(e[1])
-        print(e[1])
- 
+    dates = fonctionPy.recupererDates()
+    
 
     return render_template("emploiDuTempsPicker.html",dates=dates)
     

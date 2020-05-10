@@ -156,7 +156,14 @@ def recupererDates():
     query = ("SELECT *, DATE_FORMAT(jourDeCour, \"%Y-%m-%d\") FROM calendrier")
     cursor.execute(query)
     rows = cursor.fetchall()
-    return rows
+    cnx.close()
+
+    dates = []
+    if len(rows) != 0:
+        for e in rows:
+            dates.append(e[1])
+
+    return dates
 
 
 
@@ -166,28 +173,39 @@ def sendDates(Dates):
     cursor = cnx.cursor()
 
     #récupération de la liste des jours a partir du json
-    liste_jours = []
-    liste_jours = Dates.split('/')
+    if Dates == '':
+        return 0
+    else:
+        liste_jours = []
+        liste_jours = Dates.split('/')
 
     
     #vide la table 
-    query = ("TRUNCATE TABLE calendrier")
+    query = ("DELETE FROM calendrier")
     cursor.execute(query)
 
     #parcour de la liste pour les envoyer dans la bdd
-
+    
     for i in range (0, len(liste_jours)-1):
-        print(liste_jours[i])
-        #Convertion de la date du json qui est en string en format datetime
+        
         dateCourante = time.strptime(str(liste_jours[i]),"%Y-%m-%d")
-       #print(dateCourante.year, dateCourante.month, dateCourante.day)
-        query = ('INSERT INTO calendrier (jourDeCour) values(%s)')
+        query = ('INSERT INTO calendrier (jourDeCour) VALUES (%s)')
         var = (time.strftime('%Y-%m-%d', dateCourante),)
         cursor.execute(query, var)
-    try:
+
         cnx.commit()
-    except: 
-        cnx.rollback()
-        print("DEBUG : fonction.py sendEmploiDutemps problème lors de l'insert a la bdd")
+
     
-    #cnx.close()
+    cnx.close()
+
+
+def effacerBase():
+    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cursor = cnx.cursor()
+
+    query = ("DELETE FROM calendrier")
+    cursor.execute(query)
+
+    cnx.commit()
+
+    cnx.close()

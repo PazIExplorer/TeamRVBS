@@ -1,12 +1,12 @@
 envoieDate = [];
 datesSelect = {};
 
+
 dateBDD = dateBDD.replace(/&#39;/g,'');
 dateBDD = dateBDD.replace(/\[/g,'');
 dateBDD = dateBDD.replace(/\]/g,'');
 dateBDD = dateBDD.split(', ');
 for(i=0;i<dateBDD.length;i++){
-
     datesSelect[dateBDD[i]] = true;
     envoieDate.push(dateBDD[i]);
 }
@@ -16,11 +16,10 @@ function get_Active(){
    a=""
    inputH = document.getElementById("tsa")
     for(i=0;i<envoieDate.length;i++){
-        a = a + envoieDate[i] + "/";
-        console.log(envoieDate[i]);
-
+        if(envoieDate[i]!=''){
+            a = a + envoieDate[i] + "/";
+        }
     }
-    
     
     inputH.value = a;
 
@@ -250,7 +249,7 @@ var dayName= ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
             tbody.disableSelection();
 
             this._refresh();
-            get_Active();
+            //get_Active();
         },
 
         _getDate: function(row, col) {
@@ -317,18 +316,13 @@ var dayName= ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
 
         _unselectDate: function(date) {
             delete this.selected[date.format('YYYY-MM-DD')];
-            //envoieDate= ['2020-05-01'];
-            console.log("Avant unselect = "+envoieDate.length);
             date = date.format('YYYY-MM-DD')
             for(i=0;i<envoieDate.length;i++){
                 d = envoieDate[i];
                 if( date === d){
-                        //index = envoieDate.indexOf(d);
-                        //delete envoieDate[index];
                         envoieDate = envoieDate.filter(item => item !== d);
                 }
             }
-            console.log("Apres unselect = "+envoieDate.length);
         },
 
         _isCellGroupSelected: function(row, col) {
@@ -436,7 +430,7 @@ var dayName= ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
                 cell.addClass('datepainter-selected');
 
             cell.text(text);
-            get_Active();
+            //get_Active();
 
         },
 
