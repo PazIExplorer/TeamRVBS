@@ -27,11 +27,11 @@
       <ol>
         <li>
           <label for="debutAnnee">Debut d'année : </label>
-          <input type="text" name="debutAnnee" id="debutAnnee" value="{{admin[0][0]}}" placeholder="jj/mm/aaaa" onClick="this.value = '';" >  
+          <input type="number" name="debutAnnee" id="debutAnnee" value="{{admin[0][0]}}" placeholder="aaaa" onClick="this.value = '';" onblur="resetForm('debutAnnee','{{admin[0][0]}}')">  
         </li>
         <li>
           <label for="finAnnee">  Fin d'année :</label>
-          <input type="text" name="finAnnee" id="finAnnee" value="{{admin[0][1]}}" placeholder="jj/mm/aaaa"  onClick="this.value = '';" >  
+          <input type="number" name="finAnnee" id="finAnnee" value="{{admin[0][1]}}" placeholder="aaaa"  onClick="this.value = '';" onblur="resetForm('finAnnee','{{admin[0][1]}}')">  
         </li>
       </ol>
     </fieldset>
@@ -41,11 +41,11 @@
       <ol>
         <li>
           <label for="debutPeriode">Du:</label>
-          <input type="text" name="debutPeriode" id="debutPeriode" value="{{admin[0][2]}}" placeholder="jj/mm/aaaa" onClick="this.value = '';" >  
+          <input type="text" name="debutPeriode" id="debutPeriode" value="{{admin[0][2]}}" placeholder="jj/mm/aaaa" onClick="this.value = '';" onblur="resetForm('debutPeriode','{{admin[0][2]}}')" pattern="^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$">  
         </li>
         <li>
           <label for="finPeriode">Au :</label>
-          <input type="text" name="finPeriode" id="finPeriode" value="{{admin[0][3]}}" placeholder="jj/mm/aaaa" onClick="this.value = '';" >
+          <input type="text" name="finPeriode" id="finPeriode" value="{{admin[0][3]}}" placeholder="jj/mm/aaaa" onClick="this.value = '';" onblur="resetForm('finPeriode','{{admin[0][3]}}')" pattern="^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$">
         </li>
       </ol>
     </fieldset>
@@ -55,11 +55,11 @@
       <ol>
         <li>
           <label for="presidentUSMB">President de l'USMB:</label>
-          <input type="text" name="presidentUSMB" id="presidentUSMB" value="{{admin[0][4]}}" onClick="this.value = '';" >
+          <input type="text" name="presidentUSMB" id="presidentUSMB" value="{{admin[0][4]}}" onClick="this.value = '';" onblur="resetForm('presidentUSMB','{{admin[0][4]}}')">
         </li>
         <li>
           <label for ="presidentSFC">President du SFC:</label>
-          <input type="text" name="presidentSFC" id="presidentSFC" value="{{admin[0][5]}}" onClick="this.value = '';" >
+          <input type="text" name="presidentSFC" id="presidentSFC" value="{{admin[0][5]}}" onClick="this.value = '';" onblur="resetForm('presidentSFC','{{admin[0][5]}}')">
         </li>
       </ol>
     </fieldset>
@@ -69,7 +69,7 @@
       <ol>
         <li>
           <label for="tarifMaster">Tarifage des master</label>
-          <input type="text" name="tarifMaster" id="tarifMaster" value="{{admin[0][6]}}" onclick="this.value='';">  
+          <input type="number" name="tarifMaster" id="tarifMaster" value="{{admin[0][6]}}" onclick="this.value='';" onblur="resetForm('tarifMaster','{{admin[0][6]}}')">  
         </li>
       </ol>
     </fieldset>
@@ -79,3 +79,13 @@
  
 </body>
 </html>
+
+<script type="text/javascript">
+        function resetForm(id,t){
+               input = document.getElementById(id);
+               if(input.value === ""){
+                       input.value = t;
+               }
+        }
+	
+</script>
