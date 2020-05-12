@@ -22,8 +22,12 @@
         <div class="erreur">Une erreur a eu lieu lors de la modification de l'étudiant : {{msgErreur}}</div>
     {% endif %}
 
+    <form action="{{url_for('pageGenerale', idFiliere=user[0][6])}}">
+        <input class="b" type="submit" value="Retour page de selection des étudiants" />
+    </form>
 
     <div id="descriptEtu">
+
         <h1>Description de l'étudiant</h1>
         <ol>
             <li>
