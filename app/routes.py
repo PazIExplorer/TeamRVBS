@@ -589,13 +589,6 @@ def creationCompte():
 
 @app.route("/gestionCompte", methods=['GET', 'POST'])
 def gestionCompte():
-    # Validation du compte dans le cookie
-    if not cookieEstValide():
-        return redirect("index")
-
-    # Vérifie si le compte est admin, sinon retour à la page d'accueil
-    if not compteEstAdmin():
-        return redirect("choixFiliere")
     
     modifType = 0   # Utilisé en cas de modification
                     # 0 = rien, 1 = succès, -1 = erreur
@@ -612,22 +605,35 @@ def gestionCompte():
 
         cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
         cursor = cnx.cursor()
+
+        query = ("SELECT * FROM connexion")
+        cursor.execute(query)
+        comptes = cursor.fetchall()
+
+        estCompte = False
+        for c in comptes:
+            if(nom == c[0]):
+                estCompte = True
         
-        #mise à jour de la BDD
-        query = ("UPDATE connexion SET motdepasse=%s WHERE identifiant=%s")
-        val = (mdp,nom)
-        try:
-            cursor.execute(query,val)
-            cnx.commit()
-            cnx.close()
-            mdpGen.envoiMailModif(nom,mdp) # envoi de l'email de modification
-            modifType = 1
-            
-        except Exception as ex:
-            cnx.rollback()
-            cnx.close()
+        if estCompte:
+            #mise à jour de la BDD
+            query = ("UPDATE connexion SET motdepasse=%s WHERE identifiant=%s")
+            val = (mdp,nom)
+            try:
+                cursor.execute(query,val)
+                cnx.commit()
+                cnx.close()
+                mdpGen.envoiMailModif(nom,mdp) # envoi de l'email de modification
+                modifType = 1
+                
+            except Exception as ex:
+                cnx.rollback()
+                cnx.close()
+                modifType = -1
+                msgErr = repr(ex)
+        else:
             modifType = -1
-            msgErr = repr(ex)
+            msgErr = "Ce compte n'existe pas"
 
     return render_template("gestionCompte.html", modifType=modifType, msgErreur=msgErr, identifiant=idCompte)
 
