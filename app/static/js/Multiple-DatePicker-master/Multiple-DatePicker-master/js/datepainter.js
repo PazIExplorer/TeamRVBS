@@ -85,7 +85,7 @@ var dayName= ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
                     th.addClass('datepainter-cell');
                     cells['0-' + col] = th;
                 } else {
-                    th.append($("<button>").html('<i class="icon-remove"/>')
+                    th.append($("<button>").html('\u2716')
                       .click(function (e) { cal.clearSelected();}));
 
                 }
@@ -193,8 +193,8 @@ var dayName= ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
 
 
 
-            var prevMonthButton = $("<button>").html('<i class="icon-arrow-left"/>');
-            var nextMonthButton = $("<button>").html('<i class="icon-arrow-right"/>');
+            var prevMonthButton = $("<button>").html('\u23f4');
+            var nextMonthButton = $("<button>").html('\u23f5');
 
             this.calendar = $("<table>")
                 .appendTo(this.element)
