@@ -654,3 +654,9 @@ def archive():
         return redirect("choixFiliere")
 
     return render_template("archive.html", aucunResultat=False, nomEtu="", prenomEtu="")
+
+
+@app.route("/documentation")
+def documentation():
+
+    return render_template("documentation.html")
