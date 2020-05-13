@@ -94,7 +94,7 @@ def pdf(etu,master,presence,administration):
     c.drawString(0,626,"SIRET : 197 308 588 000 15")
     #attestation de presence
     c.setFont("Helvetica-Bold", 14)
-    c.drawCentredString(230, 575, "ATTESTATION de PRÉSENCE")
+    c.drawCentredString(230, 575, "ATTESTATION DE PRÉSENCE")
     #Je soussigné
     c.setFont("Helvetica",12)
     textobject=c.beginText(0,540)
@@ -161,6 +161,9 @@ def pdf(etu,master,presence,administration):
 def presence(etu,master,presenceJour,administration):
     
     from reportlab.lib.units import cm,inch
+
+    usmb=os.path.join("./app/static/img",'logoUSMB2.png')
+
     #obtention de l'année scolaire
     debutScol=datetime.strptime(administration[0][0], '%d/%m/%Y').date()
     finScol=datetime.strptime(administration[0][1], '%d/%m/%Y').date()
@@ -190,6 +193,9 @@ def presence(etu,master,presenceJour,administration):
 
     # origine x, y en haut à gauche
     c.translate(inch,inch)
+
+    # Logo USMB
+    c.drawImage(usmb,0,690,150,60)
 
     c.line(0,600,440,600)
     c.line(0,560,440,560)
