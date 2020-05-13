@@ -40,7 +40,7 @@ def pdf(etu,master,presence,administration):
 
     pathPDF = "./app/static/pdf"
     pathArchive = "./app/static/archive"
-    filename = alternant+" Attestation de Présence.pdf"
+    filename = alternant+" Attestation.pdf"
     currDate = datetime.now()
     c = canvas.Canvas(os.path.join(pathPDF,filename))
     #obtention de l'année scolaire
@@ -180,7 +180,7 @@ def presence(etu,master,presenceJour,administration):
 
     pathPDF = "./app/static/pdf"
     pathArchive = "./app/static/archive"
-    filename = alternant+" Feuille de Présence.pdf"
+    filename = alternant+" Presence.pdf"
 
     periodeDebut=administration[0][2]
     periodeFin=administration[0][3]
