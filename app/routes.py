@@ -204,29 +204,27 @@ def pageEtu(id):
     # si un formulaire à été envoyé à cette page
     if request.method == "POST":
         # recuperation des informations du formulaire
-        idCarteEtu = id
+        idCarteEtu = request.form["idCarteEtu"]
+        idCarteEtu = int(idCarteEtu,16)
         nom = request.form["nom"]
         prenom = request.form["prenom"]
-        numeroEtudiant = int(request.form["numeroEtudiant"])
+        numeroEtudiant = id
         typeContratEtudiant = request.form["typeContratEtudiant"]
         tarif = float(request.form["tarif"])
         filiere = int(request.form["filiere"])
-        numeroTel = int(request.form["numeroTel"])
+        numeroTel = request.form["numeroTel"]
         mailEtu = request.form["mailEtu"]
         mailEntreprise = request.form["mailEntreprise"]
+        description = request.form["description"]
         
-        val = (idCarteEtu,nom,prenom,numeroEtudiant,typeContratEtudiant,tarif,filiere,numeroTel,mailEtu,mailEntreprise,id)
+        val = (idCarteEtu,nom,prenom,numeroEtudiant,typeContratEtudiant,tarif,filiere,numeroTel,mailEtu,mailEntreprise,description,id)
 
         # Modification de la table étudiant avec les nouvelles informations 
-        query = ("UPDATE etudiant SET idCarteEtu=%s,nom=%s,prenom=%s,numeroEtudiant=%s,typeContratEtudiant=%s,tarif=%s,filiere=%s,numeroTel=%s,mailEtu=%s,mailEntreprise=%s WHERE idCarteEtu=%s")
+        query = ("UPDATE etudiant SET idCarteEtu=%s,nom=%s,prenom=%s,numeroEtudiant=%s,typeContratEtudiant=%s,tarif=%s,filiere=%s,numeroTel=%s,mailEtu=%s,mailEntreprise=%s,description=%s WHERE numeroEtudiant=%s")
 
         try:
             cursor.execute(query,val)
 
-            query = ("UPDATE presence SET idCarteEtu=%s WHERE idCarteEtu=%s")
-            val = (idCarteEtu,id)
-
-            cursor.execute(query,val)
             cnx.commit()
 
             modifType = 1
@@ -238,15 +236,15 @@ def pageEtu(id):
             
 
     # recuperation des étudiants et de leurs présence
-    query = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
+    query = ("SELECT * FROM etudiant WHERE numeroEtudiant="+str(id))
     cursor.execute(query)
     etu = cursor.fetchall()
     
-    query = ("SELECT * FROM presence WHERE idCarteEtu="+str(id))
+    query = ("SELECT * FROM presence WHERE numeroEtudiant="+str(id))
     cursor.execute(query)
     presence = cursor.fetchall()
     cnx.close()
-
+    print(etu[0][6])
     return render_template("pageEtu.html", user=etu , presence=presence, modifType=modifType, msgErreur=msgErr)
 
 @app.route("/pageConvention/<id>", methods=["GET", "POST"])
@@ -266,7 +264,7 @@ def pageConvention(id):
     id=id
 
     #recuperation de l'étudiants concerné
-    query = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
+    query = ("SELECT * FROM etudiant WHERE numeroEtudiant="+str(id))
     cursor.execute(query)
     etu = cursor.fetchall()
     cnx.close()
@@ -307,7 +305,7 @@ def pageModifEtu(id):
     id=id
 
     #recuperation de létudiant et des filières
-    query = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
+    query = ("SELECT * FROM etudiant WHERE numeroEtudiant="+str(id))
     cursor.execute(query)
     etu = cursor.fetchall()
 
@@ -333,7 +331,7 @@ def pdfEtuPresence(id):
     cursor = cnx.cursor()
 
     id=id
-    query = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
+    query = ("SELECT * FROM etudiant WHERE numeroEtudiant="+str(id))
     cursor.execute(query)
     etu = cursor.fetchall()
 
@@ -341,7 +339,7 @@ def pdfEtuPresence(id):
     cursor.execute(query)
     filiere = cursor.fetchall()
 
-    query = ("SELECT * FROM presence WHERE idCarteEtu="+str(id))
+    query = ("SELECT * FROM presence WHERE numeroEtudiant="+str(id))
     cursor.execute(query)
     presence = cursor.fetchall()
 
@@ -369,11 +367,11 @@ def pdfEtu(id):
     cursor = cnx.cursor()
 
     id=id 
-    query = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
+    query = ("SELECT * FROM etudiant WHERE numeroEtudiant="+str(id))
     cursor.execute(query)
     etu = cursor.fetchall()
 
-    query = ("SELECT * FROM presence WHERE idCarteEtu="+str(id))
+    query = ("SELECT * FROM presence WHERE numeroEtudiant="+str(id))
     cursor.execute(query)
     presence = cursor.fetchall()
 
@@ -387,6 +385,7 @@ def pdfEtu(id):
 
     cnx.close()
 
+    print(len(presence))
 
     myPDF=pdfgen.pdf(etu[0][1]+" "+etu[0][2],filiere[0][1],presence,administration)
     return render_template("pdfEtuAttest.html",myPDF=myPDF,user=etu)
@@ -415,15 +414,14 @@ def archiveEtu(id):
         rows = cursor.fetchall()
         #Il ne doit avoir récupérer qu'un étudiant
         for row in rows:
-            id = row[0] #idCarteEtu
+            id = row[3] #numeroEtudiant
 
         #On regarde que l'id a bien était initialisé (si id = 0 l'étudiant n'est pas dans la bdd)
         if(int(id) == 0):
             return render_template("archive.html", aucunResultat=True, nomEtu=nom, prenomEtu=prenom)
             
     import re
-    #On récupère les informations de l'étudiant 
-    query = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
+    query = ("SELECT * FROM etudiant WHERE numeroEtudiant="+str(id))
     cursor.execute(query)
     etu = cursor.fetchall()
 
@@ -537,7 +535,7 @@ def adminModifVariable():
         if signature.filename != "":
             nom_fichier = secure_filename(signature.filename)
             signature.save(os.getcwd()+'/app/static/img/'+nom_fichier)
-        query = ("UPDATE administration SET debutAnnee=%s,finAnnee=%s,debutAffiche=%s,finAffiche=%s,presidentSMB=%s,presidentSFC=%s,tarfiMaster=%s")
+        query = ("UPDATE administration SET debutAnnee=%s,finAnnee=%s,debutAffiche=%s,finAffiche=%s,presidentSMB=%s,presidentSFC=%s,tarifMaster=%s")
         val = (debutAnnee,finAnnee,debutAffiche,finAffiche,presidentSMB,presidentSFC,tarifMaster)
 
         try:

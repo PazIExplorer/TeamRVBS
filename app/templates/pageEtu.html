@@ -22,9 +22,17 @@
         <div class="erreur">Une erreur a eu lieu lors de la modification de l'étudiant : {{msgErreur}}</div>
     {% endif %}
 
-    <form action="{{url_for('pageGenerale', idFiliere=user[0][6])}}">
-        <input class="b" type="submit" value="Retour page de selection des étudiants" />
-    </form>
+    
+    {% if user[0][6] %}  
+        <form action="{{url_for('pageGenerale', idFiliere=user[0][6])}}">
+            <input class="b" type="submit" value="Retour page de selection des étudiants" />
+        </form>
+    {% else %}
+        <form action="{{url_for('pageGenerale', idFiliere='NULL')}}">
+            <input class="b" type="submit" value="Retour page de selection des étudiants" />
+        </form>
+    {% endif %}
+
 
     <div id="descriptEtu">
 
@@ -54,24 +62,29 @@
                 <p class="gauche">Mail entreprise :</p>
                 <p class="droite">{{user[0][9]}}</p>
             </li>
+                <p class="gauche">Commentaire :</p>
+                <p class="droite">{{user[0][10]}}</p>
             <li>
-                <form class="gauche" method="GET" action="{{url_for('archiveEtu',id=user[0][0]) }}">
+
+            </li>
+            <li>
+                <form class="gauche" method="GET" action="{{url_for('archiveEtu',id=user[0][3]) }}">
                     <input type="submit" value="Archive de l'étudiant">
                 </form>
-                <form class="droite" method="GET" action="{{url_for('pageConvention', id=user[0][0])}}">
+                <form class="droite" method="GET" action="{{url_for('pageConvention', id=user[0][3])}}">
                     <input type="submit" value="Convention">
                 </form>
             </li>
             <li>
-                <form class="gauche" method="GET" action="{{url_for('pdfEtuPresence', id=user[0][0])}}">
+                <form class="gauche" method="GET" action="{{url_for('pdfEtuPresence',id=user[0][3])}}">
                     <input type="submit" value="Fiche de présence">
                 </form>
-                <form class="droite" method="GET" action="{{url_for('pdfEtu',id=user[0][0]) }}">
+                <form class="droite" method="GET" action="{{url_for('pdfEtu',id=user[0][3])}}">
                     <input type="submit" value="Attestation de présence">
                 </form>
             </li>
             <li>
-                <form class="gauche" method="GET" action="{{url_for('pageModifEtu', id=user[0][0])}}">
+                <form class="gauche" method="GET" action="{{url_for('pageModifEtu',id=user[0][3])}}">
                     <input type="submit" value="Modifier">
                 </form>
             </li>

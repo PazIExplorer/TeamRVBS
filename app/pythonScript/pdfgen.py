@@ -58,18 +58,16 @@ def pdf(etu,master,presence,administration):
     
     i=0
     while (i!=len(presence)):
+        print(presence[i][3])
         if(presence[i][3] < dateDebut):
-            
             presence.remove(presence[i])
-        elif(presence[i][3]>dateFin):
-            
+        elif(presence[i][3]>dateFin): 
             presence.remove(presence[i])
         else:
             i+=1
     
-
     presenceVirtuel = len(presence)*7
-
+    
     presenceEffective = 0
     for i in range(0,len(presence)):
         if(presence[i][0]!=3):
@@ -114,8 +112,10 @@ def pdf(etu,master,presence,administration):
         textobject.textLine(line.rstrip())
     c.drawText(textobject)
 
+    print(presenceVirtuel)
+    print(presenceEffective)
     c.drawString(0,350,"Nombre d'heures de cours: "+ str(presenceVirtuel))
-    c.drawString(0,300,"Nombre d'heures de présence: "+str(presenceEffective))
+    c.drawString(0,300,"Nombre d'heures de présence: "+ str(presenceEffective))
 
 
     c.drawString(200,150,"Le Bourget du Lac,le "+str(currDate.day) + "/" + str(currDate.month)+ "/" + str(currDate.year))

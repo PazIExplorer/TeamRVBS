@@ -199,7 +199,7 @@ def creation():
         ws.write(row+i, 3, str(tarifConv), formatT1Base)
 
         #afficher la présence
-        tab = fonctionPy.heurePresentParMoi(element[0])
+        tab = fonctionPy.heurePresentParMoi(element[3])
         ws.write(row+i, 4, tab["Sept"], formatT1Base)
         ws.write(row+i, 5, tab["Oct"], formatT1Base)
         ws.write(row+i, 6, tab["Nov"], formatT1Base)
@@ -253,7 +253,7 @@ def creation():
         ws.write(row+i, 3, str(tarifConv), formatT1Base)
 
         #afficher la présence
-        tab = fonctionPy.heurePresentParMoi(element[0])
+        tab = fonctionPy.heurePresentParMoi(element[3])
         ws.write(row+i, 4, tab["Sept"], formatT1Base)
         ws.write(row+i, 5, tab["Oct"], formatT1Base)
         ws.write(row+i, 6, tab["Nov"], formatT1Base)
