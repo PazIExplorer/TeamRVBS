@@ -8,6 +8,7 @@ import mysql.connector
 import os.path
 from os import path
 
+from operator import itemgetter
 
 import os
 from app.pythonScript import pdfgen
@@ -161,6 +162,9 @@ def pageGenerale(idFiliere):
 
     cursor.execute(query)
     etu = cursor.fetchall()
+
+    # Tri des élèves par nom / prénom
+    etu = sorted(etu, key=itemgetter(1,2))   # Tri par nom puis par prénom
 
     # Filières (récupération du nom)
     if idFiliere == "NULL":
