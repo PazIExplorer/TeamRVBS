@@ -16,7 +16,7 @@ def heurePresentParMoi(numCarteEtu):
     cursor = cnx.cursor()
 
     #Récupération de la présence de l'étu
-    query = ("SELECT matin, apresMidi, datePresence FROM presence WHERE numeroEtudiant = "+str(numCarteEtu))
+    query = ("SELECT matin, apresMidi, datePresence FROM presence WHERE numeroEtudiant="+str(numCarteEtu))
     cursor.execute(query)
     rows = cursor.fetchall()
 
@@ -27,6 +27,10 @@ def heurePresentParMoi(numCarteEtu):
         numMoi = recupMoi(dateCourant)
         #récupérer le nom du moi ("Sept")
         nomMoi = tab_des_mois[numMoi]
+
+        print(dateCourant)
+        print(numMoi)
+        print(nomMoi)
         #ajouter +4 pour le matin et +3 pour l'aprem dans le tab_presence au bon mois
         if(row[0] == 1 or row[0] == 3):
             tab_presence[nomMoi] = tab_presence[nomMoi] + 4
@@ -139,7 +143,8 @@ def tabHeureCoursParMoi(anneeScolaireDebut, anneeScolaireFin):
         jourCourant = row[1]
         num_moi = jourCourant[0]+jourCourant[1] 
         annee = jourCourant[6]+jourCourant[7]+jourCourant[8]+jourCourant[9]
-        if(int(annee) == anneeScolaireDebut or int(annee) == anneeScolaireFin):
+
+        if(int(annee) == int(anneeScolaireDebut) or int(annee) == int(anneeScolaireFin)):
             nom_moi = tab_des_mois[num_moi]
             tab_heureCourParMoi[nom_moi] = tab_heureCourParMoi[nom_moi] + 7 #on ajoute 7h (le nb d'heure de cours dans une journée)
     return tab_heureCourParMoi

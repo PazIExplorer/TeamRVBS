@@ -23,13 +23,12 @@
     {% endif %}
 
     
-    {% if user[0][6] != 'NoneType' %} 
-       
-        <form action="{{url_for('pageGenerale', idFiliere='NULL')}}">
+    {% if user[0][6] %}  
+        <form action="{{url_for('pageGenerale', idFiliere=user[0][6])}}">
             <input class="b" type="submit" value="Retour page de selection des étudiants" />
         </form>
     {% else %}
-        <form action="{{url_for('pageGenerale', idFiliere=user[0][6])}}">
+        <form action="{{url_for('pageGenerale', idFiliere='NULL')}}">
             <input class="b" type="submit" value="Retour page de selection des étudiants" />
         </form>
     {% endif %}
