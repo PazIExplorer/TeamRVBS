@@ -4,7 +4,7 @@ from app.pythonScript import fonctionPy
 
 def creation():
     #connection bdd
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
 
     query = ("SELECT * FROM administration")
@@ -229,7 +229,7 @@ def creation():
         ws.write_formula(row+i, 21, formuleTotalEuro, formatTotalBold)
 
 
-        #TODO complete les cases vide que je ne comprend pas l'utilité avec le format
+        #complete les cases vide que je ne comprend pas l'utilité avec le format
         ws.write("J"+str(row+i+1), "", formatT1Base)
         ws.write("O"+str(row+i+1), "", formatT2Base)
         ws.write("T"+str(row+i+1), "", formatT3Base)
@@ -237,7 +237,7 @@ def creation():
         i = i+1
 
 
-    #TODO la ligne de séparation
+    #la ligne de séparation
     num = 1
     #Affichage des CA
     for element in rowsCA:
@@ -282,7 +282,7 @@ def creation():
         formuleTotalEuro = "=J"+str(lc)+"+O"+str(lc)+"+S"+str(lc)
         ws.write_formula(row+i, 21, formuleTotalEuro, formatTotalBold)
 
-        #TODO complete les cases vide que je ne comprend pas l'utilité avec le format
+        #complete les cases vide que je ne comprend pas l'utilité avec le format
         ws.write("J"+str(row+i+1), "", formatT1Base)
         ws.write("O"+str(row+i+1), "", formatT2Base)
         ws.write("T"+str(row+i+1), "", formatT3Base)

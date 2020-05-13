@@ -77,14 +77,14 @@ def pdf(etu,master,presence,administration):
         if(presence[i][1]!=3):
             presenceEffective+=3
     
-    # move the origin up and to the left
+    # origin x y en haut à gauche 
     c.translate(inch,inch)
 
     c.line(0,600,440,600)
     c.line(0,560,440,560)
     c.line(0,600,0,560)
     c.line(440,600,440,560)
-    # define a large font
+    # Police basique
     c.setFont("Helvetica", 14)
     
 
@@ -167,23 +167,15 @@ def presence(etu,master,presenceJour,administration):
         
         presenceJour[i][3]=datetime.strptime(presenceJour[i][3], '%d/%m/%Y').date()
     presenceJour = sorted(presenceJour, key=lambda presence: presence[3])
- 
-   
 
-
-    
-  
-    
-    
-
-    # move the origin up and to the left
+    # origine x, y en haut à gauche
     c.translate(inch,inch)
 
     c.line(0,600,440,600)
     c.line(0,560,440,560)
     c.line(0,600,0,560)
     c.line(440,600,440,560)
-    # define a large font
+    # Police basique
     c.setFont("Helvetica", 14)
     
 
@@ -213,7 +205,7 @@ def presence(etu,master,presenceJour,administration):
         textobject.textLine(line.rstrip())
     c.drawText(textobject)
 
-    
+    #Affichage de l'ensemble des présences de l'étudiant traité 
     
     i=20
     for element in presenceJour:
