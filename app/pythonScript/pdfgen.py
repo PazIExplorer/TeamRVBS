@@ -40,7 +40,7 @@ def pdf(etu,master,presence,administration):
 
     pathPDF = "./app/static/pdf"
     pathArchive = "./app/static/archive"
-    filename = alternant+" Attestation.pdf"
+    filename = alternant+" Attestation de Présence.pdf"
     currDate = datetime.now()
     c = canvas.Canvas(os.path.join(pathPDF,filename))
     #obtention de l'année scolaire
@@ -137,9 +137,23 @@ def pdf(etu,master,presence,administration):
     c.save()
 
     # ARCHIVAGE
+    fichierAnneeScolaire = str(debutScol.year)+"-"+str(finScol.year)
+    fichierDateDebut     = ("0"+str(dateDebut.day) if dateDebut.day<10 else str(dateDebut.day)) + "-" + ("0"+str(dateDebut.month) if dateDebut.month<10 else str(dateDebut.month)) + "-" + str(dateDebut.year)
+    fichierDateFin       = ("0"+str(dateFin.day) if dateFin.day<10 else str(dateFin.day)) + "-" + ("0"+str(dateFin.month) if dateFin.month<10 else str(dateFin.month)) + "-" + str(dateFin.year)
+
+    nomArchive = fichierAnneeScolaire + " " + master + " " + alternant + " du " + fichierDateDebut + " au " + fichierDateFin + " Attestation Présence"
+
+    # Gestion des duplicatas
+    if os.path.isfile(os.path.join(pathArchive,nomArchive) + ".pdf"):
+        numDuplicata = 1
+        while os.path.isfile(os.path.join(pathArchive,nomArchive) + " (" + str(numDuplicata) +").pdf"):
+            numDuplicata+=1
+        
+        nomArchive += " (" + str(numDuplicata)+")"
+
     
-    dateStr = str(currDate.year) + "-" + str(currDate.month)+ "-" + str(currDate.day) + "-" + str(currDate.hour) + "-" + str(currDate.minute) + "-" + str(currDate.second) + "-" + filename
-    shutil.copy2(os.path.join(pathPDF,filename), os.path.join(pathArchive,dateStr))
+    nomArchive += ".pdf" # Ajout de l'extension
+    shutil.copy2(os.path.join(pathPDF,filename), os.path.join(pathArchive,nomArchive))
     return c
 
 
@@ -157,7 +171,13 @@ def presence(etu,master,presenceJour,administration):
 
     pathPDF = "./app/static/pdf"
     pathArchive = "./app/static/archive"
-    filename = alternant+" Presence.pdf"
+    filename = alternant+" Feuille de Présence.pdf"
+
+    periodeDebut=administration[0][2]
+    periodeFin=administration[0][3]
+
+    dateDebut=datetime.strptime(periodeDebut, '%d/%m/%Y').date()
+    dateFin=datetime.strptime(periodeFin, '%d/%m/%Y').date()
    
 
     c = canvas.Canvas(os.path.join(pathPDF,filename))
@@ -233,7 +253,22 @@ def presence(etu,master,presenceJour,administration):
     c.save()
 
     # ARCHIVAGE
-    currDate = datetime.now()
-    dateStr = str(currDate.year) + "-" + str(currDate.month)+ "-" + str(currDate.day) + "-" + str(currDate.hour) + "-" + str(currDate.minute) + "-" + str(currDate.second) + "-" + filename
-    shutil.copy2(os.path.join(pathPDF,filename), os.path.join(pathArchive,dateStr))
+    fichierAnneeScolaire = str(debutScol.year)+"-"+str(finScol.year)
+    fichierDateDebut     = ("0"+str(dateDebut.day) if dateDebut.day<10 else str(dateDebut.day)) + "-" + ("0"+str(dateDebut.month) if dateDebut.month<10 else str(dateDebut.month)) + "-" + str(dateDebut.year)
+    fichierDateFin       = ("0"+str(dateFin.day) if dateFin.day<10 else str(dateFin.day)) + "-" + ("0"+str(dateFin.month) if dateFin.month<10 else str(dateFin.month)) + "-" + str(dateFin.year)
+
+    nomArchive = fichierAnneeScolaire + " " + master + " " + alternant + " du " + fichierDateDebut + " au " + fichierDateFin + " Feuille Présence"
+
+    # Gestion des duplicatas
+    if os.path.isfile(os.path.join(pathArchive,nomArchive) + ".pdf"):
+        numDuplicata = 1
+        while os.path.isfile(os.path.join(pathArchive,nomArchive) + " (" + str(numDuplicata) +").pdf"):
+            numDuplicata+=1
+        
+        nomArchive += " (" + str(numDuplicata)+")"
+
+    
+    nomArchive += ".pdf" # Ajout de l'extension
+    shutil.copy2(os.path.join(pathPDF,filename), os.path.join(pathArchive,nomArchive))
+    return c
     return c
