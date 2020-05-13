@@ -16,7 +16,7 @@ def heurePresentParMoi(numCarteEtu):
     cursor = cnx.cursor()
 
     #Récupération de la présence de l'étu
-    query = ("SELECT matin, apresMidi, datePresence FROM presence WHERE idCarteEtu = "+str(numCarteEtu))
+    query = ("SELECT matin, apresMidi, datePresence FROM presence WHERE numeroEtudiant = "+str(numCarteEtu))
     cursor.execute(query)
     rows = cursor.fetchall()
 
