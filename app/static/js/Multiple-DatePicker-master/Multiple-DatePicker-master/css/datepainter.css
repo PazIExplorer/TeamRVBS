@@ -1,0 +1,82 @@
+.datepainter {
+    border: 1px solid;
+    border-color: rgb(0, 0, 0);
+    border-collapse: separate;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    cursor:default;
+    width:100%;
+}
+
+.datepainter select {
+    width: 100%;
+}
+.datepainter-cell {
+    border: 1px solid;
+    border-color: #fff;
+    text-align: center;
+
+}
+
+.datepainter-cell:hover {
+    border: 1px solid;
+    border-color: #aaa;
+
+}
+
+.datepainter-week-cell {
+    text-align: left;
+    color: #658AAB;
+}
+
+.datepainter-today {
+    background-color: #D6FFE2;
+}
+
+.datepainter-selected {
+    background: #61c6f4c7;
+
+}
+
+.datepainter-highlight {
+    background: #DEEBFF;
+}
+
+.datepainter-selected.datepainter-today {
+    background: #BBD3FA;
+}
+
+
+.datepainter-highlight.datepainter-today {
+    background: #D6FFFD;
+}
+
+.datepainter-selected.datepainter-highlight {
+    background: #BBD0F2;
+}
+
+.datepainter-other-months {
+    color: #888;
+
+}
+
+.icon-arrow-right {
+    width: 20px;
+    height: 32px;
+    background-color: #e888a3;
+
+    clip-path: polygon(0 0, 0 100%, 100% 50%);
+}
+
+
+.icon-arrow-left {
+    width: 20px;
+    height: 32px;
+    background-color: #8de698;
+
+    clip-path: polygon(100% 100%, 100% 0, 0 50%);
+}

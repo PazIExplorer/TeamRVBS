@@ -8,25 +8,27 @@
   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 </head>
 <body>
-        {% include 'header.html' %}
+        {% include 'header.html' %}        
+    
+    
         <form action="{{url_for('pageEtu', id=user[0][0])}}" method="POST">
         <h1>Modifier les informations de l'étudiant</h1>
         <ol>
                 <li>
                         <label for="nom">Nom:</label>
-                        <input type="text" name="nom" id="nom" value='{{user[0][1]}}' onClick="this.value = '';"> 
+                        <input type="text" name="nom" id="nom" value='{{user[0][1]}}' onClick="this.value = '';" onblur="resetForm('nom','{{user[0][1]}}')"> 
                 </li>
                 <li>
                         <label for="prenom">Prenom:</label>
-                        <input type="text" name="prenom" id="prenom" value='{{user[0][2]}}' onClick="this.value = '';"> 
+                        <input type="text" name="prenom" id="prenom" value='{{user[0][2]}}' onClick="this.value = '';" onblur="resetForm('prenom','{{user[0][2]}}')"> 
                 </li>
                 <li>
                         <label for="numeroEtudiant">Numero Etudiant: </label>
-                        <input type="text" name="numeroEtudiant" id="numeroEtudiant" value='{{user[0][3]}}' onClick="this.value = '';">
+                        <input type="number" name="numeroEtudiant" id="numeroEtudiant" value='{{user[0][3]}}' onClick="this.value = '';" onblur="resetForm('numeroEtudiant','{{user[0][3]}}')">
                 </li>
                 <li>
                         <label for="idCarteEtu">Numero badgage: </label>
-                        <input type="text" name="idCarteEtu" readonly id="idCarteEtu" value="{{'%0x' % user[0][0]}}" onClick="this.value = '';" >
+                        <input type="text" name="idCarteEtu" readonly id="idCarteEtu" value="{{'%0x' % user[0][0]}}" onClick="this.value = '';" onblur="resetForm('idCarteEtu','{{'%0x' % user[0][0]}}')">
                 </li>
                 <li>
                         <label for="typeContratEtudiant">Type de Contrat: </label>
@@ -39,7 +41,7 @@
                 </li>
                 <li>
                         <label for="tarif">Tarif: </label>
-                        <input type="text" name="tarif" id="tarif" value='{{user[0][5]}}' onClick="this.value = '';">
+                        <input type="text" name="tarif" id="tarif" value='{{user[0][5]}}' onClick="this.value = '';" onblur="resetForm('tarif','{{user[0][5]}}')">
                 </li>
                 <li>
                         <label for="filiere">Filiere: </label>
@@ -55,17 +57,18 @@
                 </li>
                 <li>
                         <label for="numeroTel">Numero de Telephone: </label>
-                        <input type="text" name="numeroTel" id="numeroTel" value='{{user[0][7]}}' onClick="this.value = '';">
+                        <input type="tel" name="numeroTel" id="numeroTel" value='{{user[0][7]}}' onClick="this.value = '';" onblur="resetForm('numeroTel','{{user[0][7]}}')">
                 </li>
                 <li>
                         <label for="mailEtu">Mail Etudiant: </label>
-                        <input type="text" name="mailEtu" id="mailEtu" value='{{user[0][8]}}' onClick="this.value = '';">
+                        <input type="email" name="mailEtu" id="mailEtu" value='{{user[0][8]}}' onClick="this.value = '';" onblur="resetForm('mailEtu','{{user[0][8]}}')">
                 </li>
                 <li>
                         <label for="mailEntreprise">Mail Entreprise: </label>
-                        <input type="text" name="mailEntreprise" id="mailEntreprise" value='{{user[0][9]}}' onClick="this.value = '';">
+                        <input type="email" name="mailEntreprise" id="mailEntreprise" value='{{user[0][9]}}' onClick="this.value = '';" onblur="resetForm('mailEntreprise','{{user[0][9]}}')">
                 </li>
         </ol>
+       
         <input type="submit" value="Valider">
         <p id="annuler" ><a href="{{url_for('pageEtu', id=user[0][0])}}">Annuler</a></p>
 
@@ -91,6 +94,13 @@
         else{
                 //Rupture :
                 document.getElementById("pas alternant").selected = true;
+        }
+
+        function resetForm(id,t){
+               input = document.getElementById(id);
+               if(input.value === ""){
+                       input.value = t;
+               }
         }
 	
 </script>

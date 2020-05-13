@@ -1,6 +1,7 @@
 import mysql.connector, json, os
 import datetime
 import sqlite3
+import time
 
 from app.pythonScript import config
 
@@ -136,3 +137,69 @@ def tabHeureCoursParMoi(anneeScolaireDebut, anneeScolaireFin):
             nom_moi = tab_des_mois[num_moi]
             tab_heureCourParMoi[nom_moi] = tab_heureCourParMoi[nom_moi] + 7 #on ajoute 7h (le nb d'heure de cours dans une journée)
     return tab_heureCourParMoi
+
+
+
+#Récupérer les dates de la bdd
+def recupererDates():
+    #connection bdd
+    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cursor = cnx.cursor()
+
+    #récupérer les jours de cours de la bdd
+    query = ("SELECT *, DATE_FORMAT(jourDeCour, \"%Y-%m-%d\") FROM calendrier")
+    cursor.execute(query)
+    rows = cursor.fetchall()
+    cnx.close()
+
+    dates = []
+    if len(rows) != 0:
+        for e in rows:
+            dates.append(e[1])
+
+    return dates
+
+
+
+def sendDates(Dates):
+    #connection bdd
+    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cursor = cnx.cursor()
+
+    #récupération de la liste des jours a partir du json
+    if Dates == '':
+        return 0
+    else:
+        liste_jours = []
+        liste_jours = Dates.split('/')
+
+    
+    #vide la table 
+    query = ("DELETE FROM calendrier")
+    cursor.execute(query)
+
+    #parcour de la liste pour les envoyer dans la bdd
+    
+    for i in range (0, len(liste_jours)-1):
+        
+        dateCourante = time.strptime(str(liste_jours[i]),"%Y-%m-%d")
+        query = ('INSERT INTO calendrier (jourDeCour) VALUES (%s)')
+        var = (time.strftime('%Y-%m-%d', dateCourante),)
+        cursor.execute(query, var)
+
+        cnx.commit()
+
+    
+    cnx.close()
+
+
+def effacerBase():
+    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cursor = cnx.cursor()
+
+    query = ("DELETE FROM calendrier")
+    cursor.execute(query)
+
+    cnx.commit()
+
+    cnx.close()

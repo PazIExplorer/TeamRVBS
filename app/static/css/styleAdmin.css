@@ -153,6 +153,10 @@ form input[type=submit] {
 	font-weight: bold;
 }
 
+form input[type=file]{
+	text-align: center;
+}
+
 /* Pour l'affichage de l'archive d'un étudiant */
 
 div#archive h1{

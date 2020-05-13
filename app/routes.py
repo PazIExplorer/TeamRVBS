@@ -1,3 +1,5 @@
+# -*-coding:utf-8 -*
+
 from app import app
 from flask import render_template, request, make_response, redirect, url_for
 from werkzeug import secure_filename
@@ -275,10 +277,10 @@ def pageConvention(id):
         #Recuperation et sauvegarde du fichier transmis dans le dossier cenvention
         conv = request.files["conv"]
         non_conv = secure_filename(conv.filename)
-        conv.save('/root/TeamRVBS/app/static/convention/'+non_conv)
+        conv.save(os.getcwd()+'/app/static/convention/'+non_conv)
     
     #pour savoir si l'étudiant possède déjà une convention
-    p = "/root/TeamRVBS/app/static/convention/"+str(etu[0][1]) + "_" + str(etu[0][2])+"_Convention.pdf"
+    p = os.getcwd()+"/app/static/convention/"+str(etu[0][1]) + "_" + str(etu[0][2])+"_Convention.pdf"
     if not(path.exists(p)):
         p = "../static/convention/conventionBase.pdf"
     else:
@@ -444,7 +446,7 @@ def archiveEtu(id):
 
         if(re.match(presenceRegex,i)!=None):
             fichierPresence.append(i)
-
+            
     return render_template("archiveEtu.html",user=etu, folderAttestation=fichiersAttestation, folderFichePresence=fichierPresence) 
 
 
@@ -486,12 +488,17 @@ def emploiDuTempsPicker():
 
     if request.method == 'POST':
 
-        data = request.form['hide']
+        data = request.form['tsa']
+                
         if data:
-            fonctionPy.sendEmploiDuTemps(data)
+            fonctionPy.sendDates(data)
+        else:
+            fonctionPy.effacerBase()
 
-    fonctionPy.recupererEmploiDuTemps()
-    return render_template("emploiDuTempsPicker.html")
+    dates = fonctionPy.recupererDates()
+    
+
+    return render_template("emploiDuTempsPicker.html",dates=dates)
     
 @app.route("/pageAdministration")
 def pageAdministration():
@@ -525,8 +532,11 @@ def adminModifVariable():
         presidentSMB = request.form["presidentUSMB"]
         presidentSFC = request.form["presidentSFC"]
         tarifMaster = int(request.form["tarifMaster"])
+        signature = request.files["signature"]
 
-        #On met a jour la bdd
+        if signature.filename != "":
+            nom_fichier = secure_filename(signature.filename)
+            signature.save(os.getcwd()+'/app/static/img/'+nom_fichier)
         query = ("UPDATE administration SET debutAnnee=%s,finAnnee=%s,debutAffiche=%s,finAffiche=%s,presidentSMB=%s,presidentSFC=%s,tarfiMaster=%s")
         val = (debutAnnee,finAnnee,debutAffiche,finAffiche,presidentSMB,presidentSFC,tarifMaster)
 
@@ -593,13 +603,6 @@ def creationCompte():
 
 @app.route("/gestionCompte", methods=['GET', 'POST'])
 def gestionCompte():
-    # Validation du compte dans le cookie
-    if not cookieEstValide():
-        return redirect("index")
-
-    # Vérifie si le compte est admin, sinon retour à la page d'accueil
-    if not compteEstAdmin():
-        return redirect("choixFiliere")
     
     modifType = 0   # Utilisé en cas de modification
                     # 0 = rien, 1 = succès, -1 = erreur
@@ -617,17 +620,17 @@ def gestionCompte():
         cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
         cursor = cnx.cursor()
 
-        # Vérifie que le compte existe
-        query = ("SELECT * FROM connexion WHERE identifiant='"+nom+"'")
+        query = ("SELECT * FROM connexion")
         cursor.execute(query)
-        result = cursor.fetchall()
-        if len(result) == 0:
-            # Compte inexistant, erreur
-            modifType = -1
-            msgErr = "Le compte n'existe pas."
+        comptes = cursor.fetchall()
 
-        else:
-            # Le compte existe, mise à jour de la BDD
+        estCompte = False
+        for c in comptes:
+            if(nom == c[0]):
+                estCompte = True
+        
+        if estCompte:
+            #mise à jour de la BDD
             query = ("UPDATE connexion SET motdepasse=%s WHERE identifiant=%s")
             val = (mdp,nom)
             try:
@@ -642,6 +645,9 @@ def gestionCompte():
                 cnx.close()
                 modifType = -1
                 msgErr = repr(ex)
+        else:
+            modifType = -1
+            msgErr = "Ce compte n'existe pas"
 
     return render_template("gestionCompte.html", modifType=modifType, msgErreur=msgErr, identifiant=idCompte)
 
@@ -656,3 +662,9 @@ def archive():
         return redirect("choixFiliere")
 
     return render_template("archive.html", aucunResultat=False, nomEtu="", prenomEtu="")
+
+
+@app.route("/documentation")
+def documentation():
+
+    return render_template("documentation.html")

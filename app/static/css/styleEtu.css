@@ -100,7 +100,7 @@ div.form-inline{
     
 }
 
-button{
+button, form input[type="submit"].b{
     background-color: white;
     height: 30px;
     border-radius: 5px;
