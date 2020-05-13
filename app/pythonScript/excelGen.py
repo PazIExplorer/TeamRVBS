@@ -2,6 +2,8 @@ import xlsxwriter
 import mysql.connector
 from app.pythonScript import fonctionPy
 
+from app.pythonScript import config
+
 def creation():
     #connection bdd
     cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
