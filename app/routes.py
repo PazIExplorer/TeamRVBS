@@ -271,10 +271,10 @@ def pageConvention(id):
         #Recuperation et sauvegarde du fichier transmis dans le dossier cenvention
         conv = request.files["conv"]
         non_conv = secure_filename(conv.filename)
-        conv.save('/root/TeamRVBS/app/static/convention/'+non_conv)
+        conv.save(os.getcwd()+'/app/static/convention/'+non_conv)
     
     #pour savoir si l'étudiant possède déjà une convention
-    p = "/root/TeamRVBS/app/static/convention/"+str(etu[0][1]) + "_" + str(etu[0][2])+"_Convention.pdf"
+    p = os.getcwd()+"/app/static/convention/"+str(etu[0][1]) + "_" + str(etu[0][2])+"_Convention.pdf"
     if not(path.exists(p)):
         p = "../static/convention/conventionBase.pdf"
     else:
@@ -525,11 +525,9 @@ def adminModifVariable():
         tarifMaster = int(request.form["tarifMaster"])
         signature = request.files["signature"]
 
-        if signature.filename == "sigature.png":
-            print("Il y a une signature")
+        if signature.filename != "":
             nom_fichier = secure_filename(signature.filename)
-            signature.save('C:/Users/Benjamin/TeamRVBS/app/static/img/'+nom_fichier)
-
+            signature.save(os.getcwd()+'/app/static/img/'+nom_fichier)
         query = ("UPDATE administration SET debutAnnee=%s,finAnnee=%s,debutAffiche=%s,finAffiche=%s,presidentSMB=%s,presidentSFC=%s,tarfiMaster=%s")
         val = (debutAnnee,finAnnee,debutAffiche,finAffiche,presidentSMB,presidentSFC,tarifMaster)
 
