@@ -77,15 +77,15 @@
                 </form>
             </li>
             <li>
-                <form class="gauche" method="GET" action="{{url_for('pdfEtuPresence', id=user[0][3])}}">
+                <form class="gauche" method="GET" action="{{url_for('pdfEtuPresence',id=user[0][3])}}">
                     <input type="submit" value="Fiche de présence">
                 </form>
-                <form class="droite" method="GET" action="{{url_for('pdfEtu',id=user[0][3]) }}">
+                <form class="droite" method="GET" action="{{url_for('pdfEtu',id=user[0][3])}}">
                     <input type="submit" value="Attestation de présence">
                 </form>
             </li>
             <li>
-                <form class="gauche" method="GET" action="{{url_for('pageModifEtu', id=user[0][3])}}">
+                <form class="gauche" method="GET" action="{{url_for('pageModifEtu',id=user[0][3])}}">
                     <input type="submit" value="Modifier">
                 </form>
             </li>

@@ -380,6 +380,7 @@ def pdfEtu(id):
 
     cnx.close()
 
+    print(len(presence))
 
     myPDF=pdfgen.pdf(etu[0][1]+" "+etu[0][2],filiere[0][1],presence,administration)
     return render_template("pdfEtuAttest.html",myPDF=myPDF,user=etu)
@@ -408,7 +409,7 @@ def archiveEtu(id):
         rows = cursor.fetchall()
         #Il ne doit avoir récupérer qu'un étudiant
         for row in rows:
-            id = row[0] #idCarteEtu
+            id = row[3] #numeroEtudiant
 
         #On regarde que l'id a bien était initialisé (si id = 0 l'étudiant n'est pas dans la bdd)
         if(int(id) == 0):
