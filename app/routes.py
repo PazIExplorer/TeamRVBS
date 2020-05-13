@@ -1,3 +1,5 @@
+# -*-coding:utf-8 -*
+
 from app import app
 from flask import render_template, request, make_response, redirect, url_for
 from werkzeug import secure_filename
@@ -440,7 +442,7 @@ def archiveEtu(id):
 
         if(re.match(presenceRegex,i)!=None):
             fichierPresence.append(i)
-
+            
     return render_template("archiveEtu.html",user=etu, folderAttestation=fichiersAttestation, folderFichePresence=fichierPresence) 
 
 
@@ -482,12 +484,17 @@ def emploiDuTempsPicker():
 
     if request.method == 'POST':
 
-        data = request.form['hide']
+        data = request.form['tsa']
+                
         if data:
-            fonctionPy.sendEmploiDuTemps(data)
+            fonctionPy.sendDates(data)
+        else:
+            fonctionPy.effacerBase()
 
-    fonctionPy.recupererEmploiDuTemps()
-    return render_template("emploiDuTempsPicker.html")
+    dates = fonctionPy.recupererDates()
+    
+
+    return render_template("emploiDuTempsPicker.html",dates=dates)
     
 @app.route("/pageAdministration")
 def pageAdministration():
