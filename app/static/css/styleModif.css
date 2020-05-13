@@ -74,6 +74,7 @@ form input[type=submit] {
 	font-weight: bold;
 }
 
+
 /* Pour faire le bouton annuler qui est une balise <a> */
 p#annuler{
 	text-align: center;
