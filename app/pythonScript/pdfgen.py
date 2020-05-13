@@ -114,9 +114,15 @@ def pdf(etu,master,presence,administration):
 
     print(presenceVirtuel)
     print(presenceEffective)
-    c.drawString(0,350,"Nombre d'heures de cours: "+ str(presenceVirtuel))
-    c.drawString(0,300,"Nombre d'heures de présence: "+ str(presenceEffective))
 
+    # TODO: VALEUR DES MOIS CONCERNÉS
+    c.drawString(0,350, "TODO : Ajouter les valeurs des mois concernés sur l'attestation")
+    
+    c.setFont("Helvetica-Bold",12)
+    c.drawString(0,325,"Soit un total de " + str(presenceEffective) + " heures de présence.")
+    
+    c.setFont("Helvetica",12)
+    c.drawString(0,300,"Heures de cours prévues : "+ str(presenceVirtuel) + " heures.")
 
     c.drawString(200,150,"Le Bourget du Lac,le "+str(currDate.day) + "/" + str(currDate.month)+ "/" + str(currDate.year))
     # #ajoute la date
