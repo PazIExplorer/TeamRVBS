@@ -4,7 +4,7 @@ from app.pythonScript import fonctionPy
 
 from app.pythonScript import config
 
-def creation():
+def creation(idFiliere):
     #connection bdd
     cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
@@ -128,12 +128,12 @@ def creation():
 
     #Récupération des étudiants de la base
     #Récupérer les CP
-    query = ("SELECT * FROM etudiant WHERE typeContratEtudiant = 'contrat pro' ORDER BY nom, prenom")
+    query = ("SELECT * FROM etudiant WHERE filiere = "+str(idFiliere)+" AND typeContratEtudiant = 'contrat pro' ORDER BY nom, prenom")
     cursor.execute(query)
     rowsCP = cursor.fetchall()
 
     #Récupérer les CA
-    query = ("SELECT * FROM etudiant WHERE typeContratEtudiant = 'contrat appr' ORDER BY nom, prenom")
+    query = ("SELECT * FROM etudiant WHERE filiere = "+str(idFiliere)+" AND typeContratEtudiant = 'contrat appr' ORDER BY nom, prenom")
     cursor.execute(query)
     rowsCA = cursor.fetchall()
 

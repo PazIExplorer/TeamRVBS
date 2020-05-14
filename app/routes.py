@@ -181,7 +181,7 @@ def pageGenerale(idFiliere):
     presence = cursor.fetchall()
     cnx.close()
     # Génération du excel a chaque fois qu'on est sur la page générale
-    excelGen.creation()
+    excelGen.creation(idFiliere)
     return render_template("pageGenerale.html",user=etu,presence=presence,filieres=filieres)
 
 @app.route("/pageEtu/<id>")
