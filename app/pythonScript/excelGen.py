@@ -4,7 +4,7 @@ from app.pythonScript import fonctionPy
 
 from app.pythonScript import config
 
-def creation():
+def creation(idFiliere):
     #connection bdd
     cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
@@ -12,17 +12,16 @@ def creation():
     query = ("SELECT * FROM administration")
     cursor.execute(query)
     recup = cursor.fetchall()
+
     #normalement ici il n'a récup qu'une ligne
     for element in recup:
         du = element[0]
         au = element[1]
-    
-    #VALEUR A MODIFIER
+        tarif = element[6]
+
     dateDebut = du[6]+du[7]+du[8]+du[9]
     dateFin = au[6]+au[7]+au[8]+au[9]
-    tarifConv = '8 500,00€'
-
-   
+    tarifConv = str(tarif)+"€"   
 
     #Création du fichier et de la feuille
     wb = xlsxwriter.Workbook('app/static/excel/forfaitHorraire.xlsx') #création d'un classeur
@@ -129,12 +128,12 @@ def creation():
 
     #Récupération des étudiants de la base
     #Récupérer les CP
-    query = ("SELECT * FROM etudiant WHERE typeContratEtudiant = 'contrat pro'")
+    query = ("SELECT * FROM etudiant WHERE filiere = "+str(idFiliere)+" AND typeContratEtudiant = 'contrat pro' ORDER BY nom, prenom")
     cursor.execute(query)
     rowsCP = cursor.fetchall()
 
     #Récupérer les CA
-    query = ("SELECT * FROM etudiant WHERE typeContratEtudiant = 'contrat appr'")
+    query = ("SELECT * FROM etudiant WHERE filiere = "+str(idFiliere)+" AND typeContratEtudiant = 'contrat appr' ORDER BY nom, prenom")
     cursor.execute(query)
     rowsCA = cursor.fetchall()
 
@@ -224,10 +223,10 @@ def creation():
         ws.write_formula(row+i, 18, formule3, formatT3Bold)
 
         #Formule pour le total
-        formuleTotalHeure = "=I"+str(lc)+"+N"+str(lc)+"+P"+str(lc)
+        formuleTotalHeure = "=I"+str(lc)+"+N"+str(lc)+"+S"+str(lc)
         ws.write_formula(row+i, 20, formuleTotalHeure, formatTotalBold)
 
-        formuleTotalEuro = "=J"+str(lc)+"+O"+str(lc)+"+S"+str(lc)
+        formuleTotalEuro = "=J"+str(lc)+"+O"+str(lc)+"+T"+str(lc)
         ws.write_formula(row+i, 21, formuleTotalEuro, formatTotalBold)
 
 
@@ -278,10 +277,10 @@ def creation():
         ws.write_formula(row+i, 18, formule3, formatT3Bold)
 
         #Formule pour le total
-        formuleTotalHeure = "=I"+str(lc)+"+N"+str(lc)+"+P"+str(lc)
+        formuleTotalHeure = "=I"+str(lc)+"+N"+str(lc)+"+S"+str(lc)
         ws.write_formula(row+i, 20, formuleTotalHeure, formatTotalBold)
 
-        formuleTotalEuro = "=J"+str(lc)+"+O"+str(lc)+"+S"+str(lc)
+        formuleTotalEuro = "=J"+str(lc)+"+O"+str(lc)+"+T"+str(lc)
         ws.write_formula(row+i, 21, formuleTotalEuro, formatTotalBold)
 
         #complete les cases vide que je ne comprend pas l'utilité avec le format
@@ -325,11 +324,11 @@ def creation():
     ws.set_row(row+i, 24)
 
 
-    ws.write_formula(row+i+1, 9, " ", formatT1Bold)
-    ws.write_formula(row+i+1, 14, " ", formatT2Bold)
-    ws.write_formula(row+i+1, 19, " ", formatT3Bold)
-    ws.write_formula(row+i+1, 20, " ", formatTotalBold)
-    ws.write_formula(row+i+1, 21, " ", formatTotalBold)
+    ws.write(row+i+1, 9, "", formatT1Bold)
+    ws.write(row+i+1, 14, "", formatT2Bold)
+    ws.write(row+i+1, 19, "", formatT3Bold)
+    ws.write(row+i+1, 20, "", formatTotalBold)
+    ws.write(row+i+1, 21, "", formatTotalBold)
     ws.write(row+i+2, 1, "FACTURATION trimestrielle heures suivies", formatBold)
 
     ws.write(row+i+1, 1, "", formatBasic)
@@ -341,7 +340,7 @@ def creation():
         ws.write(row+i+1, a, "", formatBasic)
         ws.write(row+i+2, a, "", formatBasic)
 
-    for a in range(15, 18):
+    for a in range(15, 19):
         ws.write(row+i+1, a, "", formatBasic)
         ws.write(row+i+2, a, "", formatBasic)
 

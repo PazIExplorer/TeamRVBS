@@ -60,6 +60,11 @@ form label{
 form input[type=text] {
 	text-align: center;
 }
+
+form input[type=number] {
+	text-align: center;
+}
+
 form input[type=submit] {
 	background: #8CDBFF;
 	width: 20%;

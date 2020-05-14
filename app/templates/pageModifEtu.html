@@ -16,19 +16,19 @@
         <ol>
                 <li>
                         <label for="nom">Nom:</label>
-                        <input type="text" name="nom" id="nom" value='{{user[0][1]}}' onClick="this.value = '';" onblur="resetForm('nom','{{user[0][1]}}')"> 
+                        <input type="text" name="nom" id="nom" value='{{user[0][1]}}'  > 
                 </li>
                 <li>
                         <label for="prenom">Prenom:</label>
-                        <input type="text" name="prenom" id="prenom" value='{{user[0][2]}}' onClick="this.value = '';" onblur="resetForm('prenom','{{user[0][2]}}')"> 
+                        <input type="text" name="prenom" id="prenom" value='{{user[0][2]}}'> 
                 </li>
                 <li>
                         <label for="numeroEtudiant">Numero Etudiant: </label>
-                        <input type="number"  name="numeroEtudiant" id="numeroEtudiant" value='{{user[0][3]}}' onClick="this.value = '';" onblur="resetForm('numeroEtudiant','{{user[0][3]}}')" readonly>
+                        <input type="number"  name="numeroEtudiant" id="numeroEtudiant" value='{{user[0][3]}}' >
                 </li>
                 <li>
                         <label for="idCarteEtu">Numero badgage: </label>
-                        <input type="text" name="idCarteEtu" readonly id="idCarteEtu" value="{{'%0x' % user[0][0]}}" onClick="this.value = '';" onblur="resetForm('idCarteEtu','{{'%0x' % user[0][0]}}')">
+                        <input type="text" name="idCarteEtu" id="idCarteEtu" value="{{'%0x' % user[0][0]}}" onchange="messageInfo();">
                 </li>
                 <li>
                         <label for="typeContratEtudiant">Type de Contrat: </label>
@@ -41,7 +41,7 @@
                 </li>
                 <li>
                         <label for="tarif">Tarif: </label>
-                        <input type="text" name="tarif" id="tarif" value='{{user[0][5]}}' onClick="this.value = '';" onblur="resetForm('tarif','{{user[0][5]}}')">
+                        <input type="text" name="tarif" id="tarif" value='{{user[0][5]}}'>
                 </li>
                 <li>
                         <label for="filiere">Filiere: </label>
@@ -57,19 +57,19 @@
                 </li>
                 <li>
                         <label for="numeroTel">Numero de Telephone: </label>
-                        <input type="tel" name="numeroTel" id="numeroTel" value='{{user[0][7]}}' onClick="this.value = '';" onblur="resetForm('numeroTel','{{user[0][7]}}')">
+                        <input type="text" name="numeroTel" id="numeroTel" value='{{user[0][7]}}'>
                 </li>
                 <li>
                         <label for="mailEtu">Mail Etudiant: </label>
-                        <input type="email" name="mailEtu" id="mailEtu" value='{{user[0][8]}}' onClick="this.value = '';" onblur="resetForm('mailEtu','{{user[0][8]}}')">
+                        <input type="text" name="mailEtu" id="mailEtu" value='{{user[0][8]}}'>
                 </li>
                 <li>
                         <label for="mailEntreprise">Mail Entreprise: </label>
-                        <input type="email" name="mailEntreprise" id="mailEntreprise" value='{{user[0][9]}}' onClick="this.value = '';" onblur="resetForm('mailEntreprise','{{user[0][9]}}')">
+                        <input type="text" name="mailEntreprise" id="mailEntreprise" value='{{user[0][9]}}'>
                 </li>
                 <li>
                         <label for="description">Commentaire: </label>
-                        <input type="text" name="description" id="description" value='{{user[0][10]}}' onClick="this.value = '';" onblur="resetForm('mailEntreprise','{{user[0][10]}}')">
+                        <textarea id="description" name="description" rows="5" cols="25">{{user[0][10]}}</textarea>
                 </li>
         </ol>
        
@@ -107,4 +107,12 @@
                }
         }
 	
+        function messageInfo(){
+                if (confirm("Voulez vous vraiment changer le numero de badge ?")) {
+                } else {
+                        input = document.getElementById("idCarteEtu");
+                        console.log('{{user[0][0]}}');
+                        input.value = parseInt('{{user[0][0]}}').toString(16);
+                } 
+        }
 </script>
