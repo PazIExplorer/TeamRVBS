@@ -30,9 +30,6 @@ def heurePresentParMoi(numCarteEtu):
         #récupérer le nom du moi ("Sept")
         nomMoi = tab_des_mois[numMoi]
 
-        print(dateCourant)
-        print(numMoi)
-        print(nomMoi)
         #ajouter +4 pour le matin et +3 pour l'aprem dans le tab_presence au bon mois
         if(row[0] == 1 or row[0] == 3):
             tab_presence[nomMoi] = tab_presence[nomMoi] + 4

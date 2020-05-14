@@ -1,6 +1,12 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
 html {
     height: 100%;
 }
+
 
 header {
     color: white;
@@ -28,36 +34,6 @@ header {
     
 }
 
-#menu, #menu ul {
-    padding: 0;
-    margin: 0;
-    list-style: none;
-}
-#menu {
-    text-align: center;
-}
-#menu li {
-    display: inline-block;
-}
-#menu ul li {
-    display: inherit;
-}
-#menu a {
-    text-decoration: none;
-    display: block;
-	color: black;
-}
-#menu ul {
-    position: absolute;
-    left: -999em;
-    text-align: left;
-    z-index: 1000;
-}
-#menu li:hover ul {
-    left: auto;
-}
-
-
 /*Le cadre noir pour former la page*/
 body {
     min-height: 100%;
@@ -67,4 +43,52 @@ body {
     border-color: black;
     padding-bottom:5px;
     font: 14px Verdana;
+}
+
+nav{
+    padding: 0px;
+    margin: 0px;
+    list-style: none;
+}
+
+.menu{
+    font-weight: bold;
+    text-align: center;
+    font-size: 25px;
+}
+
+
+
+nav ul li{
+    float: left;
+    text-align: left;
+    position: relative;
+}
+
+
+nav a{
+    display: block;
+    text-decoration: none;
+    color: white;
+}
+
+nav a:hover{
+    color: grey;
+}
+
+.sous{
+    display: none;
+    background-color: #5fc7f6;
+    position: absolute;
+    z-index: 1000;
+    font-size: 14px;
+
+}
+
+.sous a{
+    padding: 10px;
+}
+
+nav > ul li:hover .sous{
+    display: block;
 }
