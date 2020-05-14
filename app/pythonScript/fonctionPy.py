@@ -37,6 +37,73 @@ def heurePresentParMois(numCarteEtu):
             tab_presence[nomMois] = tab_presence[nomMois] + 3
     return tab_presence
 
+# On lui donne un étudiant a partir de son numéro de carte étudiant
+# La fonction renvoie un tableau avec les heures de présences / mois
+# dans la limite d'affichage pour les fiches / attestations de présence
+#
+def heurePresentParMoisLimiteAffichage(numCarteEtu):
+    #initialisation tab
+    tab_presence = {}
+    tab_des_mois = {"1":"Janvier", "2":"Février", "3":"Mars", "4":"Avril", "5":"Mai", "6":"Juin", "7":"Juillet", "8":"Août", "9": "Septembre", "10":"Octobre", "11":"Novembre", "12":"Décembre"}
+
+    #connection bdd
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
+    cursor = cnx.cursor()
+
+    #Récupération de la présence de l'étu
+    query = ("SELECT matin, apresMidi, datePresence FROM presence WHERE numeroEtudiant="+str(numCarteEtu))
+    cursor.execute(query)
+    rows = cursor.fetchall()
+
+    # Dates d'affichage
+    query = ("SELECT debutAffiche, finAffiche FROM administration")
+    cursor.execute(query)
+    admin = cursor.fetchall()
+    debutAffiche = datetime.datetime.strptime(admin[0][0], '%d/%m/%Y')
+    finAffiche = datetime.datetime.strptime(admin[0][1], '%d/%m/%Y') 
+    
+    # Création du tableau de mois
+    moisDebut = debutAffiche.month
+    anneeDebut = debutAffiche.year
+    moisFin = finAffiche.month
+    anneeFin = finAffiche.year
+
+    if anneeDebut == anneeFin:
+        for i in range(moisDebut, moisFin+1):
+            mois = tab_des_mois[str(i)]
+            if nomMois not in tab_presence:
+                tab_presence[nomMois] = 0 # Mois non existent, on l'ajoute dans la liste
+    else:
+        for i in range(moisDebut, moisFin+1+12):
+            nomMois = ""
+            if i <= 12:
+                nomMois = tab_des_mois[str(i)]
+            elif i > 12 and i < moisDebut+12:
+                nomMois = tab_des_mois[str(i-12)]
+            
+            if i < moisDebut+12 and nomMois not in tab_presence:
+                tab_presence[nomMois] = 0 # Mois non existent, on l'ajoute dans la liste
+
+    # Ajout des heures de présence le tableau
+    for row in rows:
+        #pour chaque rows : récupérer la datePresence 
+        dateCourant = row[2]
+        datetimeCourant = datetime.datetime.strptime(dateCourant, '%d/%m/%Y')
+
+        #en récupérer le mois (ex : "09")
+        numMois = recupMois(dateCourant)
+        #récupérer le nom du mois ("Sept")
+        nomMois = tab_des_mois[numMois]
+
+        #ajouter +4 pour le matin et +3 pour l'aprem dans le tab_presence au bon mois
+        if debutAffiche <= datetimeCourant and datetimeCourant <= finAffiche:
+            if(row[0] == 1 or row[0] == 3):
+                tab_presence[nomMois] = tab_presence[nomMois] + 4
+            if(row[1] == 1 or row[1] == 3):
+                tab_presence[nomMois] = tab_presence[nomMois] + 3
+    
+    return tab_presence
+
 def recupMois(datePresence):
     liste = list(datePresence)
     i = 0

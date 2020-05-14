@@ -3,6 +3,12 @@ import os
 from datetime import datetime
 import shutil
 
+from app.pythonScript import fonctionPy
+
+from app.pythonScript import config
+
+import mysql.connector
+
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
 
@@ -58,7 +64,6 @@ def pdf(etu,master,presence,administration):
     
     i=0
     while (i!=len(presence)):
-        print(presence[i][3])
         if(presence[i][3] < dateDebut):
             presence.remove(presence[i])
         elif(presence[i][3]>dateFin): 
@@ -67,13 +72,25 @@ def pdf(etu,master,presence,administration):
             i+=1
     
     presenceVirtuel = len(presence)*7
+
+
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
+    cursor = cnx.cursor()
+
+    tabEtu = alternant.split()
+    query = ("SELECT numeroEtudiant FROM etudiant WHERE nom='" + str(tabEtu[0]) + "' AND prenom='" + str(tabEtu[1]) + "'")
+
+    cursor.execute(query)
+    numEtu = cursor.fetchall()
+
+    cnx.close()
+
+    tabPresence = fonctionPy.heurePresentParMoisLimiteAffichage(numEtu[0][0]) # On récupère les présences selon les dates données
+    
     
     presenceEffective = 0
-    for i in range(0,len(presence)):
-        if(presence[i][0]!=3):
-            presenceEffective+=4
-        if(presence[i][1]!=3):
-            presenceEffective+=3
+    for key, value in tabPresence.items():
+        presenceEffective += value
     
     # origin x y en haut à gauche 
     c.translate(inch,inch)
@@ -112,17 +129,22 @@ def pdf(etu,master,presence,administration):
         textobject.textLine(line.rstrip())
     c.drawText(textobject)
 
-    print(presenceVirtuel)
-    print(presenceEffective)
+    # Heures de présence / mois
 
-    # TODO: VALEUR DES MOIS CONCERNÉS
-    c.drawString(0,350, "TODO : Ajouter les valeurs des mois concernés sur l'attestation")
+    hauteur = 400
+    for key, value in tabPresence.items():
+        c.drawString(50,hauteur,"- " + str(key) + " :")
+        c.drawString(130,hauteur,str(value) + " heures")
+        hauteur -= 15
+
     
+    hauteur -= 15
     c.setFont("Helvetica-Bold",12)
-    c.drawString(0,325,"Soit un total de " + str(presenceEffective) + " heures de présence.")
+    c.drawString(0,hauteur,"Soit un total de " + str(presenceEffective) + " heures de présence.")
     
+    hauteur -= 30
     c.setFont("Helvetica",12)
-    c.drawString(0,300,"Heures de cours prévues : "+ str(presenceVirtuel) + " heures.")
+    c.drawString(0,hauteur,"Heures de cours prévues : "+ str(presenceVirtuel) + " heures.")
 
     c.drawString(200,150,"Le Bourget du Lac,le "+str(currDate.day) + "/" + str(currDate.month)+ "/" + str(currDate.year))
     # #ajoute la date
