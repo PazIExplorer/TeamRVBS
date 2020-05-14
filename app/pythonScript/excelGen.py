@@ -223,10 +223,10 @@ def creation():
         ws.write_formula(row+i, 18, formule3, formatT3Bold)
 
         #Formule pour le total
-        formuleTotalHeure = "=I"+str(lc)+"+N"+str(lc)+"+P"+str(lc)
+        formuleTotalHeure = "=I"+str(lc)+"+N"+str(lc)+"+S"+str(lc)
         ws.write_formula(row+i, 20, formuleTotalHeure, formatTotalBold)
 
-        formuleTotalEuro = "=J"+str(lc)+"+O"+str(lc)+"+S"+str(lc)
+        formuleTotalEuro = "=J"+str(lc)+"+O"+str(lc)+"+T"+str(lc)
         ws.write_formula(row+i, 21, formuleTotalEuro, formatTotalBold)
 
 
@@ -277,10 +277,10 @@ def creation():
         ws.write_formula(row+i, 18, formule3, formatT3Bold)
 
         #Formule pour le total
-        formuleTotalHeure = "=I"+str(lc)+"+N"+str(lc)+"+P"+str(lc)
+        formuleTotalHeure = "=I"+str(lc)+"+N"+str(lc)+"+S"+str(lc)
         ws.write_formula(row+i, 20, formuleTotalHeure, formatTotalBold)
 
-        formuleTotalEuro = "=J"+str(lc)+"+O"+str(lc)+"+S"+str(lc)
+        formuleTotalEuro = "=J"+str(lc)+"+O"+str(lc)+"+T"+str(lc)
         ws.write_formula(row+i, 21, formuleTotalEuro, formatTotalBold)
 
         #complete les cases vide que je ne comprend pas l'utilité avec le format
@@ -324,11 +324,11 @@ def creation():
     ws.set_row(row+i, 24)
 
 
-    ws.write_formula(row+i+1, 9, " ", formatT1Bold)
-    ws.write_formula(row+i+1, 14, " ", formatT2Bold)
-    ws.write_formula(row+i+1, 19, " ", formatT3Bold)
-    ws.write_formula(row+i+1, 20, " ", formatTotalBold)
-    ws.write_formula(row+i+1, 21, " ", formatTotalBold)
+    ws.write(row+i+1, 9, "", formatT1Bold)
+    ws.write(row+i+1, 14, "", formatT2Bold)
+    ws.write(row+i+1, 19, "", formatT3Bold)
+    ws.write(row+i+1, 20, "", formatTotalBold)
+    ws.write(row+i+1, 21, "", formatTotalBold)
     ws.write(row+i+2, 1, "FACTURATION trimestrielle heures suivies", formatBold)
 
     ws.write(row+i+1, 1, "", formatBasic)
@@ -340,7 +340,7 @@ def creation():
         ws.write(row+i+1, a, "", formatBasic)
         ws.write(row+i+2, a, "", formatBasic)
 
-    for a in range(15, 18):
+    for a in range(15, 19):
         ws.write(row+i+1, a, "", formatBasic)
         ws.write(row+i+2, a, "", formatBasic)
 
