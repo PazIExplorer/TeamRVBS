@@ -269,13 +269,23 @@ def pageConvention(id):
     etu = cursor.fetchall()
     cnx.close()
 
+    modifType=0
+    msgErreur=''
+
 
     if request.method == "POST":
 
         #Recuperation et sauvegarde du fichier transmis dans le dossier cenvention
         conv = request.files["conv"]
-        non_conv = secure_filename(conv.filename)
-        conv.save(os.getcwd()+'/app/static/convention/'+non_conv)
+        nom_conv = secure_filename(conv.filename)
+        nom = str(etu[0][1]) + "_" + str(etu[0][2]) +"_Convention.pdf"
+        if nom_conv == nom :
+            conv.save(os.getcwd()+'/app/static/convention/'+nom_conv)
+            modifType=1
+        else :
+            modifType=-1
+            msgErreur = "Le fichier convention n'est pas au bon format (format accepté : \"Nom Prenom Convention.pdf\""
+
     
     #pour savoir si l'étudiant possède déjà une convention
     p = os.getcwd()+"/app/static/convention/"+str(etu[0][1]) + "_" + str(etu[0][2])+"_Convention.pdf"
@@ -283,7 +293,7 @@ def pageConvention(id):
         p = "../static/convention/conventionBase.pdf"
     else:
         p = "../static/convention/"+ str(etu[0][1]) + "_" + str(etu[0][2]) +"_Convention.pdf"
-    return render_template("pageConvention.html",user=etu,path=p) 
+    return render_template("pageConvention.html",user=etu,path=p,modifType=modifType,msgErreur=msgErreur) 
 
 
 
@@ -532,17 +542,24 @@ def adminModifVariable():
         tarifMaster = int(request.form["tarifMaster"])
         signature = request.files["signature"]
 
-        if signature.filename != "":
-            nom_fichier = secure_filename(signature.filename)
-            signature.save(os.getcwd()+'/app/static/img/'+nom_fichier)
+        
+
         query = ("UPDATE administration SET debutAnnee=%s,finAnnee=%s,debutAffiche=%s,finAffiche=%s,presidentSMB=%s,presidentSFC=%s,tarifMaster=%s")
         val = (debutAnnee,finAnnee,debutAffiche,finAffiche,presidentSMB,presidentSFC,tarifMaster)
 
         try:
             cursor.execute(query,val)
-            cnx.commit()            
-            modifType = 1     
-        
+                       
+            modifType = 1 
+            if signature.filename != "":
+                nom_fichier = secure_filename(signature.filename)
+                if nom_fichier == "signature.png":
+                    signature.save(os.getcwd()+'/app/static/img/'+nom_fichier)
+                else :
+                    cnx.rollback()
+                    modifType = -1
+                    msgErr = "Le fichier signature n'est pas au bon format (format accepté : \"signature.png\""    
+            cnx.commit() 
         except Exception as ex:
             cnx.rollback()
             modifType = -1
