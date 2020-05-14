@@ -12,17 +12,16 @@ def creation():
     query = ("SELECT * FROM administration")
     cursor.execute(query)
     recup = cursor.fetchall()
+
     #normalement ici il n'a récup qu'une ligne
     for element in recup:
         du = element[0]
         au = element[1]
-    
-    #VALEUR A MODIFIER
+        tarif = element[6]
+
     dateDebut = du[6]+du[7]+du[8]+du[9]
     dateFin = au[6]+au[7]+au[8]+au[9]
-    tarifConv = '8 500,00€'
-
-   
+    tarifConv = str(tarif)+"€"   
 
     #Création du fichier et de la feuille
     wb = xlsxwriter.Workbook('app/static/excel/forfaitHorraire.xlsx') #création d'un classeur
@@ -129,12 +128,12 @@ def creation():
 
     #Récupération des étudiants de la base
     #Récupérer les CP
-    query = ("SELECT * FROM etudiant WHERE typeContratEtudiant = 'contrat pro'")
+    query = ("SELECT * FROM etudiant WHERE typeContratEtudiant = 'contrat pro' ORDER BY nom, prenom")
     cursor.execute(query)
     rowsCP = cursor.fetchall()
 
     #Récupérer les CA
-    query = ("SELECT * FROM etudiant WHERE typeContratEtudiant = 'contrat appr'")
+    query = ("SELECT * FROM etudiant WHERE typeContratEtudiant = 'contrat appr' ORDER BY nom, prenom")
     cursor.execute(query)
     rowsCA = cursor.fetchall()
 
