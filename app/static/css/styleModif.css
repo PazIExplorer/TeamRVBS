@@ -59,6 +59,7 @@ form label{
 
 form input[type=text] {
 	text-align: center;
+	width: 30%;
 }
 
 form input[type=number] {

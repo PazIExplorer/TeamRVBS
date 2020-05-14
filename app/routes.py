@@ -204,56 +204,59 @@ def pageEtu(id):
     # si un formulaire à été envoyé à cette page
     if request.method == "POST":
         # recuperation des informations du formulaire
-        idCarteEtu = request.form["idCarteEtu"]
-        idCarteEtu = int(idCarteEtu,16)
         nom = request.form["nom"]
         prenom = request.form["prenom"]
-        numeroEtudiant = id
+        numeroEtudiant = request.form["numeroEtudiant"]
+        numeroBadge = request.form["numeroBadge"]
         typeContratEtudiant = request.form["typeContratEtudiant"]
         tarif = float(request.form["tarif"])
         filiere = int(request.form["filiere"])
         numeroTel = request.form["numeroTel"]
         mailEtu = request.form["mailEtu"]
         mailEntreprise = request.form["mailEntreprise"]
-        description = request.form["description"]
+        commentaire = request.form["commentaire"]
         
         #Vérification du formulaire :
         #Pour le nom de l'étudiant 
         if len(nom.strip()) == 0:
             modifType = -1
             msgErr = "Nom de l'étudiant invalide"
-
         #Pour le prénom de l'étudiant
         if len(prenom.strip()) == 0:
             modifType = -1
             msgErr = "Prenom de l'étudiant invalide"
         #Pour le numéro de la carte étudiante
-        #if len()
-        #Pour le numéro de badgage
-        #Pour le type de contrat 
-        #Pour le tarif
-        #Pour la filiere
-        #Pour le numéro de tel
-        #Pour mail Etudiant
-        #Pour mail Entreprise
-        #Commentaire
-
-        val = (idCarteEtu,nom,prenom,numeroEtudiant,typeContratEtudiant,tarif,filiere,numeroTel,mailEtu,mailEntreprise,description,id)
-
-        # Modification de la table étudiant avec les nouvelles informations 
-        query = ("UPDATE etudiant SET idCarteEtu=%s,nom=%s,prenom=%s,numeroEtudiant=%s,typeContratEtudiant=%s,tarif=%s,filiere=%s,numeroTel=%s,mailEtu=%s,mailEntreprise=%s,description=%s WHERE numeroEtudiant=%s")
-
-        try:
-            cursor.execute(query,val)
-            cnx.commit()
-            modifType = 1
-            
-        except Exception as ex:
-            cnx.rollback()
+        if len(numeroEtudiant.strip()) == 0:
             modifType = -1
-            msgErr = repr(ex)
-            
+            msgErr = "Numéro de carte étudiante invalide"
+        #Pour le numéro de badgage
+        if len(numeroBadge.strip()) == 0:
+            modifType = -1
+            msgErr = "Numéro de badge invalide"
+        #Pour le tarif Vérif que c'est int
 
+        #Pour le numéro de tel, pas important
+        #Pour mail Etudiant, pas important
+        #Pour mail Entreprise, pas important
+        #Commentaire, pas important
+
+        if modifType != -1:
+            numeroBadge = int(numeroBadge,16)
+            val = (numeroBadge,nom,prenom,numeroEtudiant,typeContratEtudiant,tarif,filiere,numeroTel,mailEtu,mailEntreprise,commentaire,id)
+
+            # Modification de la table étudiant avec les nouvelles informations 
+            query = ("UPDATE etudiant SET idCarteEtu=%s,nom=%s,prenom=%s,numeroEtudiant=%s,typeContratEtudiant=%s,tarif=%s,filiere=%s,numeroTel=%s,mailEtu=%s,mailEntreprise=%s,description=%s WHERE numeroEtudiant=%s")
+
+            try:
+                cursor.execute(query,val)
+                cnx.commit()
+                modifType = 1
+            
+            except Exception as ex:
+                cnx.rollback()
+                modifType = -1
+                msgErr = repr(ex)
+            
     # recuperation des étudiants et de leurs présence
     query = ("SELECT * FROM etudiant WHERE numeroEtudiant="+str(id))
     cursor.execute(query)
@@ -263,7 +266,7 @@ def pageEtu(id):
     cursor.execute(query)
     presence = cursor.fetchall()
     cnx.close()
-    print(etu[0][6])
+
     return render_template("pageEtu.html", user=etu , presence=presence, modifType=modifType, msgErreur=msgErr)
 
 @app.route("/pageConvention/<id>", methods=["GET", "POST"])
