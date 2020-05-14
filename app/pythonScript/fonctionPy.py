@@ -212,7 +212,7 @@ def tabHeureCoursParMois(anneeScolaireDebut, anneeScolaireFin):
 #Récupérer les dates de la bdd
 def recupererDates():
     #connection bdd
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
 
     #récupérer les jours de cours de la bdd
@@ -232,7 +232,7 @@ def recupererDates():
 
 def sendDates(Dates):
     #connection bdd
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
 
     #récupération de la liste des jours a partir du json
@@ -263,7 +263,7 @@ def sendDates(Dates):
 
 
 def effacerBase():
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
 
     query = ("DELETE FROM calendrier")
