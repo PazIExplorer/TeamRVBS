@@ -217,6 +217,27 @@ def pageEtu(id):
         mailEntreprise = request.form["mailEntreprise"]
         description = request.form["description"]
         
+        #Vérification du formulaire :
+        #Pour le nom de l'étudiant 
+        if len(nom.strip()) == 0:
+            modifType = -1
+            msgErr = "Nom de l'étudiant invalide"
+
+        #Pour le prénom de l'étudiant
+        if len(prenom.strip()) == 0:
+            modifType = -1
+            msgErr = "Prenom de l'étudiant invalide"
+        #Pour le numéro de la carte étudiante
+        #if len()
+        #Pour le numéro de badgage
+        #Pour le type de contrat 
+        #Pour le tarif
+        #Pour la filiere
+        #Pour le numéro de tel
+        #Pour mail Etudiant
+        #Pour mail Entreprise
+        #Commentaire
+
         val = (idCarteEtu,nom,prenom,numeroEtudiant,typeContratEtudiant,tarif,filiere,numeroTel,mailEtu,mailEntreprise,description,id)
 
         # Modification de la table étudiant avec les nouvelles informations 
@@ -224,9 +245,7 @@ def pageEtu(id):
 
         try:
             cursor.execute(query,val)
-
             cnx.commit()
-
             modifType = 1
             
         except Exception as ex:
