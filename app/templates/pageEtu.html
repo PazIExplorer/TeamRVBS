@@ -52,15 +52,27 @@
             </li>
             <li>
                 <p class="gauche">Contact :</p>
-                <p class="droite">{{user[0][8]}}</p>
+                {% if user[0][8]  %}
+                    <p class="droite">{{user[0][8]}}</p>
+                {% else %}
+                    <p class="droite">non renseigné</p>
+                {% endif %}
             </li>
             <li>
                 <p class="gauche">Numéro de téléphone :</p>
-                <p class="droite">{{user[0][7]}}</p>
+                {% if user[0][7] %}
+                    <p class="droite">{{user[0][7]}}</p>
+                {% else %}
+                    <p class="droite">non renseigné</p>
+                {% endif %}
             </li>
             <li>
                 <p class="gauche">Mail entreprise :</p>
-                <p class="droite">{{user[0][9]}}</p>
+                {% if user[0][9]  %}
+                    <p class="droite">{{user[0][9]}}</p>
+                {% else %}
+                    <p class="droite">non renseigné</p>
+                {% endif %}
             </li>
                 <p class="gauche">Commentaire :</p>
                 <p class="droite">{{user[0][10]}}</p>

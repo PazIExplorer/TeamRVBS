@@ -181,7 +181,7 @@ def pageGenerale(idFiliere):
     presence = cursor.fetchall()
     cnx.close()
     # Génération du excel a chaque fois qu'on est sur la page générale
-    excelGen.creation()
+    excelGen.creation(idFiliere)
     return render_template("pageGenerale.html",user=etu,presence=presence,filieres=filieres)
 
 @app.route("/pageEtu/<id>")
@@ -204,37 +204,59 @@ def pageEtu(id):
     # si un formulaire à été envoyé à cette page
     if request.method == "POST":
         # recuperation des informations du formulaire
-        idCarteEtu = request.form["idCarteEtu"]
-        idCarteEtu = int(idCarteEtu,16)
         nom = request.form["nom"]
         prenom = request.form["prenom"]
-        numeroEtudiant = id
+        numeroEtudiant = request.form["numeroEtudiant"]
+        numeroBadge = request.form["numeroBadge"]
         typeContratEtudiant = request.form["typeContratEtudiant"]
         tarif = float(request.form["tarif"])
         filiere = int(request.form["filiere"])
         numeroTel = request.form["numeroTel"]
         mailEtu = request.form["mailEtu"]
         mailEntreprise = request.form["mailEntreprise"]
-        description = request.form["description"]
+        commentaire = request.form["commentaire"]
         
-        val = (idCarteEtu,nom,prenom,numeroEtudiant,typeContratEtudiant,tarif,filiere,numeroTel,mailEtu,mailEntreprise,description,id)
-
-        # Modification de la table étudiant avec les nouvelles informations 
-        query = ("UPDATE etudiant SET idCarteEtu=%s,nom=%s,prenom=%s,numeroEtudiant=%s,typeContratEtudiant=%s,tarif=%s,filiere=%s,numeroTel=%s,mailEtu=%s,mailEntreprise=%s,description=%s WHERE numeroEtudiant=%s")
-
-        try:
-            cursor.execute(query,val)
-
-            cnx.commit()
-
-            modifType = 1
-            
-        except Exception as ex:
-            cnx.rollback()
+        #Vérification du formulaire :
+        #Pour le nom de l'étudiant 
+        if len(nom.strip()) == 0:
             modifType = -1
-            msgErr = repr(ex)
-            
+            msgErr = "Nom de l'étudiant invalide"
+        #Pour le prénom de l'étudiant
+        if len(prenom.strip()) == 0:
+            modifType = -1
+            msgErr = "Prenom de l'étudiant invalide"
+        #Pour le numéro de la carte étudiante
+        if len(numeroEtudiant.strip()) == 0:
+            modifType = -1
+            msgErr = "Numéro de carte étudiante invalide"
+        #Pour le numéro de badgage
+        if len(numeroBadge.strip()) == 0:
+            modifType = -1
+            msgErr = "Numéro de badge invalide"
+        #Pour le tarif Vérif que c'est int
 
+        #Pour le numéro de tel, pas important
+        #Pour mail Etudiant, pas important
+        #Pour mail Entreprise, pas important
+        #Commentaire, pas important
+
+        if modifType != -1:
+            numeroBadge = int(numeroBadge,16)
+            val = (numeroBadge,nom,prenom,numeroEtudiant,typeContratEtudiant,tarif,filiere,numeroTel,mailEtu,mailEntreprise,commentaire,id)
+
+            # Modification de la table étudiant avec les nouvelles informations 
+            query = ("UPDATE etudiant SET idCarteEtu=%s,nom=%s,prenom=%s,numeroEtudiant=%s,typeContratEtudiant=%s,tarif=%s,filiere=%s,numeroTel=%s,mailEtu=%s,mailEntreprise=%s,description=%s WHERE numeroEtudiant=%s")
+
+            try:
+                cursor.execute(query,val)
+                cnx.commit()
+                modifType = 1
+            
+            except Exception as ex:
+                cnx.rollback()
+                modifType = -1
+                msgErr = repr(ex)
+            
     # recuperation des étudiants et de leurs présence
     query = ("SELECT * FROM etudiant WHERE numeroEtudiant="+str(id))
     cursor.execute(query)
@@ -244,7 +266,7 @@ def pageEtu(id):
     cursor.execute(query)
     presence = cursor.fetchall()
     cnx.close()
-    print(etu[0][6])
+
     return render_template("pageEtu.html", user=etu , presence=presence, modifType=modifType, msgErreur=msgErr)
 
 @app.route("/pageConvention/<id>", methods=["GET", "POST"])
@@ -427,15 +449,15 @@ def archiveEtu(id):
 
     cnx.close()
     #Création de deux regex pour récupérer les fichiers attestation.pdf et presence.pdf de l'étudiant en question
-    attestationRegex=rf".*{etu[0][1]}\s{etu[0][2]}\sAttestation\.pdf"
-    presenceRegex=rf".*{etu[0][1]}\s{etu[0][2]}\sPresence\.pdf"
+    attestationRegex=rf".*{etu[0][1]}\s{etu[0][2]}\s.*Attestation.*\.pdf"
+    presenceRegex=rf".*{etu[0][1]}\s{etu[0][2]}\s.*Feuille.*\.pdf"
 
     #Récupération de la liste des fichiers de l'archive
     folderContent = os.listdir(os.path.join("./app/static/archive"))
 
     #Création de deux tableaux pour récupérer dans chacun deux les fichiers voulu
     fichiersAttestation = []
-    fichierPresence = []
+    fichiersPresence = []
 
     for i in folderContent:
         #on passe tout les fichiers de l'archive dans les regex, quand ils correspondent on les ajoutes au tableau correspondant
@@ -443,9 +465,13 @@ def archiveEtu(id):
             fichiersAttestation.append(i)
 
         if(re.match(presenceRegex,i)!=None):
-            fichierPresence.append(i)
+            fichiersPresence.append(i)
+    
+    # Tri des fichiers par nom
+    fichiersAttestation.sort()
+    fichiersPresence.sort()
             
-    return render_template("archiveEtu.html",user=etu, folderAttestation=fichiersAttestation, folderFichePresence=fichierPresence) 
+    return render_template("archiveEtu.html",user=etu, folderAttestation=fichiersAttestation, folderFichePresence=fichiersPresence) 
 
 
 #Sert a ajouter un étudiant depuis l'application mobile
