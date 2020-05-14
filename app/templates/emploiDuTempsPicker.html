@@ -5,72 +5,50 @@
     <title>Selection du calendrier des alternants</title>
 	<link rel="stylesheet" href="../static/css/styleHeader.css">
 	<link rel="stylesheet" href="../static/css/styleAcceuil.css">
-    	<!-- loads jquery and jquery ui -->
-	<!-- -->
-	<script type="text/javascript" src="http://code.jquery.com/jquery-2.2.4.min.js"></script>
-	<script type="text/javascript" src="http://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
 
-    <!-- loads multiple dates picker -->
-	<script type="text/javascript" src="../static/js/jquery-ui.multidatespicker.js"></script>
-   
-    <!-- le css pour le calendrier -->
-	<link rel="stylesheet" type="text/css" href="../static/css/newDatePicker.css">
+<!-- pour le deuxième calendrier -->
+	<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
+	<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+	<script src="../static/js/Week-Picker-jQuery-Moment/src/week-picker.js"></script>
+	<link rel="stylesheet" href="../static/js/Week-Picker-jQuery-Moment/dist/week-picker.css">
+	<link type="text/css" rel="stylesheet" href="../static/js/Multiple-DatePicker-master/Multiple-DatePicker-master/css/jquery-ui.css"/>
+	<link type="text/css" rel="stylesheet" href="../static/js/Multiple-DatePicker-master/Multiple-DatePicker-master/css/datepainter.css"/>
 	
-
-    <script>
-		$(function(){
-			//---------------------------------------------------------
-			//Récupération de l'emploi du temps déja mis dans la bdd
-			//----------------------------------------------------------
-			var liste_jours_cours;
-			$.getJSON("../static/json/emploiDuTempsPick.json", function(data){
-				//récupère le tableau de date du format json
-				liste_jours_cours = data;
-			})
-			.done(function() {
-				//transforme le tableau de date qui est en string en un tableau de format date
-				var date = new Date();
-				var tab_date = new Array();
-				for(let i=0; i<liste_jours_cours.length; i++){
-					tab_date[i] = date.setDate(liste_jours_cours[i].substring(3,5));
-				}
-
-				//utilise la fonction multiDatesPicker pour sélectionner les jours du tableau dans le calendrier
-           		$('#calendar').multiDatesPicker({
-					addDates: tab_date 
-				});
-  			})
-  			.fail(function() {
-    			console.log( "erreur lors du chargement du json" );
-  			})
-		})
+	<script>
+		let dateBDD = '{{dates}}';
 	</script>
 </head>
 
 <body>
 	{% include 'header.html' %}
-    <div id="calendar">
+
+		<div class="container">
+			<h1>Selection des semaines :</h1>
+			<br>
+			<div id="datepainter">
+			</div>
+		
+		</div>
 
 	</div>
 	<form method="post">
-		<input id="hide" name="hide" type="hidden" value="">
-		<button id="valider" type="submit" onclick="getDatesSelected()">Valider</button>
+		<input id="tsa" name="tsa" type="hidden" value="">
+		<button id="valider" type="submit" onclick="get_Active()">Valider</button>
 	</form>
+
+	<script type="text/javascript" src="../static/js/Multiple-DatePicker-master/Multiple-DatePicker-master/js/jquery-latest.min.js"></script>
+    <script type="text/javascript" src="../static/js/Multiple-DatePicker-master/Multiple-DatePicker-master/js/jquery-ui-1.9.2.custom.min.js"></script>
+    <script type="text/javascript" src="../static/js/Multiple-DatePicker-master/Multiple-DatePicker-master/js/moment.min.js"></script>
+    <script type="text/javascript" src="../static/js/Multiple-DatePicker-master/Multiple-DatePicker-master/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../static/js/Multiple-DatePicker-master/Multiple-DatePicker-master/js/datepainter.js"></script>
+    <script>
+    
+    $(function() {
+        $("#datepainter").datepainter();
+    });
+    
+    </script>
 	
 </body>
 </html>
-
-<script type="text/javascript">
-	let dates;
-
-	let inputH = document.getElementById("hide");
-
-	function getDatesSelected(){
-		//Récupération des dates pick
-		dates = $('#calendar').multiDatesPicker('getDates');
-
-		//Transformation en js
-		let myJson = JSON.stringify(dates, null, '\t');
-		inputH.value = myJson;
-	}
-</script>

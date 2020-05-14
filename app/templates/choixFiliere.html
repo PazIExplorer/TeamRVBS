@@ -10,7 +10,7 @@
 <body>
   {% include 'header.html' %}
 
-  <h1 id="titre">Choix du master</h1>
+  <h1 id="titre">Choix de la filière</h1>
     {% for f in filieres %}
     <form action="{{url_for('pageGenerale',idFiliere=f[0])}}" method="GET">
       <input class="button" type="submit" value="{{f[1]}}">

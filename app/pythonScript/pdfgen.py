@@ -3,6 +3,12 @@ import os
 from datetime import datetime
 import shutil
 
+from app.pythonScript import fonctionPy
+
+from app.pythonScript import config
+
+import mysql.connector
+
 from reportlab.lib.pagesizes import A4
 from reportlab.lib.units import cm
 
@@ -59,23 +65,32 @@ def pdf(etu,master,presence,administration):
     i=0
     while (i!=len(presence)):
         if(presence[i][3] < dateDebut):
-            
             presence.remove(presence[i])
-        elif(presence[i][3]>dateFin):
-            
+        elif(presence[i][3]>dateFin): 
             presence.remove(presence[i])
         else:
             i+=1
     
-
     presenceVirtuel = len(presence)*7
 
+
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
+    cursor = cnx.cursor()
+
+    tabEtu = alternant.split()
+    query = ("SELECT numeroEtudiant FROM etudiant WHERE nom='" + str(tabEtu[0]) + "' AND prenom='" + str(tabEtu[1]) + "'")
+
+    cursor.execute(query)
+    numEtu = cursor.fetchall()
+
+    cnx.close()
+
+    tabPresence = fonctionPy.heurePresentParMoisLimiteAffichage(numEtu[0][0]) # On récupère les présences selon les dates données
+    
+    
     presenceEffective = 0
-    for i in range(0,len(presence)):
-        if(presence[i][0]!=3):
-            presenceEffective+=4
-        if(presence[i][1]!=3):
-            presenceEffective+=3
+    for key, value in tabPresence.items():
+        presenceEffective += value
     
     # origin x y en haut à gauche 
     c.translate(inch,inch)
@@ -96,7 +111,7 @@ def pdf(etu,master,presence,administration):
     c.drawString(0,626,"SIRET : 197 308 588 000 15")
     #attestation de presence
     c.setFont("Helvetica-Bold", 14)
-    c.drawCentredString(230, 575, "ATTESTATION de PRÉSENCE")
+    c.drawCentredString(230, 575, "ATTESTATION DE PRÉSENCE")
     #Je soussigné
     c.setFont("Helvetica",12)
     textobject=c.beginText(0,540)
@@ -114,9 +129,22 @@ def pdf(etu,master,presence,administration):
         textobject.textLine(line.rstrip())
     c.drawText(textobject)
 
-    c.drawString(0,350,"Nombre d'heures de cours: "+ str(presenceVirtuel))
-    c.drawString(0,300,"Nombre d'heures de présence: "+str(presenceEffective))
+    # Heures de présence / mois
 
+    hauteur = 400
+    for key, value in tabPresence.items():
+        c.drawString(50,hauteur,"- " + str(key) + " :")
+        c.drawString(130,hauteur,str(value) + " heures")
+        hauteur -= 15
+
+    
+    hauteur -= 15
+    c.setFont("Helvetica-Bold",12)
+    c.drawString(0,hauteur,"Soit un total de " + str(presenceEffective) + " heures de présence.")
+    
+    hauteur -= 30
+    c.setFont("Helvetica",12)
+    c.drawString(0,hauteur,"Heures de cours prévues : "+ str(presenceVirtuel) + " heures.")
 
     c.drawString(200,150,"Le Bourget du Lac,le "+str(currDate.day) + "/" + str(currDate.month)+ "/" + str(currDate.year))
     # #ajoute la date
@@ -137,9 +165,23 @@ def pdf(etu,master,presence,administration):
     c.save()
 
     # ARCHIVAGE
+    fichierAnneeScolaire = str(debutScol.year)+"-"+str(finScol.year)
+    fichierDateDebut     = ("0"+str(dateDebut.day) if dateDebut.day<10 else str(dateDebut.day)) + "-" + ("0"+str(dateDebut.month) if dateDebut.month<10 else str(dateDebut.month)) + "-" + str(dateDebut.year)
+    fichierDateFin       = ("0"+str(dateFin.day) if dateFin.day<10 else str(dateFin.day)) + "-" + ("0"+str(dateFin.month) if dateFin.month<10 else str(dateFin.month)) + "-" + str(dateFin.year)
+
+    nomArchive = fichierAnneeScolaire + " " + master + " " + alternant + " du " + fichierDateDebut + " au " + fichierDateFin + " Attestation Présence"
+
+    # Gestion des duplicatas
+    if os.path.isfile(os.path.join(pathArchive,nomArchive) + ".pdf"):
+        numDuplicata = 1
+        while os.path.isfile(os.path.join(pathArchive,nomArchive) + " (" + str(numDuplicata) +").pdf"):
+            numDuplicata+=1
+        
+        nomArchive += " (" + str(numDuplicata)+")"
+
     
-    dateStr = str(currDate.year) + "-" + str(currDate.month)+ "-" + str(currDate.day) + "-" + str(currDate.hour) + "-" + str(currDate.minute) + "-" + str(currDate.second) + "-" + filename
-    shutil.copy2(os.path.join(pathPDF,filename), os.path.join(pathArchive,dateStr))
+    nomArchive += ".pdf" # Ajout de l'extension
+    shutil.copy2(os.path.join(pathPDF,filename), os.path.join(pathArchive,nomArchive))
     return c
 
 
@@ -147,6 +189,9 @@ def pdf(etu,master,presence,administration):
 def presence(etu,master,presenceJour,administration):
     
     from reportlab.lib.units import cm,inch
+
+    usmb=os.path.join("./app/static/img",'logoUSMB2.png')
+
     #obtention de l'année scolaire
     debutScol=datetime.strptime(administration[0][0], '%d/%m/%Y').date()
     finScol=datetime.strptime(administration[0][1], '%d/%m/%Y').date()
@@ -158,6 +203,12 @@ def presence(etu,master,presenceJour,administration):
     pathPDF = "./app/static/pdf"
     pathArchive = "./app/static/archive"
     filename = alternant+" Presence.pdf"
+
+    periodeDebut=administration[0][2]
+    periodeFin=administration[0][3]
+
+    dateDebut=datetime.strptime(periodeDebut, '%d/%m/%Y').date()
+    dateFin=datetime.strptime(periodeFin, '%d/%m/%Y').date()
    
 
     c = canvas.Canvas(os.path.join(pathPDF,filename))
@@ -170,6 +221,9 @@ def presence(etu,master,presenceJour,administration):
 
     # origine x, y en haut à gauche
     c.translate(inch,inch)
+
+    # Logo USMB
+    c.drawImage(usmb,0,690,150,60)
 
     c.line(0,600,440,600)
     c.line(0,560,440,560)
@@ -233,7 +287,22 @@ def presence(etu,master,presenceJour,administration):
     c.save()
 
     # ARCHIVAGE
-    currDate = datetime.now()
-    dateStr = str(currDate.year) + "-" + str(currDate.month)+ "-" + str(currDate.day) + "-" + str(currDate.hour) + "-" + str(currDate.minute) + "-" + str(currDate.second) + "-" + filename
-    shutil.copy2(os.path.join(pathPDF,filename), os.path.join(pathArchive,dateStr))
+    fichierAnneeScolaire = str(debutScol.year)+"-"+str(finScol.year)
+    fichierDateDebut     = ("0"+str(dateDebut.day) if dateDebut.day<10 else str(dateDebut.day)) + "-" + ("0"+str(dateDebut.month) if dateDebut.month<10 else str(dateDebut.month)) + "-" + str(dateDebut.year)
+    fichierDateFin       = ("0"+str(dateFin.day) if dateFin.day<10 else str(dateFin.day)) + "-" + ("0"+str(dateFin.month) if dateFin.month<10 else str(dateFin.month)) + "-" + str(dateFin.year)
+
+    nomArchive = fichierAnneeScolaire + " " + master + " " + alternant + " du " + fichierDateDebut + " au " + fichierDateFin + " Feuille Présence"
+
+    # Gestion des duplicatas
+    if os.path.isfile(os.path.join(pathArchive,nomArchive) + ".pdf"):
+        numDuplicata = 1
+        while os.path.isfile(os.path.join(pathArchive,nomArchive) + " (" + str(numDuplicata) +").pdf"):
+            numDuplicata+=1
+        
+        nomArchive += " (" + str(numDuplicata)+")"
+
+    
+    nomArchive += ".pdf" # Ajout de l'extension
+    shutil.copy2(os.path.join(pathPDF,filename), os.path.join(pathArchive,nomArchive))
+    return c
     return c

@@ -6,14 +6,23 @@
   <link rel="stylesheet" href="../static/css/styleHeader.css">
   <link rel="stylesheet" href="../static/css/styleConvention.css">
   <link rel="stylesheet" href="../static/css/stylePDF.css">
+  <link rel="stylesheet" href="../static/css/styleMessage.css">
   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
 </head>
 <body>
   {% include 'header.html' %}
 
+  {% if modifType == 1 %}
+  <!-- MODIFICATIONS RÉUSSIES -->
+  <div class="reussit">Modifications des données enregistrées.</div>
+  {% elif modifType == -1 %}
+  <!-- MODIFICATIONS ÉCHOUÉES -->
+  <div class="erreur">Une erreur a eu lieu lors de la modification des données : {{msgErreur}}</div>
+  {% endif %}
+
   <h1 id="titre">Convention</h1>
 
-  <form enctype="multipart/form-data" action="{{url_for('pageConvention', id=user[0][0])}}" method="POST">
+  <form enctype="multipart/form-data" action="{{url_for('pageConvention', id=user[0][3])}}" method="POST">
 	  <label for="conv">Ajouter une convention(au format "Nom Prenom Convention.pdf"):</label>
 	  <input id="conv" type="file" name="conv" />    
     <input id="upload" type="submit" value="Envoyer la convention" />

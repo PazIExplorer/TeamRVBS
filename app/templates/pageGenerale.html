@@ -26,7 +26,7 @@
     <tbody>
 
       {% for e in user %}
-      <tr id="ligneEtudiant" onclick="window.location=`{{url_for('pageEtu', id=e[0])}}`">
+      <tr id="ligneEtudiant" onclick="window.location=`{{url_for('pageEtu', id=e[3])}}`">
         <td>{{e[1]}}</td>
         <td>{{e[2]}}</td>
         <td>{{e[4]}}</td>
@@ -69,7 +69,7 @@
     <button class="btn btn-outline-primary col-sm-6" onclick=nextWeek()>Suivant</button>
   </div>
   
-  <a id="buttonExcel" href="../static/excel/forfaitHorraire.xlsx" download="tableau_de_facturation_alternants.xlsx">Générer le tableau du mois</a>
+  <a id="buttonExcel" href="../static/excel/forfaitHorraire.xlsx" download="tableau_de_facturation_alternants.xlsx">Générer le tableau de facturation du mois</a>
  
   <script>
       // Suppression des boutons administrateur
@@ -114,7 +114,7 @@ function showCalendar(monday) {
     let numEtu=[];
     let nomEtu=[];
     {% for e in user %}
-      idEtu.push({{e[0]}});
+      idEtu.push({{e[3]}});
       numEtu.push({{e[3]}});
       nomEtu.push("{{e[1]}} {{e[2]}}");
     {% endfor %}

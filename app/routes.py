@@ -1,3 +1,5 @@
+# -*-coding:utf-8 -*
+
 from app import app
 from flask import render_template, request, make_response, redirect, url_for
 from werkzeug import secure_filename
@@ -6,13 +8,18 @@ import mysql.connector
 import os.path
 from os import path
 
-
+from operator import itemgetter
 
 import os
+import re
+import string
+
 from app.pythonScript import pdfgen
 from app.pythonScript import excelGen
 from app.pythonScript import fonctionPy
 from app.pythonScript import mdpGen
+
+from app.pythonScript import config
 
 # Vérification de la validité du cookie
 def cookieEstValide():
@@ -22,7 +29,7 @@ def cookieEstValide():
         user_name = request.cookies.get('compteConnecte')
         user_accType = request.cookies.get('typeCompte')
 
-        cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+        cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
         cursor = cnx.cursor()
 
         query = ("SELECT identifiant FROM connexion WHERE identifiant=%s AND typeCompte=%s")
@@ -70,7 +77,7 @@ def index():
         user_name = request.form["user_name"]
         user_mdp = request.form["user_mdp"]
 
-        cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+        cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
         cursor = cnx.cursor()
 
         query = ("SELECT * FROM connexion WHERE identifiant=%s AND motdepasse=%s")
@@ -127,7 +134,7 @@ def choixFiliere():
 
     
 
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
     # Recuperation de la liste des filières
     query = ("SELECT * FROM filiere")
@@ -153,11 +160,14 @@ def pageGenerale(idFiliere):
     else:
         query = ("SELECT * FROM etudiant WHERE filiere="+str(idFiliere))
 
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
 
     cursor.execute(query)
     etu = cursor.fetchall()
+
+    # Tri des élèves par nom / prénom
+    etu = sorted(etu, key=itemgetter(1,2))   # Tri par nom puis par prénom
 
     # Filières (récupération du nom)
     if idFiliere == "NULL":
@@ -174,7 +184,7 @@ def pageGenerale(idFiliere):
     presence = cursor.fetchall()
     cnx.close()
     # Génération du excel a chaque fois qu'on est sur la page générale
-    excelGen.creation()
+    excelGen.creation(idFiliere)
     return render_template("pageGenerale.html",user=etu,presence=presence,filieres=filieres)
 
 @app.route("/pageEtu/<id>")
@@ -187,7 +197,7 @@ def pageEtu(id):
 
     id=id
 
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
     
     modifType = 0   # Utilisé en cas de modifs utilisateur
@@ -197,45 +207,65 @@ def pageEtu(id):
     # si un formulaire à été envoyé à cette page
     if request.method == "POST":
         # recuperation des informations du formulaire
-        idCarteEtu = id
         nom = request.form["nom"]
         prenom = request.form["prenom"]
-        numeroEtudiant = int(request.form["numeroEtudiant"])
+        numeroEtudiant = request.form["numeroEtudiant"]
+        numeroBadge = request.form["numeroBadge"]
         typeContratEtudiant = request.form["typeContratEtudiant"]
         tarif = float(request.form["tarif"])
         filiere = int(request.form["filiere"])
-        numeroTel = int(request.form["numeroTel"])
+        numeroTel = request.form["numeroTel"]
         mailEtu = request.form["mailEtu"]
         mailEntreprise = request.form["mailEntreprise"]
+        commentaire = request.form["commentaire"]
         
-        val = (idCarteEtu,nom,prenom,numeroEtudiant,typeContratEtudiant,tarif,filiere,numeroTel,mailEtu,mailEntreprise,id)
-
-        # Modification de la table étudiant avec les nouvelles informations 
-        query = ("UPDATE etudiant SET idCarteEtu=%s,nom=%s,prenom=%s,numeroEtudiant=%s,typeContratEtudiant=%s,tarif=%s,filiere=%s,numeroTel=%s,mailEtu=%s,mailEntreprise=%s WHERE idCarteEtu=%s")
-
-        try:
-            cursor.execute(query,val)
-
-            query = ("UPDATE presence SET idCarteEtu=%s WHERE idCarteEtu=%s")
-            val = (idCarteEtu,id)
-
-            cursor.execute(query,val)
-            cnx.commit()
-
-            modifType = 1
-            
-        except Exception as ex:
-            cnx.rollback()
+        #Vérification du formulaire :
+        #Pour le nom de l'étudiant 
+        if len(nom.strip()) == 0:
             modifType = -1
-            msgErr = repr(ex)
-            
+            msgErr = "Nom de l'étudiant invalide"
+        #Pour le prénom de l'étudiant
+        if len(prenom.strip()) == 0:
+            modifType = -1
+            msgErr = "Prenom de l'étudiant invalide"
+        #Pour le numéro de la carte étudiante
+        if len(numeroEtudiant.strip()) == 0:
+            modifType = -1
+            msgErr = "Numéro de carte étudiante invalide"
+        #Pour le numéro de badgage
+        if len(numeroBadge.strip()) == 0:
+            modifType = -1
+            msgErr = "Numéro de badge invalide"
+        #Pour le tarif Vérif que c'est int
 
+        #Pour le numéro de tel, pas important
+        #Pour mail Etudiant, pas important
+        #Pour mail Entreprise, pas important
+        #Commentaire, pas important
+
+        if modifType != -1:
+            numeroBadge = int(numeroBadge,16)
+            val = (numeroBadge,nom,prenom,numeroEtudiant,typeContratEtudiant,tarif,filiere,numeroTel,mailEtu,mailEntreprise,commentaire,id)
+
+            # Modification de la table étudiant avec les nouvelles informations 
+            query = ("UPDATE etudiant SET idCarteEtu=%s,nom=%s,prenom=%s,numeroEtudiant=%s,typeContratEtudiant=%s,tarif=%s,filiere=%s,numeroTel=%s,mailEtu=%s,mailEntreprise=%s,description=%s WHERE numeroEtudiant=%s")
+
+            try:
+                cursor.execute(query,val)
+                cnx.commit()
+                modifType = 1
+            
+            except Exception as ex:
+                cnx.rollback()
+                modifType = -1
+                msgErr = repr(ex)
+            
     # recuperation des étudiants et de leurs présence
-    query = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
+    query = ("SELECT * FROM etudiant WHERE numeroEtudiant="+str(id))
     cursor.execute(query)
     etu = cursor.fetchall()
     
-    query = ("SELECT * FROM presence WHERE idCarteEtu="+str(id))
+    query = ("SELECT * FROM presence WHERE numeroEtudiant="+str(id))
     cursor.execute(query)
     presence = cursor.fetchall()
     cnx.close()
@@ -253,32 +283,42 @@ def pageConvention(id):
     if not compteEstAdmin():
         return redirect(url_for("pageEtu", id=id))
 
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
 
     id=id
 
     #recuperation de l'étudiants concerné
-    query = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
+    query = ("SELECT * FROM etudiant WHERE numeroEtudiant="+str(id))
     cursor.execute(query)
     etu = cursor.fetchall()
     cnx.close()
+
+    modifType=0
+    msgErreur=''
 
 
     if request.method == "POST":
 
         #Recuperation et sauvegarde du fichier transmis dans le dossier cenvention
         conv = request.files["conv"]
-        non_conv = secure_filename(conv.filename)
-        conv.save('/root/TeamRVBS/app/static/convention/'+non_conv)
+        nom_conv = secure_filename(conv.filename)
+        nom = str(etu[0][1]) + "_" + str(etu[0][2]) +"_Convention.pdf"
+        if nom_conv == nom :
+            conv.save(os.getcwd()+'/app/static/convention/'+nom_conv)
+            modifType=1
+        else :
+            modifType=-1
+            msgErreur = "Le fichier convention n'est pas au bon format (format accepté : \"Nom Prenom Convention.pdf\""
+
     
     #pour savoir si l'étudiant possède déjà une convention
-    p = "/root/TeamRVBS/app/static/convention/"+str(etu[0][1]) + "_" + str(etu[0][2])+"_Convention.pdf"
+    p = os.getcwd()+"/app/static/convention/"+str(etu[0][1]) + "_" + str(etu[0][2])+"_Convention.pdf"
     if not(path.exists(p)):
         p = "../static/convention/conventionBase.pdf"
     else:
         p = "../static/convention/"+ str(etu[0][1]) + "_" + str(etu[0][2]) +"_Convention.pdf"
-    return render_template("pageConvention.html",user=etu,path=p) 
+    return render_template("pageConvention.html",user=etu,path=p,modifType=modifType,msgErreur=msgErreur) 
 
 
 
@@ -294,13 +334,13 @@ def pageModifEtu(id):
     if not compteEstAdmin():
         return redirect(url_for("pageEtu", id=id))
 
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
 
     id=id
 
     #recuperation de létudiant et des filières
-    query = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
+    query = ("SELECT * FROM etudiant WHERE numeroEtudiant="+str(id))
     cursor.execute(query)
     etu = cursor.fetchall()
 
@@ -322,11 +362,11 @@ def pdfEtuPresence(id):
     if not compteEstAdmin():
         return redirect(url_for("pageEtu", id=id))
 
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
 
     id=id
-    query = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
+    query = ("SELECT * FROM etudiant WHERE numeroEtudiant="+str(id))
     cursor.execute(query)
     etu = cursor.fetchall()
 
@@ -334,7 +374,7 @@ def pdfEtuPresence(id):
     cursor.execute(query)
     filiere = cursor.fetchall()
 
-    query = ("SELECT * FROM presence WHERE idCarteEtu="+str(id))
+    query = ("SELECT * FROM presence WHERE numeroEtudiant="+str(id))
     cursor.execute(query)
     presence = cursor.fetchall()
 
@@ -358,15 +398,15 @@ def pdfEtu(id):
     if not compteEstAdmin():
         return redirect(url_for("pageEtu", id=id))
 
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
 
     id=id 
-    query = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
+    query = ("SELECT * FROM etudiant WHERE numeroEtudiant="+str(id))
     cursor.execute(query)
     etu = cursor.fetchall()
 
-    query = ("SELECT * FROM presence WHERE idCarteEtu="+str(id))
+    query = ("SELECT * FROM presence WHERE numeroEtudiant="+str(id))
     cursor.execute(query)
     presence = cursor.fetchall()
 
@@ -380,6 +420,7 @@ def pdfEtu(id):
 
     cnx.close()
 
+    print(len(presence))
 
     myPDF=pdfgen.pdf(etu[0][1]+" "+etu[0][2],filiere[0][1],presence,administration)
     return render_template("pdfEtuAttest.html",myPDF=myPDF,user=etu)
@@ -394,43 +435,37 @@ def archiveEtu(id):
     # Vérifie si le compte est admin, sinon retour à la page étudiant
     if not compteEstAdmin():
         return redirect(url_for("pageEtu", id=id))
-
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
-    cursor = cnx.cursor()
     
+    #Si on arrive depuis l'archive globale on récupère le nom et prénom du formulaire
     if request.method == 'POST':
-        #si arrive ici avec formulaire alors il faut trouver l'id de l'étudiant
         nom = request.form["nom"]
         prenom = request.form["prenom"]
-        query = ("SELECT * FROM etudiant WHERE nom=%s AND prenom=%s")
-        val = (nom,prenom)
-        cursor.execute(query,val)
-        rows = cursor.fetchall()
-        #Il ne doit avoir récupérer qu'un étudiant
-        for row in rows:
-            id = row[0] #idCarteEtu
 
-        #On regarde que l'id a bien était initialisé (si id = 0 l'étudiant n'est pas dans la bdd)
-        if(int(id) == 0):
-            return render_template("archive.html", aucunResultat=True, nomEtu=nom, prenomEtu=prenom)
-            
-    import re
-    #On récupère les informations de l'étudiant 
-    query = ("SELECT * FROM etudiant WHERE idCarteEtu="+str(id))
-    cursor.execute(query)
-    etu = cursor.fetchall()
+    #Si on arrive depuis la page étudiant, a partir de l'id on récupère le nom et prénom de la bdd
+    else :
+        cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
+        cursor = cnx.cursor()
+        query = ("SELECT * FROM etudiant WHERE numeroEtudiant="+str(id))
+        cursor.execute(query)
+        etu = cursor.fetchall()
+        cnx.close()
+        nom = etu[0][1]
+        prenom = etu[0][2]
 
-    cnx.close()
+    #Pour être sur que nom et prénom commence par une majuscule
+    nom = nom.capitalize()
+    prenom = prenom.capitalize()
+
     #Création de deux regex pour récupérer les fichiers attestation.pdf et presence.pdf de l'étudiant en question
-    attestationRegex=rf".*{etu[0][1]}\s{etu[0][2]}\sAttestation\.pdf"
-    presenceRegex=rf".*{etu[0][1]}\s{etu[0][2]}\sPresence\.pdf"
+    attestationRegex=rf".*{nom}\s{prenom}\s.*Attestation.*\.pdf"
+    presenceRegex=rf".*{nom}\s{prenom}\s.*Feuille.*\.pdf"
 
     #Récupération de la liste des fichiers de l'archive
     folderContent = os.listdir(os.path.join("./app/static/archive"))
 
     #Création de deux tableaux pour récupérer dans chacun deux les fichiers voulu
     fichiersAttestation = []
-    fichierPresence = []
+    fichiersPresence = []
 
     for i in folderContent:
         #on passe tout les fichiers de l'archive dans les regex, quand ils correspondent on les ajoutes au tableau correspondant
@@ -438,9 +473,15 @@ def archiveEtu(id):
             fichiersAttestation.append(i)
 
         if(re.match(presenceRegex,i)!=None):
-            fichierPresence.append(i)
-
-    return render_template("archiveEtu.html",user=etu, folderAttestation=fichiersAttestation, folderFichePresence=fichierPresence) 
+            fichiersPresence.append(i)
+    
+    # Tri des fichiers par nom
+    fichiersAttestation.sort()
+    fichiersPresence.sort()
+    
+    #Pour pouvoir afficher le nom et prénom de l'étudiant sur la page d'archive
+    etu = (nom, prenom)
+    return render_template("archiveEtu.html",user=etu, folderAttestation=fichiersAttestation, folderFichePresence=fichiersPresence) 
 
 
 #Sert a ajouter un étudiant depuis l'application mobile
@@ -452,7 +493,7 @@ def ajoutEtu(nomprenomid):
     prenom = np[1]
     numEtu = np[3]
 
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
 
     #insertion de l'etudiant dans la BDD
@@ -481,12 +522,17 @@ def emploiDuTempsPicker():
 
     if request.method == 'POST':
 
-        data = request.form['hide']
+        data = request.form['tsa']
+                
         if data:
-            fonctionPy.sendEmploiDuTemps(data)
+            fonctionPy.sendDates(data)
+        else:
+            fonctionPy.effacerBase()
 
-    fonctionPy.recupererEmploiDuTemps()
-    return render_template("emploiDuTempsPicker.html")
+    dates = fonctionPy.recupererDates()
+    
+
+    return render_template("emploiDuTempsPicker.html",dates=dates)
     
 @app.route("/pageAdministration")
 def pageAdministration():
@@ -503,7 +549,7 @@ def pageAdministration():
 @app.route("/adminModifVariable")
 @app.route("/adminModifVariable", methods=["GET", "POST"])
 def adminModifVariable():
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
 
     modifType = 0   # Utilisé en cas de modifs utilisateur
@@ -520,16 +566,26 @@ def adminModifVariable():
         presidentSMB = request.form["presidentUSMB"]
         presidentSFC = request.form["presidentSFC"]
         tarifMaster = int(request.form["tarifMaster"])
+        signature = request.files["signature"]
 
-        #On met a jour la bdd
-        query = ("UPDATE administration SET debutAnnee=%s,finAnnee=%s,debutAffiche=%s,finAffiche=%s,presidentSMB=%s,presidentSFC=%s,tarfiMaster=%s")
+        
+
+        query = ("UPDATE administration SET debutAnnee=%s,finAnnee=%s,debutAffiche=%s,finAffiche=%s,presidentSMB=%s,presidentSFC=%s,tarifMaster=%s")
         val = (debutAnnee,finAnnee,debutAffiche,finAffiche,presidentSMB,presidentSFC,tarifMaster)
 
         try:
             cursor.execute(query,val)
-            cnx.commit()            
-            modifType = 1     
-        
+                       
+            modifType = 1 
+            if signature.filename != "":
+                nom_fichier = secure_filename(signature.filename)
+                if nom_fichier == "signature.png":
+                    signature.save(os.getcwd()+'/app/static/img/'+nom_fichier)
+                else :
+                    cnx.rollback()
+                    modifType = -1
+                    msgErr = "Le fichier signature n'est pas au bon format (format accepté : \"signature.png\""    
+            cnx.commit() 
         except Exception as ex:
             cnx.rollback()
             modifType = -1
@@ -552,7 +608,7 @@ def creationCompte():
     if not compteEstAdmin():
         return redirect("choixFiliere")
 
-    cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
     
     modifType = 0   # Utilisé en cas de modification
@@ -588,13 +644,6 @@ def creationCompte():
 
 @app.route("/gestionCompte", methods=['GET', 'POST'])
 def gestionCompte():
-    # Validation du compte dans le cookie
-    if not cookieEstValide():
-        return redirect("index")
-
-    # Vérifie si le compte est admin, sinon retour à la page d'accueil
-    if not compteEstAdmin():
-        return redirect("choixFiliere")
     
     modifType = 0   # Utilisé en cas de modification
                     # 0 = rien, 1 = succès, -1 = erreur
@@ -609,24 +658,37 @@ def gestionCompte():
 
         idCompte = nom
 
-        cnx = mysql.connector.connect(host='192.168.176.21',database='badgeuse',user='ben',password='teamRVBS')
+        cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
         cursor = cnx.cursor()
+
+        query = ("SELECT * FROM connexion")
+        cursor.execute(query)
+        comptes = cursor.fetchall()
+
+        estCompte = False
+        for c in comptes:
+            if(nom == c[0]):
+                estCompte = True
         
-        #mise à jour de la BDD
-        query = ("UPDATE connexion SET motdepasse=%s WHERE identifiant=%s")
-        val = (mdp,nom)
-        try:
-            cursor.execute(query,val)
-            cnx.commit()
-            cnx.close()
-            mdpGen.envoiMailModif(nom,mdp) # envoi de l'email de modification
-            modifType = 1
-            
-        except Exception as ex:
-            cnx.rollback()
-            cnx.close()
+        if estCompte:
+            #mise à jour de la BDD
+            query = ("UPDATE connexion SET motdepasse=%s WHERE identifiant=%s")
+            val = (mdp,nom)
+            try:
+                cursor.execute(query,val)
+                cnx.commit()
+                cnx.close()
+                mdpGen.envoiMailModif(nom,mdp) # envoi de l'email de modification
+                modifType = 1
+                
+            except Exception as ex:
+                cnx.rollback()
+                cnx.close()
+                modifType = -1
+                msgErr = repr(ex)
+        else:
             modifType = -1
-            msgErr = repr(ex)
+            msgErr = "Ce compte n'existe pas"
 
     return render_template("gestionCompte.html", modifType=modifType, msgErreur=msgErr, identifiant=idCompte)
 
@@ -641,3 +703,9 @@ def archive():
         return redirect("choixFiliere")
 
     return render_template("archive.html", aucunResultat=False, nomEtu="", prenomEtu="")
+
+
+@app.route("/documentation")
+def documentation():
+
+    return render_template("documentation.html")

@@ -59,7 +59,13 @@ form label{
 
 form input[type=text] {
 	text-align: center;
+	width: 30%;
 }
+
+form input[type=number] {
+	text-align: center;
+}
+
 form input[type=submit] {
 	background: #8CDBFF;
 	width: 20%;
@@ -73,6 +79,7 @@ form input[type=submit] {
 	border-radius: 15px;
 	font-weight: bold;
 }
+
 
 /* Pour faire le bouton annuler qui est une balise <a> */
 p#annuler{

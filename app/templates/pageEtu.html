@@ -22,8 +22,20 @@
         <div class="erreur">Une erreur a eu lieu lors de la modification de l'étudiant : {{msgErreur}}</div>
     {% endif %}
 
+    
+    {% if user[0][6] %}  
+        <form action="{{url_for('pageGenerale', idFiliere=user[0][6])}}">
+            <input class="b" type="submit" value="Retour page de selection des étudiants" />
+        </form>
+    {% else %}
+        <form action="{{url_for('pageGenerale', idFiliere='NULL')}}">
+            <input class="b" type="submit" value="Retour page de selection des étudiants" />
+        </form>
+    {% endif %}
+
 
     <div id="descriptEtu">
+
         <h1>Description de l'étudiant</h1>
         <ol>
             <li>
@@ -40,34 +52,51 @@
             </li>
             <li>
                 <p class="gauche">Contact :</p>
-                <p class="droite">{{user[0][8]}}</p>
+                {% if user[0][8]  %}
+                    <p class="droite">{{user[0][8]}}</p>
+                {% else %}
+                    <p class="droite">non renseigné</p>
+                {% endif %}
             </li>
             <li>
                 <p class="gauche">Numéro de téléphone :</p>
-                <p class="droite">{{user[0][7]}}</p>
+                {% if user[0][7] %}
+                    <p class="droite">{{user[0][7]}}</p>
+                {% else %}
+                    <p class="droite">non renseigné</p>
+                {% endif %}
             </li>
             <li>
                 <p class="gauche">Mail entreprise :</p>
-                <p class="droite">{{user[0][9]}}</p>
+                {% if user[0][9]  %}
+                    <p class="droite">{{user[0][9]}}</p>
+                {% else %}
+                    <p class="droite">non renseigné</p>
+                {% endif %}
+            </li>
+                <p class="gauche">Commentaire :</p>
+                <p class="droite">{{user[0][10]}}</p>
+            <li>
+
             </li>
             <li>
-                <form class="gauche" method="GET" action="{{url_for('archiveEtu',id=user[0][0]) }}">
+                <form class="gauche" method="GET" action="{{url_for('archiveEtu',id=user[0][3]) }}">
                     <input type="submit" value="Archive de l'étudiant">
                 </form>
-                <form class="droite" method="GET" action="{{url_for('pageConvention', id=user[0][0])}}">
+                <form class="droite" method="GET" action="{{url_for('pageConvention', id=user[0][3])}}">
                     <input type="submit" value="Convention">
                 </form>
             </li>
             <li>
-                <form class="gauche" method="GET" action="{{url_for('pdfEtuPresence', id=user[0][0])}}">
+                <form class="gauche" method="GET" action="{{url_for('pdfEtuPresence',id=user[0][3])}}">
                     <input type="submit" value="Fiche de présence">
                 </form>
-                <form class="droite" method="GET" action="{{url_for('pdfEtu',id=user[0][0]) }}">
+                <form class="droite" method="GET" action="{{url_for('pdfEtu',id=user[0][3])}}">
                     <input type="submit" value="Attestation de présence">
                 </form>
             </li>
             <li>
-                <form class="gauche" method="GET" action="{{url_for('pageModifEtu', id=user[0][0])}}">
+                <form class="gauche" method="GET" action="{{url_for('pageModifEtu',id=user[0][3])}}">
                     <input type="submit" value="Modifier">
                 </form>
             </li>
