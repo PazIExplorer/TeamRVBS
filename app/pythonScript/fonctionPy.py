@@ -6,9 +6,9 @@ import time
 from app.pythonScript import config
 
 # On lui donne un étudiant a partir de son numéro de carte étudiant
-# La fonction renvoie un tableau avec les heures de présences / moi 
+# La fonction renvoie un tableau avec les heures de présences / mois 
 #
-def heurePresentParMoi(numCarteEtu):
+def heurePresentParMois(numCarteEtu):
     #initialisation tab
     tab_presence = {"Sept":0, "Oct":0, "Nov":0, "Déc":0, "Jan":0, "Fev":0, "Mars":0, "Avril":0, "Mai":0, "Juin":0}
     tab_des_mois = {"1":"Janv", "2":"Fev", "3":"Mars", "4":"Avril", "5":"Mai", "6":"Juin", "7":"Juil", "8":"Aout", "9": "Sept", "10":"Oct", "11":"Nov", "12":"Déc"}
@@ -26,21 +26,18 @@ def heurePresentParMoi(numCarteEtu):
         #pour chaque rows : récupérer la datePresence 
         dateCourant = row[2]
         #en récupérer le moi (ex : "09")
-        numMoi = recupMoi(dateCourant)
-        #récupérer le nom du moi ("Sept")
-        nomMoi = tab_des_mois[numMoi]
+        numMois = recupMois(dateCourant)
+        #récupérer le nom du mois ("Sept")
+        nomMois = tab_des_mois[numMois]
 
-        print(dateCourant)
-        print(numMoi)
-        print(nomMoi)
         #ajouter +4 pour le matin et +3 pour l'aprem dans le tab_presence au bon mois
         if(row[0] == 1 or row[0] == 3):
-            tab_presence[nomMoi] = tab_presence[nomMoi] + 4
+            tab_presence[nomMois] = tab_presence[nomMois] + 4
         if(row[1] == 1 or row[1] == 3):
-            tab_presence[nomMoi] = tab_presence[nomMoi] + 3
+            tab_presence[nomMois] = tab_presence[nomMois] + 3
     return tab_presence
 
-def recupMoi(datePresence):
+def recupMois(datePresence):
     liste = list(datePresence)
     i = 0
     flag = False
@@ -84,10 +81,10 @@ def recupererEmploiDuTemps():
 def dateStringToDatetime(dateEnString):
 
     annee = dateEnString[6]+dateEnString[7]+dateEnString[8]+dateEnString[9]
-    moi = dateEnString[0]+dateEnString[1]
+    mois = dateEnString[0]+dateEnString[1]
     jour = dateEnString[3]+dateEnString[4]
 
-    myDate = datetime.datetime(int(annee), int(moi), int(jour), 0, 0, 0)
+    myDate = datetime.datetime(int(annee), int(mois), int(jour), 0, 0, 0)
     return myDate
 
 
@@ -118,9 +115,9 @@ def sendEmploiDuTemps(jsonDates):
     
     #cnx.close()
 
-def tabHeureCoursParMoi(anneeScolaireDebut, anneeScolaireFin):
+def tabHeureCoursParMois(anneeScolaireDebut, anneeScolaireFin):
     #initialisation tab
-    tab_heureCourParMoi = {"Sept":0, "Oct":0, "Nov":0, "Déc":0, "Jan":0, "Fev":0, "Mars":0, "Avril":0, "Mai":0, "Juin":0}
+    tab_heureCourParMois = {"Sept":0, "Oct":0, "Nov":0, "Déc":0, "Jan":0, "Fev":0, "Mars":0, "Avril":0, "Mai":0, "Juin":0}
     tab_des_mois = {"01":"Janv", "02":"Fev", "03":"Mars", "04":"Avril", "05":"Mai", "06":"Juin", "07":"Juil", "08":"Aout", "09": "Sept", "10":"Oct", "11":"Nov", "12":"Déc"}
 
     #connection bdd
@@ -135,13 +132,13 @@ def tabHeureCoursParMoi(anneeScolaireDebut, anneeScolaireFin):
     #row[0] la date sql avec le format de base, row[1] avec format %m
     for row in rows:
         jourCourant = row[1]
-        num_moi = jourCourant[0]+jourCourant[1] 
+        num_mois = jourCourant[0]+jourCourant[1] 
         annee = jourCourant[6]+jourCourant[7]+jourCourant[8]+jourCourant[9]
 
         if(int(annee) == int(anneeScolaireDebut) or int(annee) == int(anneeScolaireFin)):
-            nom_moi = tab_des_mois[num_moi]
-            tab_heureCourParMoi[nom_moi] = tab_heureCourParMoi[nom_moi] + 7 #on ajoute 7h (le nb d'heure de cours dans une journée)
-    return tab_heureCourParMoi
+            nom_mois = tab_des_mois[num_mois]
+            tab_heureCourParMois[nom_mois] = tab_heureCourParMois[nom_mois] + 7 #on ajoute 7h (le nb d'heure de cours dans une journée)
+    return tab_heureCourParMois
 
 
 

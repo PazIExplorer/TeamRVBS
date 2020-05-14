@@ -161,8 +161,8 @@ def creation():
     ws.write('U6:U6', 'TOTAL H', formatTotalBoldTitle)
     ws.merge_range('V6:V7', 'TOTAL €', formatTotalBoldTitle)
 
-    #afficher le nombre d'heures de cours par moi 
-    tabHeure = fonctionPy.tabHeureCoursParMoi(dateDebut, dateFin)
+    #afficher le nombre d'heures de cours par mois 
+    tabHeure = fonctionPy.tabHeureCoursParMois(dateDebut, dateFin)
     #tableau de la forme {"Sept":0, "Oct":0, "Nov":0, "Déc":0, "Jan":0, "Fev":0, "Mars":0, "Avril":0, "Mai":0, "Juin":0} avec les 0 remplacés par le nb d'heures
     ws.write('E7:E7', str(tabHeure["Sept"]), formatT1Bold)
     ws.write('F7:F7', str(tabHeure["Oct"]), formatT1Bold)
@@ -199,7 +199,7 @@ def creation():
         ws.write(row+i, 3, str(tarifConv), formatT1Base)
 
         #afficher la présence
-        tab = fonctionPy.heurePresentParMoi(element[3])
+        tab = fonctionPy.heurePresentParMois(element[3])
         ws.write(row+i, 4, tab["Sept"], formatT1Base)
         ws.write(row+i, 5, tab["Oct"], formatT1Base)
         ws.write(row+i, 6, tab["Nov"], formatT1Base)
@@ -253,7 +253,7 @@ def creation():
         ws.write(row+i, 3, str(tarifConv), formatT1Base)
 
         #afficher la présence
-        tab = fonctionPy.heurePresentParMoi(element[3])
+        tab = fonctionPy.heurePresentParMois(element[3])
         ws.write(row+i, 4, tab["Sept"], formatT1Base)
         ws.write(row+i, 5, tab["Oct"], formatT1Base)
         ws.write(row+i, 6, tab["Nov"], formatT1Base)
