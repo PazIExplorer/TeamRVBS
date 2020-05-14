@@ -449,15 +449,15 @@ def archiveEtu(id):
 
     cnx.close()
     #Création de deux regex pour récupérer les fichiers attestation.pdf et presence.pdf de l'étudiant en question
-    attestationRegex=rf".*{etu[0][1]}\s{etu[0][2]}\sAttestation\.pdf"
-    presenceRegex=rf".*{etu[0][1]}\s{etu[0][2]}\sPresence\.pdf"
+    attestationRegex=rf".*{etu[0][1]}\s{etu[0][2]}\s.*Attestation.*\.pdf"
+    presenceRegex=rf".*{etu[0][1]}\s{etu[0][2]}\s.*Feuille.*\.pdf"
 
     #Récupération de la liste des fichiers de l'archive
     folderContent = os.listdir(os.path.join("./app/static/archive"))
 
     #Création de deux tableaux pour récupérer dans chacun deux les fichiers voulu
     fichiersAttestation = []
-    fichierPresence = []
+    fichiersPresence = []
 
     for i in folderContent:
         #on passe tout les fichiers de l'archive dans les regex, quand ils correspondent on les ajoutes au tableau correspondant
@@ -465,9 +465,13 @@ def archiveEtu(id):
             fichiersAttestation.append(i)
 
         if(re.match(presenceRegex,i)!=None):
-            fichierPresence.append(i)
+            fichiersPresence.append(i)
+    
+    # Tri des fichiers par nom
+    fichiersAttestation.sort()
+    fichiersPresence.sort()
             
-    return render_template("archiveEtu.html",user=etu, folderAttestation=fichiersAttestation, folderFichePresence=fichierPresence) 
+    return render_template("archiveEtu.html",user=etu, folderAttestation=fichiersAttestation, folderFichePresence=fichiersPresence) 
 
 
 #Sert a ajouter un étudiant depuis l'application mobile
