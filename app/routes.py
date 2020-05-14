@@ -11,6 +11,9 @@ from os import path
 from operator import itemgetter
 
 import os
+import re
+import string
+
 from app.pythonScript import pdfgen
 from app.pythonScript import excelGen
 from app.pythonScript import fonctionPy
@@ -432,35 +435,30 @@ def archiveEtu(id):
     # Vérifie si le compte est admin, sinon retour à la page étudiant
     if not compteEstAdmin():
         return redirect(url_for("pageEtu", id=id))
-
-    cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
-    cursor = cnx.cursor()
     
+    #Si on arrive depuis l'archive globale on récupère le nom et prénom du formulaire
     if request.method == 'POST':
-        #si arrive ici avec formulaire alors il faut trouver l'id de l'étudiant
         nom = request.form["nom"]
         prenom = request.form["prenom"]
-        query = ("SELECT * FROM etudiant WHERE nom=%s AND prenom=%s")
-        val = (nom,prenom)
-        cursor.execute(query,val)
-        rows = cursor.fetchall()
-        #Il ne doit avoir récupérer qu'un étudiant
-        for row in rows:
-            id = row[3] #numeroEtudiant
 
-        #On regarde que l'id a bien était initialisé (si id = 0 l'étudiant n'est pas dans la bdd)
-        if(int(id) == 0):
-            return render_template("archive.html", aucunResultat=True, nomEtu=nom, prenomEtu=prenom)
-            
-    import re
-    query = ("SELECT * FROM etudiant WHERE numeroEtudiant="+str(id))
-    cursor.execute(query)
-    etu = cursor.fetchall()
+    #Si on arrive depuis la page étudiant, a partir de l'id on récupère le nom et prénom de la bdd
+    else :
+        cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
+        cursor = cnx.cursor()
+        query = ("SELECT * FROM etudiant WHERE numeroEtudiant="+str(id))
+        cursor.execute(query)
+        etu = cursor.fetchall()
+        cnx.close()
+        nom = etu[0][1]
+        prenom = etu[0][2]
 
-    cnx.close()
+    #Pour être sur que nom et prénom commence par une majuscule
+    nom = nom.capitalize()
+    prenom = prenom.capitalize()
+
     #Création de deux regex pour récupérer les fichiers attestation.pdf et presence.pdf de l'étudiant en question
-    attestationRegex=rf".*{etu[0][1]}\s{etu[0][2]}\s.*Attestation.*\.pdf"
-    presenceRegex=rf".*{etu[0][1]}\s{etu[0][2]}\s.*Feuille.*\.pdf"
+    attestationRegex=rf".*{nom}\s{prenom}\s.*Attestation.*\.pdf"
+    presenceRegex=rf".*{nom}\s{prenom}\s.*Feuille.*\.pdf"
 
     #Récupération de la liste des fichiers de l'archive
     folderContent = os.listdir(os.path.join("./app/static/archive"))
@@ -480,7 +478,9 @@ def archiveEtu(id):
     # Tri des fichiers par nom
     fichiersAttestation.sort()
     fichiersPresence.sort()
-            
+    
+    #Pour pouvoir afficher le nom et prénom de l'étudiant sur la page d'archive
+    etu = (nom, prenom)
     return render_template("archiveEtu.html",user=etu, folderAttestation=fichiersAttestation, folderFichePresence=fichiersPresence) 
 
 

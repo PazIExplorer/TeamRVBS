@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <title>Étudiant : {{user[0][1]}} {{user[0][2]}} </title>
+  <title>Étudiant : {{user[0]}} {{user[1]}} </title>
   <link rel="stylesheet" href="../static/css/styleHeader.css">
   <link rel="stylesheet" href="../static/css/styleAdmin.css">
   <script src="//code.jquery.com/jquery-1.10.2.js"></script>
@@ -11,7 +11,7 @@
     {% include 'header.html' %}
 
     <div id="archive">
-      <h1>Archive de : {{user[0][1]}} {{user[0][2]}}</h1>
+      <h1>Archive de : {{user[0]}} {{user[1]}}</h1>
 
       <ol>
         <h2>Les attestations de présence :</h2>
