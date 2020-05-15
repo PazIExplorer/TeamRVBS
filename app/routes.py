@@ -18,6 +18,7 @@ from app.pythonScript import pdfgen
 from app.pythonScript import excelGen
 from app.pythonScript import fonctionPy
 from app.pythonScript import mdpGen
+from app.pythonScript import changeAnnee
 
 from app.pythonScript import config
 
@@ -420,8 +421,6 @@ def pdfEtu(id):
 
     cnx.close()
 
-    print(len(presence))
-
     myPDF=pdfgen.pdf(etu[0][1]+" "+etu[0][2],filiere[0][1],presence,administration)
     return render_template("pdfEtuAttest.html",myPDF=myPDF,user=etu)
 
@@ -709,3 +708,57 @@ def archive():
 def documentation():
 
     return render_template("documentation.html")
+
+@app.route("/changementAnnee",  methods=['GET', 'POST'])
+def changementAnnee():
+
+        # Validation du compte dans le cookie
+    if not cookieEstValide():
+        return redirect("index")
+
+    # Vérifie si le compte est admin, sinon retour à la page d'accueil
+    if not compteEstAdmin():
+        return redirect("choixFiliere")
+    modifType = 0
+
+    if request.method == "POST":
+        dateDebutP = request.form["debutAnneeP"]
+        dateFinP = request.form["finAnneeP"]
+
+        dateDebut = request.form["debutAnnee"]
+        dateFin = request.form["finAnnee"]
+
+        anneeD = dateDebutP[6:11]
+        anneeF = dateFinP[6:11]
+
+        #Changement de la période des attestations pour qu'elles soient globales
+        modifType = changeAnnee.changeTableAdmin(dateDebutP,dateFinP)
+        
+        #génération attestations/fiches/facturation
+        changeAnnee.genereFeuilles(anneeD,anneeF)
+
+        #Changements BDD
+        changeAnnee.nettoyageBDD()
+
+        #changement des dates pour celle de la nouvelle annee
+        modifType = changeAnnee.changeTableAdmin(dateDebut,dateFin)
+
+    return render_template("changementAnnee.html",modifType=modifType)
+
+@app.route("/archiveT")
+def archiveT():
+
+    excel = os.listdir(os.path.join("./app/static/excel"))
+    regex=rf"^forfaitHorraire_global.*\.xlsx$"
+
+    #tableaux pour récupérer les fichiers souhaités
+    file = []
+
+    #traitement par nom de fichier correspondant avec la regex
+    for e in excel:
+        if (re.match(regex,e)!=None):
+            file.append(e)
+        print(e)
+    file.sort()
+
+    return render_template("archiveT.html", file=file)

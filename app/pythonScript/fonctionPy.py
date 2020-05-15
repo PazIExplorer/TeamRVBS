@@ -70,7 +70,7 @@ def heurePresentParMoisLimiteAffichage(numCarteEtu):
 
     if anneeDebut == anneeFin:
         for i in range(moisDebut, moisFin+1):
-            mois = tab_des_mois[str(i)]
+            nomMois = tab_des_mois[str(i)]
             if nomMois not in tab_presence:
                 tab_presence[nomMois] = 0 # Mois non existent, on l'ajoute dans la liste
     else:

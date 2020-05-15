@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8">
+    <title>Page de changement d'année</title>
+    <link rel="stylesheet" href="../static/css/styleHeader.css">
+    <link rel="stylesheet" href="../static/css/styleAdmin.css">
+    <link rel="stylesheet" href="../static/css/styleMessage.css">
+</head>
+<body>
+    {% include 'header.html' %}
+
+    
+    {% if modifType == 1 %}
+    <!-- MODIFICATIONS RÉUSSIES -->
+    <div class="reussit">Changement d'année effectué.</div>
+    {% elif modifType == -1 %}
+    <!-- MODIFICATIONS ÉCHOUÉES -->
+    <div class="erreur">Une erreur a eu lieu lors du changement d'année : Veuillez réessayer plus tard</div>
+    {% endif %}
+    
+    <form action="{{url_for('changementAnnee')}}" method="POST" onsubmit="return (messageInfo());">
+        <h1>Changement d'année</h1>
+        
+        <br>
+        <p>Pour effectuer un changement d'année il faut renseigner les champs suivants, cela permettra de générer une attestation et une fiche de présence global pour chaque étudiant. Cela va aussi génerer un tableau de facturation de l'année pour chaques filière. Pour ensuite accéder à ces données il suffit de passer par la rubrique archive du menu. Les étudiants restent présent dans la section "Plus étudiant" de la page d'accueil.</p>
+        <br>
+
+        <fieldset>
+          <legend>Dates de début et de fin de formation pour l'année courante </legend>
+          <ol>
+            <li>
+              <label for="debutAnneeP">Debut de formation : </label>
+              <input type="text" name="debutAnneeP" id="debutAnneeP" value="" placeholder="jj/mm/aaaa" pattern="^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$">  
+            </li>
+            <li>
+              <label for="finAnneeP">Fin de formation :</label>
+              <input type="text" name="finAnneeP" id="finAnneeP" value="" placeholder="jj/mm/aaaa" pattern="^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$">  
+            </li>
+          </ol>
+        </fieldset>
+
+        <fieldset>
+            <legend>Dates de début et de fin de formation pour la nouvelle année</legend>
+            <ol>
+              <li>
+                <label for="debutAnnee">Debut de formation : </label>
+                <input type="text" name="debutAnnee" id="debutAnnee" value="" placeholder="jj/mm/aaaa" pattern="^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$">  
+              </li>
+              <li>
+                <label for="finAnnee">Fin de formation :</label>
+                <input type="text" name="finAnnee" id="finAnnee" value="" placeholder="jj/mm/aaaa" pattern="^([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$">  
+              </li>
+            </ol>
+          </fieldset>
+
+
+        <input type="submit" id="val" value="Valider">
+  </form>
+</body>
+</html>
+
+
+
+
+<script type="text/javascript">
+
+        function messageInfo(){
+                b = document.getElementById("val");
+                if(confirm("Voulez vous vraiment effectuer un changement d'année ?")){
+                  res = true;
+                }else{
+                  res = false;
+                }
+                console.log(res);
+                return res;
+        }
+</script>
