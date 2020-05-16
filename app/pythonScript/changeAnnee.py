@@ -76,9 +76,9 @@ def nettoyageBDD():
     cnx.commit()
 
     #Remise à zéro des présences
-    query = ("DELETE FROM presence")
-    cursor.execute(query)
-    cnx.commit()
+    #query = ("DELETE FROM presence")
+    #cursor.execute(query)
+    #cnx.commit()
 
     #déplacement des étudiants dans la catégorie 'plus etudiant'
             # Modification de la table étudiant avec les nouvelles informations 
