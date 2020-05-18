@@ -1,0 +1,23 @@
+#valider{
+    cursor: pointer;
+    border-radius: 20px;
+    background-color: #61c6f4c7;;
+    border: none;
+    text-align: center;
+    padding: 10px;
+    display:block;
+    margin:auto;
+    font: 16px Verdana;
+}
+
+form input{
+    cursor: pointer;
+    border-radius: 20px;
+    background-color: #61c6f4c7;
+    border: none;
+    text-align: center;
+    padding: 8px;
+    margin-top:5px;
+    width: 60%;
+    font: 16px Verdana;
+}

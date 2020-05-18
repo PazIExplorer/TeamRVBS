@@ -4,17 +4,12 @@
     <meta charset="utf-8">
     <title>Selection du calendrier des alternants</title>
 	<link rel="stylesheet" href="../static/css/styleHeader.css">
-	<link rel="stylesheet" href="../static/css/styleAcceuil.css">
-
-<!-- pour le deuxième calendrier -->
-	<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
-	<script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
-	<script src="../static/js/Week-Picker-jQuery-Moment/src/week-picker.js"></script>
-	<link rel="stylesheet" href="../static/js/Week-Picker-jQuery-Moment/dist/week-picker.css">
-	<link type="text/css" rel="stylesheet" href="../static/js/Multiple-DatePicker-master/Multiple-DatePicker-master/css/jquery-ui.css"/>
-	<link type="text/css" rel="stylesheet" href="../static/js/Multiple-DatePicker-master/Multiple-DatePicker-master/css/datepainter.css"/>
+	<link rel="stylesheet" href="../static/css/styleMessage.css">
+	<link rel="stylesheet" href="../static/css/styleEmploi.css">
 	
+	<!-- pour le calendrier -->
+	<link rel="stylesheet" href="../static/css/datepainter.css">
+
 	<script>
 		let dateBDD = '{{dates}}';
 	</script>
@@ -22,6 +17,13 @@
 
 <body>
 	{% include 'header.html' %}
+	{% if modifType == 1 %}
+	<!-- MODIFICATIONS RÉUSSIES -->
+	<div class="reussit">Modifications des dates du calendrier enregistrées.</div>
+	{% elif modifType == -1 %}
+	<!-- MODIFICATIONS ÉCHOUÉES -->
+	<div class="erreur">Une erreur a eu lieu lors de la modification des dates du calendrier</div>
+	{% endif %}
 
 		<div class="container">
 			<h1>Selection des semaines :</h1>
@@ -37,11 +39,10 @@
 		<button id="valider" type="submit" onclick="get_Active()">Valider</button>
 	</form>
 
-	<script type="text/javascript" src="../static/js/Multiple-DatePicker-master/Multiple-DatePicker-master/js/jquery-latest.min.js"></script>
-    <script type="text/javascript" src="../static/js/Multiple-DatePicker-master/Multiple-DatePicker-master/js/jquery-ui-1.9.2.custom.min.js"></script>
-    <script type="text/javascript" src="../static/js/Multiple-DatePicker-master/Multiple-DatePicker-master/js/moment.min.js"></script>
-    <script type="text/javascript" src="../static/js/Multiple-DatePicker-master/Multiple-DatePicker-master/js/bootstrap.min.js"></script>
-    <script type="text/javascript" src="../static/js/Multiple-DatePicker-master/Multiple-DatePicker-master/js/datepainter.js"></script>
+	<script type="text/javascript" src="../static/js/jquery-latest.min.js"></script>
+    <script type="text/javascript" src="../static/js/jquery-ui-1.9.2.custom.min.js"></script>
+    <script type="text/javascript" src="../static/js/moment.min.js"></script>
+    <script type="text/javascript" src="../static/js/datepainter.js"></script>
     <script>
     
     $(function() {

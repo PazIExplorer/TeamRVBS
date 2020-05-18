@@ -511,6 +511,8 @@ def ajoutEtu(nomprenomid):
 @app.route("/emploiDuTemps")
 @app.route("/emploiDuTemps", methods=['GET', 'POST'])
 def emploiDuTempsPicker():
+    modifType = 0
+
     # Validation du compte dans le cookie
     if not cookieEstValide():
         return redirect("index")
@@ -524,14 +526,18 @@ def emploiDuTempsPicker():
         data = request.form['tsa']
                 
         if data:
-            fonctionPy.sendDates(data)
+            err = fonctionPy.sendDates(data)
         else:
-            fonctionPy.effacerBase()
+            err = fonctionPy.effacerBase()
+        
+        if err == 0:
+            modifType=1
+        else:
+            modiType=-1
 
     dates = fonctionPy.recupererDates()
-    
 
-    return render_template("emploiDuTempsPicker.html",dates=dates)
+    return render_template("emploiDuTempsPicker.html",dates=dates, modifType=modifType)
     
 @app.route("/pageAdministration")
 def pageAdministration():

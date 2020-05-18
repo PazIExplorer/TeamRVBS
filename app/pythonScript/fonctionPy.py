@@ -248,27 +248,38 @@ def sendDates(Dates):
     cursor.execute(query)
 
     #parcour de la liste pour les envoyer dans la bdd
-    
-    for i in range (0, len(liste_jours)-1):
+    try :
+        for i in range (0, len(liste_jours)-1):
         
-        dateCourante = time.strptime(str(liste_jours[i]),"%Y-%m-%d")
-        query = ('INSERT INTO calendrier (jourDeCour) VALUES (%s)')
-        var = (time.strftime('%Y-%m-%d', dateCourante),)
-        cursor.execute(query, var)
+            dateCourante = time.strptime(str(liste_jours[i]),"%Y-%m-%d")
+            query = ('INSERT INTO calendrier (jourDeCour) VALUES (%s)')
+            var = (time.strftime('%Y-%m-%d', dateCourante),)
+            cursor.execute(query, var)
 
-        cnx.commit()
+            cnx.commit()
 
     
-    cnx.close()
+        cnx.close()
+        return 0
+    except:
+        cnx.rollback()
+        cnx.close()
+        return -1
 
 
 def effacerBase():
     cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
+    
+    try:
+        query = ("DELETE FROM calendrier")
+        cursor.execute(query)
 
-    query = ("DELETE FROM calendrier")
-    cursor.execute(query)
+        cnx.commit()
 
-    cnx.commit()
-
-    cnx.close()
+        cnx.close()
+        return 0
+    except:
+        cnx.rollback()
+        cnx.close()
+        return -1
