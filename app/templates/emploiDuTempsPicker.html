@@ -5,6 +5,7 @@
     <title>Selection du calendrier des alternants</title>
 	<link rel="stylesheet" href="../static/css/styleHeader.css">
 	<link rel="stylesheet" href="../static/css/styleAcceuil.css">
+	<link rel="stylesheet" href="../static/css/styleMessage.css">
 
 <!-- pour le deuxième calendrier -->
 	<link href="http://www.jqueryscript.net/css/jquerysctipttop.css" rel="stylesheet" type="text/css">
@@ -22,6 +23,13 @@
 
 <body>
 	{% include 'header.html' %}
+	{% if modifType == 1 %}
+	<!-- MODIFICATIONS RÉUSSIES -->
+	<div class="reussit">Modifications des dates du calendrier enregistrées.</div>
+	{% elif modifType == -1 %}
+	<!-- MODIFICATIONS ÉCHOUÉES -->
+	<div class="erreur">Une erreur a eu lieu lors de la modification des dates du calendrier</div>
+{% endif %}
 
 		<div class="container">
 			<h1>Selection des semaines :</h1>
