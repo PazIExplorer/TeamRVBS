@@ -64,19 +64,7 @@
 
 }
 
-.icon-arrow-right {
-    width: 20px;
-    height: 32px;
-    background-color: #e888a3;
-
-    clip-path: polygon(0 0, 0 100%, 100% 50%);
-}
 
 
-.icon-arrow-left {
-    width: 20px;
-    height: 32px;
-    background-color: #8de698;
 
-    clip-path: polygon(100% 100%, 100% 0, 0 50%);
-}
+
