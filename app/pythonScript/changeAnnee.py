@@ -49,18 +49,24 @@ def genereFeuilles(anneeP,anneeF):
             #print(os.getcwd())
 
     for e in etu:
-        query = ("SELECT * FROM presence WHERE numeroEtudiant="+str(e[3]))
-        cursor.execute(query)
-        presence = cursor.fetchall()
+        
         
         if str(e[6]) != 'None' or int(e[6]) != 100:
             query = ("SELECT * FROM filiere WHERE idFiliere="+str(e[6]))
             cursor.execute(query)
             filiere = cursor.fetchall()
             
+            query = ("SELECT * FROM presence WHERE numeroEtudiant="+str(e[3]))
+            cursor.execute(query)
+            presence = cursor.fetchall()
+            
             #génération des attestations globales
             pdfgen.pdf(e[1]+" "+e[2],filiere[0][1],presence,administration)
 
+            
+            query = ("SELECT * FROM presence WHERE numeroEtudiant="+str(e[3]))
+            cursor.execute(query)
+            presence = cursor.fetchall()
             #Génération des fiches de présences globales
             pdfgen.presence(e[1]+" "+e[2],filiere[0][1],presence,administration)
 
