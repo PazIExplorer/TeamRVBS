@@ -40,14 +40,10 @@
                         </select>
                 </li>
                 <li>
-                        <label for="tarif">Tarif: </label>
-                        <input type="text" name="tarif" id="tarif" value='{{user[0][5]}}'>
-                </li>
-                <li>
                         <label for="filiere">Filiere: </label>
                         <select name="filiere">
                                 {% for f in fil %}
-                                        {% if user[0][6] == f[0] %}
+                                        {% if user[0][5] == f[0] %}
                                                 <option selected value="{{f[0]}}">{{f[1]}}</option>
                                         {% else %}
                                                 <option value="{{f[0]}}">{{f[1]}}</option>
@@ -57,31 +53,31 @@
                 </li>
                 <li>
                         <label for="numeroTel">Numero de Telephone: </label>
-                        {% if user[0][7] == "" %}
+                        {% if user[0][6] == "" %}
                                 <input type="text" name="numeroTel" id="numeroTel" value="">
                         {% else %}
-                                <input type="text" name="numeroTel" id="numeroTel" value='{{user[0][7]}}'>
+                                <input type="text" name="numeroTel" id="numeroTel" value='{{user[0][6]}}'>
                         {% endif %}
                 </li>
                 <li>
                         <label for="mailEtu">Mail Etudiant: </label>
-                        {% if user[0][8] == "" %}
+                        {% if user[0][7] == "" %}
                                 <input type="text" name="mailEtu" id="mailEtu" value="">
                         {% else %}
-                                <input type="text" name="mailEtu" id="mailEtu" value='{{user[0][8]}}'>
+                                <input type="text" name="mailEtu" id="mailEtu" value='{{user[0][7]}}'>
                         {% endif %}
                 </li>
                 <li>
                         <label for="mailEntreprise">Mail Entreprise: </label>
-                        {% if user[0][9] == "" %}
+                        {% if user[0][8] == "" %}
                                 <input type="text" name="mailEntreprise" id="mailEntreprise" value="">
                         {% else %}
-                                <input type="text" name="mailEntreprise" id="mailEntreprise" value='{{user[0][9]}}'>
+                                <input type="text" name="mailEntreprise" id="mailEntreprise" value='{{user[0][8]}}'>
                         {% endif %}
                 </li>
                 <li>
                         <label for="commentaire">Commentaire: </label>
-                        <textarea id="commentaire" name="commentaire" rows="5" cols="25">{{user[0][10]}}</textarea>
+                        <textarea id="commentaire" name="commentaire" rows="5" cols="25">{{user[0][9]}}</textarea>
                 </li>
         </ol>
        

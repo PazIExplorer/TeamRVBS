@@ -45,14 +45,14 @@ def genereFeuilles(anneeP,anneeF):
     for f in filiere:
         if int(f[0]) != 100:
             excelGen.creation(f[0])
-            shutil.copy(os.getcwd()+"/app/static/excel/forfaitHorraire.xlsx",os.getcwd()+"/app/static/excel/forfaitHorraire_global_"+ str(anneeP) + "-" + str(anneeF) + "_" + str(f[1]) + ".xlsx")
+            shutil.copy(os.getcwd()+"/app/static/excel/forfaitHorraire.xlsx",os.getcwd()+"/app/static/excel/forfaitHoraire_global_"+ str(anneeP) + "-" + str(anneeF) + "_" + str(f[1]) + ".xlsx")
             #print(os.getcwd())
 
     for e in etu:
         
         
-        if str(e[6]) != 'None' or int(e[6]) != 100:
-            query = ("SELECT * FROM filiere WHERE idFiliere="+str(e[6]))
+        if str(e[5]) != 'None' or int(e[5]) != 100:
+            query = ("SELECT * FROM filiere WHERE idFiliere="+str(e[5]))
             cursor.execute(query)
             filiere = cursor.fetchall()
             

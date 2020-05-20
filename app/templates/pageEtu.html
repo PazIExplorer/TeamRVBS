@@ -24,7 +24,7 @@
 
     
     {% if user[0][6] %}  
-        <form action="{{url_for('pageGenerale', idFiliere=user[0][6])}}">
+        <form action="{{url_for('pageGenerale', idFiliere=user[0][5])}}">
             <input class="b" type="submit" value="Retour page de selection des étudiants" />
         </form>
     {% else %}
@@ -52,30 +52,30 @@
             </li>
             <li>
                 <p class="gauche">Contact :</p>
-                {% if user[0][8]  %}
-                    <p class="droite">{{user[0][8]}}</p>
-                {% else %}
-                    <p class="droite">non renseigné</p>
-                {% endif %}
-            </li>
-            <li>
-                <p class="gauche">Numéro de téléphone :</p>
-                {% if user[0][7] %}
+                {% if user[0][7]  %}
                     <p class="droite">{{user[0][7]}}</p>
                 {% else %}
                     <p class="droite">non renseigné</p>
                 {% endif %}
             </li>
             <li>
+                <p class="gauche">Numéro de téléphone :</p>
+                {% if user[0][6] %}
+                    <p class="droite">{{user[0][6]}}</p>
+                {% else %}
+                    <p class="droite">non renseigné</p>
+                {% endif %}
+            </li>
+            <li>
                 <p class="gauche">Mail entreprise :</p>
-                {% if user[0][9]  %}
-                    <p class="droite">{{user[0][9]}}</p>
+                {% if user[0][8]  %}
+                    <p class="droite">{{user[0][8]}}</p>
                 {% else %}
                     <p class="droite">non renseigné</p>
                 {% endif %}
             </li>
                 <p class="gauche">Commentaire :</p>
-                <p class="droite">{{user[0][10]}}</p>
+                <p class="droite">{{user[0][9]}}</p>
             <li>
 
             </li>

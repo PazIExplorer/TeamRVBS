@@ -138,7 +138,7 @@ def choixFiliere():
     cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
     cursor = cnx.cursor()
     # Recuperation de la liste des filières
-    query = ("SELECT * FROM filiere")
+    query = ("SELECT * FROM filiere ORDER BY nomFiliere")
     cursor.execute(query)
     filieres = cursor.fetchall()
 
@@ -213,7 +213,6 @@ def pageEtu(id):
         numeroEtudiant = request.form["numeroEtudiant"]
         numeroBadge = request.form["numeroBadge"]
         typeContratEtudiant = request.form["typeContratEtudiant"]
-        tarif = float(request.form["tarif"])
         filiere = int(request.form["filiere"])
         numeroTel = request.form["numeroTel"]
         mailEtu = request.form["mailEtu"]
@@ -246,10 +245,10 @@ def pageEtu(id):
 
         if modifType != -1:
             numeroBadge = int(numeroBadge,16)
-            val = (numeroBadge,nom,prenom,numeroEtudiant,typeContratEtudiant,tarif,filiere,numeroTel,mailEtu,mailEntreprise,commentaire,id)
+            val = (numeroBadge,nom,prenom,numeroEtudiant,typeContratEtudiant,filiere,numeroTel,mailEtu,mailEntreprise,commentaire,id)
 
             # Modification de la table étudiant avec les nouvelles informations 
-            query = ("UPDATE etudiant SET idCarteEtu=%s,nom=%s,prenom=%s,numeroEtudiant=%s,typeContratEtudiant=%s,tarif=%s,filiere=%s,numeroTel=%s,mailEtu=%s,mailEntreprise=%s,description=%s WHERE numeroEtudiant=%s")
+            query = ("UPDATE etudiant SET idCarteEtu=%s,nom=%s,prenom=%s,numeroEtudiant=%s,typeContratEtudiant=%s,filiere=%s,numeroTel=%s,mailEtu=%s,mailEntreprise=%s,description=%s WHERE numeroEtudiant=%s")
 
             try:
                 cursor.execute(query,val)
@@ -371,7 +370,7 @@ def pdfEtuPresence(id):
     cursor.execute(query)
     etu = cursor.fetchall()
 
-    query = ("SELECT * FROM filiere WHERE idFiliere="+str(etu[0][6]))
+    query = ("SELECT * FROM filiere WHERE idFiliere="+str(etu[0][5]))
     cursor.execute(query)
     filiere = cursor.fetchall()
 
@@ -411,7 +410,7 @@ def pdfEtu(id):
     cursor.execute(query)
     presence = cursor.fetchall()
 
-    query = ("SELECT * FROM filiere WHERE idFiliere="+str(etu[0][6]))
+    query = ("SELECT * FROM filiere WHERE idFiliere="+str(etu[0][5]))
     cursor.execute(query)
     filiere = cursor.fetchall()
     
@@ -755,7 +754,7 @@ def changementAnnee():
 def archiveT():
 
     excel = os.listdir(os.path.join("./app/static/excel"))
-    regex=rf"^forfaitHorraire_global.*\.xlsx$"
+    regex=rf"^forfaitHoraire_global.*\.xlsx$"
 
     #tableaux pour récupérer les fichiers souhaités
     file = []
@@ -768,3 +767,47 @@ def archiveT():
     file.sort()
 
     return render_template("archiveT.html", file=file)
+
+
+@app.route("/ajouterFiliere",  methods=['GET', 'POST'])
+def ajouterFiliere():
+        # Validation du compte dans le cookie
+    if not cookieEstValide():
+        return redirect("index")
+
+    # Vérifie si le compte est admin, sinon retour à la page d'accueil
+    if not compteEstAdmin():
+        return redirect("choixFiliere")
+    modifType = 0
+    msgErr = ""
+
+
+    if request.method == "POST":
+        cnx = mysql.connector.connect(host=config.BDD_host, database=config.BDD_database, user=config.BDD_user, password=config.BDD_password)
+        cursor = cnx.cursor()
+
+        query = ("SELECT * FROM filiere")
+        cursor.execute(query)
+        filiere = cursor.fetchall()
+
+        nomFiliere = request.form["nomFiliere"]
+
+        try:
+            idF = len(filiere)
+            if idF<100:
+                query = ("INSERT INTO filiere VALUES (%s,%s)")
+                val =(idF,nomFiliere)
+                cursor.execute(query,val)
+                cnx.commit()
+                modifType = 1
+            else:
+                modifType = -1
+                msgErr = "Nombre maximal de filière atteint" 
+        except:
+            cnx.rollback()
+            modifType = -1
+
+        cnx.close()
+    
+
+    return render_template("ajouterFiliere.html", modifType=modifType ,msgErr=msgErr)
