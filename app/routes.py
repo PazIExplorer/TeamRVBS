@@ -218,7 +218,9 @@ def pageEtu(id):
         mailEtu = request.form["mailEtu"]
         mailEntreprise = request.form["mailEntreprise"]
         commentaire = request.form["commentaire"]
-        
+
+
+
         #Vérification du formulaire :
         #Pour le nom de l'étudiant 
         if len(nom.strip()) == 0:
@@ -242,6 +244,22 @@ def pageEtu(id):
         #Pour mail Etudiant, pas important
         #Pour mail Entreprise, pas important
         #Commentaire, pas important
+        #Pour le numéro de tel
+        if len(numeroTel.strip()) == 0:
+            numeroTel = "non renseigné"
+
+        #Pour mail Etudiant
+        if len(mailEtu.strip()) == 0:
+            mailEtu = "non renseigné"
+
+        #Pour mail Entreprise, pas important
+        if len(mailEntreprise.strip()) == 0:
+            mailEntreprise = "non renseigné"
+
+        #Commentaire, pas important
+        if len(commentaire.strip()) == 0:
+            commentaire = "non renseigné"
+
 
         if modifType != -1:
             numeroBadge = int(numeroBadge,16)
@@ -495,7 +513,7 @@ def ajoutEtu(nomprenomid):
     cursor = cnx.cursor()
 
     #insertion de l'etudiant dans la BDD
-    query = ("INSERT INTO etudiant (idCarteEtu,nom,prenom,numeroEtudiant) VALUES (%s,%s,%s,%s)")
+    query = ("INSERT INTO etudiant VALUES (%s,%s,%s,%s,'non renseigné','non renseigné','non renseigné','non renseigné','non renseigné','non renseigné')")
     arg = (idCarte,nom,prenom,numEtu)
     try:
         cursor.execute(query,arg)

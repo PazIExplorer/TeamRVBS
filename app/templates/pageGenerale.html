@@ -29,7 +29,13 @@
       <tr id="ligneEtudiant" onclick="window.location=`{{url_for('pageEtu', id=e[3])}}`">
         <td>{{e[1]}}</td>
         <td>{{e[2]}}</td>
-        <td>{{e[4]}}</td>
+        <td>
+          {% if e[4] %}
+          {{e[4]}}
+          {% else %}
+          non renseigné
+          {% endif %}
+        </td>
         <td>{{e[3]}}</td>
       </tr>
       {% endfor %}
