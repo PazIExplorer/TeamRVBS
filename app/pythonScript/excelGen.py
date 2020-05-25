@@ -231,7 +231,7 @@ def creation(idFiliere):
 
 
 
-        #complete les cases vide que je ne comprend pas l'utilité avec le format
+        #Pour la colonne facturation des CP pas de formule, complété a la main par la secrétaire
         ws.write("J"+str(row+i+1), "", formatT1Base)
         ws.write("O"+str(row+i+1), "", formatT2Base)
         ws.write("T"+str(row+i+1), "", formatT3Base)
@@ -286,10 +286,10 @@ def creation(idFiliere):
 
         formuleTotalTrimestre = "="+str(tarif)+"/3"
 
-        #complete les cases vide que je ne comprend pas l'utilité avec le format
-        ws.write_formula("J"+str(row+i+1), formuleTotalTrimestre, formatT1Base)
-        ws.write_formula("O"+str(row+i+1), formuleTotalTrimestre, formatT2Base)
-        ws.write_formula("T"+str(row+i+1), formuleTotalTrimestre, formatT3Base)
+        #formule pour la facturation CA
+        ws.write_formula("J"+str(row+i+1), formuleTotalTrimestre, formatT1Bold)
+        ws.write_formula("O"+str(row+i+1), formuleTotalTrimestre, formatT2Bold)
+        ws.write_formula("T"+str(row+i+1), formuleTotalTrimestre, formatT3Bold)
 
         #incrémentation des var
         num = num+1
@@ -310,17 +310,17 @@ def creation(idFiliere):
     ws.write_formula(row+i, 6, "=SUM(G8:G"+str(7+i-1)+")", formatT1Base)
     ws.write_formula(row+i, 7, "=SUM(H8:H"+str(7+i-1)+")", formatT1Base)
     ws.write_formula(row+i, 8, "=SUM(I8:I"+str(7+i-1)+")", formatT1Base)
-    ws.write_formula(row+i, 9, "=SUM(J8:J"+str(7+i-1)+")", formatT1Bold)
+    ws.write(row+i, 9, "", formatT1Bold)
     ws.write_formula(row+i, 10, "=SUM(K8:K"+str(7+i-1)+")", formatT2Base)
     ws.write_formula(row+i, 11, "=SUM(L8:L"+str(7+i-1)+")", formatT2Base)
     ws.write_formula(row+i, 12, "=SUM(M8:M"+str(7+i-1)+")", formatT2Base)
     ws.write_formula(row+i, 13, "=SUM(N8:N"+str(7+i-1)+")", formatT2Base)
-    ws.write_formula(row+i, 14, "=SUM(O8:O"+str(7+i-1)+")", formatT2Bold)
+    ws.write(row+i, 14, "", formatT2Bold)
     ws.write_formula(row+i, 15, "=SUM(P8:P"+str(7+i-1)+")", formatT3Base)
     ws.write_formula(row+i, 16, "=SUM(Q8:Q"+str(7+i-1)+")", formatT3Base)
     ws.write_formula(row+i, 17, "=SUM(R8:R"+str(7+i-1)+")", formatT3Base)
     ws.write_formula(row+i, 18, "=SUM(S8:S"+str(7+i-1)+")", formatT3Bold)
-    ws.write_formula(row+i, 19, "=SUM(T8:T"+str(7+i-1)+")", formatT3Bold)
+    ws.write(row+i, 19, "", formatT3Bold)
     ws.write(row+i, 20, "", formatTotalBase)
     ws.write(row+i, 21, "", formatTotalBase)
    
