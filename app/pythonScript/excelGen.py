@@ -230,6 +230,7 @@ def creation(idFiliere):
         ws.write_formula(row+i, 21, formuleTotalEuro, formatTotalBold)
 
 
+
         #complete les cases vide que je ne comprend pas l'utilité avec le format
         ws.write("J"+str(row+i+1), "", formatT1Base)
         ws.write("O"+str(row+i+1), "", formatT2Base)
@@ -283,10 +284,12 @@ def creation(idFiliere):
         formuleTotalEuro = "=J"+str(lc)+"+O"+str(lc)+"+T"+str(lc)
         ws.write_formula(row+i, 21, formuleTotalEuro, formatTotalBold)
 
+        formuleTotalTrimestre = "="+str(tarif)+"/3"
+
         #complete les cases vide que je ne comprend pas l'utilité avec le format
-        ws.write("J"+str(row+i+1), "", formatT1Base)
-        ws.write("O"+str(row+i+1), "", formatT2Base)
-        ws.write("T"+str(row+i+1), "", formatT3Base)
+        ws.write_formula("J"+str(row+i+1), formuleTotalTrimestre, formatT1Base)
+        ws.write_formula("O"+str(row+i+1), formuleTotalTrimestre, formatT2Base)
+        ws.write_formula("T"+str(row+i+1), formuleTotalTrimestre, formatT3Base)
 
         #incrémentation des var
         num = num+1

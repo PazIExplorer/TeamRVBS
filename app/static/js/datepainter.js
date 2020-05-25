@@ -304,7 +304,7 @@ var dayName= ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
         _selectDate: function(date) {
             d = date.format('dddd');
             if(d == "Saturday" || d == "Sunday"){
-                console.log("xd");
+
             }else{
                 this.selected[date.format('YYYY-MM-DD')] = true;
             
