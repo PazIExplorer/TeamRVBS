@@ -12,14 +12,31 @@
 
   <h1 id="titre">Choix de la filière</h1>
     {% for f in filieres %}
+    {% if f[0]!=100 %}
     <form action="{{url_for('pageGenerale',idFiliere=f[0])}}" method="GET">
       <input class="button" type="submit" value="{{f[1]}}">
     </form>
     <br>
+    {% endif %}
+    {% endfor %}
+    <br>
+    <form action="{{url_for('pageGenerale',idFiliere='NULL')}}" method="GET">
+      <input class="button" type="submit" value="Étudiants sans filière">
+    </form>
+
+    <br>
+    {% for f in filieres %}
+    {% if f[0]==100 %}
+    <form action="{{url_for('pageGenerale',idFiliere=f[0])}}" method="GET">
+      <input class="button" type="submit" value="{{f[1]}}">
+    </form>
+    <br>
+    {% endif %}
     {% endfor %}
 
-    <form action="{{url_for('pageGenerale',idFiliere='NULL')}}" method="GET">
-        <input class="button" type="submit" value="Étudiants sans filière">
+
+    <form action="{{url_for('ajouterFiliere')}}" method="GET">
+      <input class="button1" type="submit" value="Ajouter une nouvelle filiere">
     </form>
 </body>
 </html>

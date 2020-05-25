@@ -302,9 +302,14 @@ var dayName= ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
         },
 
         _selectDate: function(date) {
-            this.selected[date.format('YYYY-MM-DD')] = true;
-            this.selected['2020-05-01'] = true;
-            envoieDate.push(date.format('YYYY-MM-DD'));
+            d = date.format('dddd');
+            if(d == "Saturday" || d == "Sunday"){
+
+            }else{
+                this.selected[date.format('YYYY-MM-DD')] = true;
+            
+                envoieDate.push(date.format('YYYY-MM-DD'));
+            }
         },
 
         clearSelected: function() {
@@ -315,6 +320,7 @@ var dayName= ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
         },
 
         _unselectDate: function(date) {
+            
             delete this.selected[date.format('YYYY-MM-DD')];
             date = date.format('YYYY-MM-DD')
             for(i=0;i<envoieDate.length;i++){
@@ -323,6 +329,7 @@ var dayName= ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
                         envoieDate = envoieDate.filter(item => item !== d);
                 }
             }
+        
         },
 
         _isCellGroupSelected: function(row, col) {
@@ -440,37 +447,6 @@ var dayName= ['Lun','Mar','Mer','Jeu','Ven','Sam','Dim'];
             return (date.diff(firstDate,'days') >= 0 && date.diff(lastDate,'days') <= 0);
 
         },
-        /*
-        _refreshSelectedList: function() {
-            var today = moment();
-            var monthCounts = {};
-            var monthNames = [];
-            for (var key in this.selected) {
-                var date = moment(key),
-                    ym = date.format('YYYY-MM');
-                if (this._isVisibleDate(date))
-                    continue;
-                if (!(ym in monthCounts)) {
-                    monthCounts[ym] = 1;
-                    monthNames.push(ym);
-                } else
-                    monthCounts[ym]++;
-            }
-
-            monthNames.sort();
-            this.selectionList.children().remove();
-
-            for (var i = 0; i < monthNames.length; i++) {
-                var ym = monthNames[i],
-                    date = moment(ym);
-
-
-                this.selectionList.append($('<li>').text(monthName[i] + date.format(' YYYY : ') + monthCounts[ym]));
-
-
-            }
-        },
-*/
 
         // called when created, and later when changing options
         _refresh: function() {

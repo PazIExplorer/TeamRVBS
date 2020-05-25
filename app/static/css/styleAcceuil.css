@@ -17,6 +17,12 @@ form input{
     text-align: center;
 }
 
+.button1{
+    background-color: white;
+    border: 3px solid black;
+    
+}
+
 form{
     display: flex;
     flex-direction: column;

@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Tableaux de facturation </title>
+  <link rel="stylesheet" href="../static/css/styleHeader.css">
+  <link rel="stylesheet" href="../static/css/styleAdmin.css">
+</head>
+<body">
+    {% include 'header.html' %}
+
+    <div id="archive">
+      <h1>Archive</h1>
+
+      <ol>
+        <h2>Les tableaux de facturation :</h2>
+        {% for f in file %}
+        <li>
+          <a href='{{url_for("static", filename="excel/"+f)}}' download="{{f}}">{{f}}</a>
+        </li>
+        {% endfor %}
+      </ol>
+    </div>
+</body>
+</html> 

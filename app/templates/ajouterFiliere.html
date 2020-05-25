@@ -1,0 +1,36 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Création de compte</title>
+    <link rel="stylesheet" href="../static/css/styleHeader.css">
+    <link rel="stylesheet" href="../static/css/styleCreaCompte.css">
+    <link rel="stylesheet" href="../static/css/styleMessage.css">      
+</head>
+
+<body>
+    {% include 'header.html' %}
+
+    {% if modifType == 1 %}
+        <!-- CRÉATION RÉUSSIE -->
+        <div class="reussit">Création de la nouvelle filière effectuée</div>
+    {% elif modifType == -1 %}
+        <!-- CRÉATION ÉCHOUÉE -->
+        <div class="erreur">Une erreur a eu lieu lors de la création de la nouvelle filière : {{msgErr}}</div>
+    {% endif %}
+
+    <h1>Ajout d'une nouvelle filière :</h1>
+    
+    <form method="POST" action="{{url_for('ajouterFiliere')}}">
+        <div>
+        <label for="nomFiliere">Nom de la filière :</label>
+        <input type="text" id="nomFiliere" name="nomFiliere" required>
+        </div>
+        <input type="submit" value="Valider">
+    </form>
+
+</body>
+
+</html>
